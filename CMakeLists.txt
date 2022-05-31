@@ -9,7 +9,15 @@ set(CMAKE_C_COMPILER gcc)
 find_package(fmt CONFIG REQUIRED)
 set(LIBS ${LIBS} fmt::fmt)
 
+# POCO library
+find_package(Poco CONFIG REQUIRED Net XML Zip Data)
+set(LIBS ${LIBS} Poco::Net Poco::XML Poco::Zip Poco::Data)
+
+# RapidJSON
+find_package(RapidJSON CONFIG REQUIRED)
+set(LIBS ${LIBS} rapidjson)
+
 add_executable(main src/main.cpp)
-target_link_libraries(main ${LIBS})
+target_link_libraries(main PRIVATE ${LIBS})
 set_target_properties(main PROPERTIES CXX_STANDARD 20)
 

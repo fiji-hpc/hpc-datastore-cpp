@@ -1,6 +1,9 @@
 #pragma once
 #include <array>
+#include <cassert>
 #include <i3d/image3d.h>
+#include <map>
+#include <optional>
 #include <string>
 #include <type_traits>
 
@@ -9,6 +12,8 @@ template <typename T>
 concept Scalar = requires(T) {
 	std::is_scalar_v<T>;
 };
+
+std::string get_dataset_path(const std::string& url, const std::string& uuid);
 } // namespace details
 
 namespace datastore {
@@ -27,12 +32,61 @@ class Vector3D {
 	T y() const { return _values[1]; }
 	T z() const { return _values[2]; }
 
-	T& operator[](std::size_t idx) { return _values[idx]; }
-	T operator[](std::size_t idx) const { return _values[idx]; }
+	T& operator[](std::size_t idx) {
+		assert(0 <= idx && idx < 3);
+		return _values[idx];
+	}
+	T operator[](std::size_t idx) const {
+		assert(0 <= idx && idx < 3);
+		return _values[idx];
+	}
 
   private:
 	std::array<T, 3> _values;
 };
+
+class DatasetProperties {
+  public:
+	std::string uuid;
+	std::string voxel_type;
+	Vector3D<int> dimensions;
+	int channels;
+	int angles;
+	std::optional<std::string> transformations;
+	std::string voxel_unit;
+	Vector3D<double> voxel_resolution;
+	std::optional<Vector3D<double>> timepoint_resolution;
+	std::optional<Vector3D<double>> channel_resolution;
+	std::optional<Vector3D<double>> angle_resolution;
+	std::string compression;
+	std::vector<std::map<std::string, Vector3D<int>>> resolution_levels;
+	std::vector<int> versions;
+	std::string label;
+	std::optional<std::string> view_registrations;
+	std::vector<int> timepoint_ids;
+};
+
+DatasetProperties get_dataset_properties(const std::string& url,
+                                         const std::string& uuid);
+
+template <details::Scalar T>
+i3d::Image3d<T> read_image(const std::string& url,
+                           const std::string& uuid,
+                           int channel = 0,
+                           int timepoint = 0,
+                           int angle = 0,
+                           Vector3D<int> resolution = {1, 1, 1},
+                           const std::string& version = "latest");
+
+template <details::Scalar T>
+bool write_image(const i3d::Image3d<T>& img,
+                 const std::string& url,
+                 const std::string& uuid,
+                 int channel = 0,
+                 int timepoint = 0,
+                 int angle = 0,
+                 Vector3D<int> resolution = {1, 1, 1},
+                 const std::string version = "latest");
 
 class ImageView {
   public:
@@ -174,30 +228,39 @@ class Connection {
 	std::string _uuid;
 };
 
-template <details::Scalar T>
-i3d::Image3d<T> read_image(const std::string& url,
-                           const std::string& uuid,
-                           int channel = 0,
-                           int timepoint = 0,
-                           int angle = 0,
-                           Vector3D<int> resolution = {1, 1, 1},
-                           const std::string& version = "latest");
-
-template <details::Scalar T>
-bool write_image(const i3d::Image3d<T>& img,
-                 const std::string& url,
-                 const std::string& uuid,
-                 int channel = 0,
-                 int timepoint = 0,
-                 int angle = 0,
-                 Vector3D<int> resolution = {1, 1, 1},
-                 const std::string version = "latest");
-
 } // namespace datastore
 
 /* ================= IMPLEMENTATION FOLLOWS ======================== */
+namespace details {
+std::string get_dataset_path(const std::string& url, const std::string& uuid) {
+	return url + "/datasets/" + uuid;
+}
+} // namespace details
 
 namespace datastore {
+/* ===================================== Global space */
+DatasetProperties get_dataset_properties(const std::string& url,
+                                         const std::string& uuid) {
+	std::string dataset_path = details::get_dataset_path(url, uuid);
+
+	return {};
+}
+
+/* ===================================== ImageView */
+
+ImageView::ImageView(std::string url,
+                     std::string uuid,
+                     int channel,
+                     int timepoint,
+                     int angle,
+                     Vector3D<int> resolution,
+                     std::string version)
+    : _url(std::move(url)), _uuid(std::move(uuid)), _channel(channel),
+      _timepoint(timepoint), _angle(angle), _resolution(resolution),
+      _version(std::move(version)) {}
+
+/* ===================================== Connection */
+
 Connection::Connection(std::string url, std::string uuid)
     : _url(std::move(url)), _uuid(std::move(uuid)) {}
 } // namespace datastore

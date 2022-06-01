@@ -206,8 +206,8 @@ namespace datastore {
 /* inline */ DatasetProperties get_dataset_properties(const std::string& ip,
                                                       int port,
                                                       const std::string& uuid) {
-	std::string json = details::datastore::get_dataset_json_str(ip, port, uuid);
-	return details::datastore::get_properties_from_json_str(json);
+	std::string json = details::get_dataset_json_str(ip, port, uuid);
+	return details::get_properties_from_json_str(json);
 }
 
 /* ===================================== ImageView */

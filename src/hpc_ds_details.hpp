@@ -13,8 +13,8 @@
 #include <type_traits>
 /* ==================== DETAILS HEADERS ============================ */
 
-namespace details {
 namespace datastore {
+namespace details {
 #ifndef NDEBUG
 constexpr inline bool debug = true;
 #else
@@ -78,12 +78,12 @@ std::optional<std::string> get_view_registrations(Object::Ptr root);
 std::vector<int> get_timepoint_ids(Object::Ptr root);
 
 } // namespace props_parser
-} // namespace datastore
 } // namespace details
+} // namespace datastore
 
 /* ================= IMPLEMENTATION FOLLOWS ======================== */
-namespace details {
 namespace datastore {
+namespace details {
 
 /* inline */ std::string
 get_dataset_url(const std::string& ip, int port, const std::string& uuid) {
@@ -149,7 +149,7 @@ get_dataset_json_str(const std::string& ip, int port, const std::string& uuid) {
 	return out;
 }
 
-inline ::datastore::DatasetProperties
+inline DatasetProperties
 get_properties_from_json_str(const std::string& json_str) {
 
 	using namespace Poco::JSON;
@@ -157,10 +157,10 @@ get_properties_from_json_str(const std::string& json_str) {
 	Parser parser;
 	Poco::Dynamic::Var result = parser.parse(json_str);
 
-	::datastore::DatasetProperties props;
+	DatasetProperties props;
 	auto root = result.extract<Object::Ptr>();
 
-	using namespace details::datastore::props_parser;
+	using namespace props_parser;
 	// UUID
 	if (root->has("uuid"))
 		props.uuid = root->getValue<std::string>("uuid");
@@ -208,5 +208,5 @@ get_properties_from_json_str(const std::string& json_str) {
 	info("Parsing has finished");
 	return props;
 }
-} // namespace datastore
 } // namespace details
+} // namespace datastore

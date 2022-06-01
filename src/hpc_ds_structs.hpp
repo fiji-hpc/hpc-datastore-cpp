@@ -9,8 +9,9 @@
 #include <string>
 #include <vector>
 
-namespace details {
 namespace datastore {
+
+namespace details {
 template <typename T>
 std::string vec_to_string(std::vector<T> vec) {
 	std::stringstream ss;
@@ -24,11 +25,7 @@ std::string vec_to_string(std::vector<T> vec) {
 	ss << "]";
 	return ss.str();
 }
-
-} // namespace datastore
 } // namespace details
-
-namespace datastore {
 
 template <typename T>
 concept Scalar = requires(T) {

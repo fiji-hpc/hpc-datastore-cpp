@@ -53,29 +53,20 @@ get_properties_from_json_str(const std::string& json_str);
 
 namespace props_parser {
 using namespace Poco::JSON;
-using ::datastore::Vector3D;
 
 // TODO finish implementations
-std::string get_uuid(Object::Ptr root);
-std::string get_voxel_type(Object::Ptr root);
-Vector3D<int> get_dimensions(Object::Ptr root);
-int get_channels(Object::Ptr root);
-int get_angles(Object::Ptr root);
-std::optional<std::string> get_transformations(Object::Ptr root);
-std::string get_voxel_unit(Object::Ptr root);
-Vector3D<double> get_voxel_resolution(Object::Ptr root);
-std::optional<Vector3D<double>> get_timepoint_resolution(Object::Ptr root);
-std::optional<Vector3D<double>> get_channel_resolution(Object::Ptr root);
-std::optional<Vector3D<double>> get_angle_resolution(Object::Ptr root);
-std::string get_compression(Object::Ptr root);
 
-std::vector<std::map<std::string, Vector3D<int>>>
-get_resolution_levels(Object::Ptr root);
+template <Basic T>
+T get_elem(Object::Ptr root, const std::string& name);
 
-std::vector<int> get_versions(Object::Ptr root);
-std::string get_label(Object::Ptr root);
-std::optional<std::string> get_view_registrations(Object::Ptr root);
-std::vector<int> get_timepoint_ids(Object::Ptr root);
+template <Vector3D_cnpt T>
+T get_elem(Object::Ptr root, const std::string& name);
+
+template <Vector_cnpt T>
+T get_elem(Object::Ptr root, const std::string& name);
+
+template <Optional_cnpt T>
+T get_elem(Object::Ptr root, const std::string& name);
 
 } // namespace props_parser
 } // namespace details
@@ -161,52 +152,98 @@ get_properties_from_json_str(const std::string& json_str) {
 	auto root = result.extract<Object::Ptr>();
 
 	using namespace props_parser;
-	// UUID
-	if (root->has("uuid"))
-		props.uuid = root->getValue<std::string>("uuid");
-	else
-		warning("UUID was not found");
 
-	// VoxelType
-	if (root->has("voxelType"))
-		props.voxel_type = root->getValue<std::string>("voxelType");
-	else
-		warning("voxelType was not found");
-
-	// dimensions
-	if (root->has("dimensions")) {
-		Array::Ptr values = root->getArray("dimensions");
-		if (values->size() == 3) {
-			props.dimensions.x() = values->getElement<int>(0);
-			props.dimensions.y() = values->getElement<int>(1);
-			props.dimensions.z() = values->getElement<int>(2);
-		} else
-			warning("Incorrect number of dimensions");
-	} else
-		warning("dimensions were not found");
-
-	/*
-	props.uuid = get_uuid(root);
-	props.voxel_type = get_voxel_type(root);
-	props.dimensions = get_dimensions(root);
-	props.channels = get_channels(root);
-	props.angles = get_angles(root);
-	props.transformations = get_transformations(root);
-	props.voxel_unit = get_voxel_unit(root);
-	props.voxel_resolution = get_voxel_resolution(root);
-	props.timepoint_resolution = get_timepoint_resolution(root);
-	props.channel_resolution = get_channel_resolution(root);
-	props.angle_resolution = get_angle_resolution(root);
-	props.compression = get_compression(root);
-	props.resolution_levels = get_resolution_levels(root);
-	props.versions = get_versions(root);
-	props.label = get_label(root);
-	props.view_registrations = get_view_registrations(root);
-	props.timepoint_ids = get_timepoint_ids(root);
-	*/
+	props.uuid = get_elem<std::string>(root, "uuid");
+	props.voxel_type = get_elem<std::string>(root, "voxelType");
+	props.dimensions = get_elem<Vector3D<int>>(root, "dimensions");
+	props.channels = get_elem<int>(root, "channels");
+	props.angles = get_elem<int>(root, "angles");
+	props.transformations =
+	    get_elem<std::optional<std::string>>(root, "transformations");
+	props.voxel_unit = get_elem<std::string>(root, "voxelUnit");
+	props.voxel_resolution =
+	    get_elem<std::optional<Vector3D<double>>>(root, "voxelResolution");
+	props.timepoint_resolution =
+	    get_elem<std::optional<Vector3D<double>>>(root, "timepointResolution");
+	props.channel_resolution =
+	    get_elem<std::optional<Vector3D<double>>>(root, "channelResolution");
+	// props.angle_resolution = get_angle_resolution(root);
+	props.compression = get_elem<std::string>(root, "compression");
+	// props.resolution_levels = get_resolution_levels(root);
+	props.versions = get_elem<std::vector<int>>(root, "versions");
+	props.label = get_elem<std::string>(root, "label");
+	// props.view_registrations = get_view_registrations(root);
+	props.timepoint_ids = get_elem<std::vector<int>>(root, "timepointIds");
 
 	info("Parsing has finished");
 	return props;
 }
+
+namespace props_parser {
+
+template <Basic T>
+T get_elem(Object::Ptr root, const std::string& name) {
+	if (!root->has(name)) {
+		warning(fmt::format("{} was not found", name));
+		return {};
+	}
+	return root->getValue<T>(name);
+}
+
+template <Vector3D_cnpt T>
+T get_elem(Object::Ptr root, const std::string& name) {
+	using V = typename T::value_type;
+	if (!root->has(name)) {
+		warning(fmt::format("{} were not found", name));
+		return {};
+	}
+
+	Array::Ptr values = root->getArray(name);
+	if (values->size() != 3) {
+		warning("Incorrect number of dimensions");
+		return {};
+	}
+
+	T out;
+	for (unsigned i = 0; i < 3; ++i)
+		out[i] = values->getElement<V>(i);
+
+	return out;
+}
+
+template <Vector_cnpt T>
+T get_elem(Object::Ptr root, const std::string& name) {
+	using V = typename T::value_type;
+	if (!root->has(name)) {
+		warning(fmt::format("{} were not found", name));
+		return {};
+	}
+
+	Array::Ptr values = root->getArray(name);
+	std::size_t count = values->size();
+
+	T out(count);
+	for (unsigned i = 0; i < count; ++i)
+		out[i] = values->getElement<V>(i);
+
+	return out;
+}
+
+template <Optional_cnpt T>
+T get_elem(Object::Ptr root, const std::string& name) {
+	if (!root->has(name)) {
+		warning(fmt::format("{} were not found", name));
+		return {};
+	}
+
+	if (root->isNull(name))
+		return {};
+
+	T out;
+	out = get_elem<typename T::value_type>(root, name);
+	return out;
+}
+
+} // namespace props_parser
 } // namespace details
 } // namespace datastore

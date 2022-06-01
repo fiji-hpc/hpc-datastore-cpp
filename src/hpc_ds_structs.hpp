@@ -41,12 +41,37 @@ std::string vec_to_string(const std::vector<T>& vec) {
 
 template <typename T>
 concept Scalar = requires(T) {
-	std::is_scalar_v<T>;
+	requires std::is_scalar_v<T>;
 };
 
 template <typename T>
+concept Basic = requires(T) {
+	requires Scalar<T> || std::is_same_v<T, std::string>;
+};
+
+template <typename T>
+concept Vector_cnpt = requires(T) {
+	requires std::is_same_v<std::vector<typename T::value_type>, T>;
+};
+
+template <typename T>
+concept Optional_cnpt = requires(T) {
+	requires std::is_same_v<std::optional<typename T::value_type>, T>;
+};
+
+template <Basic T>
+class Vector3D;
+
+template <typename T>
+concept Vector3D_cnpt = requires(T) {
+	requires std::is_same_v<Vector3D<typename T::value_type>, T>;
+	requires Basic<typename T::value_type>;
+};
+
+template <Basic T>
 class Vector3D {
   public:
+	using value_type = T;
 	Vector3D() = default;
 	Vector3D(T xyz) : _values({xyz, xyz, xyz}) {}
 	Vector3D(T x, T y, T z) : _values({x, y, z}) {}
@@ -60,11 +85,11 @@ class Vector3D {
 	T z() const { return _values[2]; }
 
 	T& operator[](std::size_t idx) {
-		assert(0 <= idx && idx < 3);
+		assert(idx < 3);
 		return _values[idx];
 	}
 	T operator[](std::size_t idx) const {
-		assert(0 <= idx && idx < 3);
+		assert(idx < 3);
 		return _values[idx];
 	}
 
@@ -90,7 +115,7 @@ class DatasetProperties {
 	int angles;
 	std::optional<std::string> transformations;
 	std::string voxel_unit;
-	Vector3D<double> voxel_resolution;
+	std::optional<Vector3D<double>> voxel_resolution;
 	std::optional<Vector3D<double>> timepoint_resolution;
 	std::optional<Vector3D<double>> channel_resolution;
 	std::optional<Vector3D<double>> angle_resolution;
@@ -111,7 +136,10 @@ class DatasetProperties {
 		ss << "angles: " << angles << '\n';
 		ss << "transformations: " << transformations.value_or("null") << '\n';
 		ss << "voxelUnit: " << voxel_unit << '\n';
-		ss << "voxelResolution: " << std::string(voxel_resolution) << '\n';
+		ss << "voxelResolution: "
+		   << (voxel_resolution ? std::string(voxel_resolution.value())
+		                        : "null")
+		   << '\n';
 		ss << "timepointResolution: "
 		   << (timepoint_resolution ? std::string(timepoint_resolution.value())
 		                            : "null")

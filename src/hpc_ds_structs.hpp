@@ -12,8 +12,20 @@
 namespace datastore {
 
 namespace details {
+template <typename key_t, typename value_t>
+std::ostream& operator<<(std::ostream& stream,
+                         const std::map<key_t, value_t>& map) {
+	stream << "{\n";
+
+	for (const auto& [k, v] : map) {
+		stream << k << ": " << v << '\n';
+	}
+	stream << "}\n";
+	return stream;
+}
+
 template <typename T>
-std::string vec_to_string(std::vector<T> vec) {
+std::string vec_to_string(const std::vector<T>& vec) {
 	std::stringstream ss;
 	ss << "[";
 	const char* delim = "";
@@ -116,14 +128,13 @@ class DatasetProperties {
 		   << '\n';
 
 		ss << "compression: " << compression << '\n';
-
-		// TODO implement printing
-		ss << "resolutionLevels: " << '\n';
-		ss << "versions: " << '\n';
+		ss << "resolutionLevels: " << details::vec_to_string(resolution_levels)
+		   << '\n';
+		ss << "versions: " << details::vec_to_string(versions) << '\n';
 		ss << "label: " << label << '\n';
 		ss << "viewRegistrations: " << view_registrations.value_or("null")
 		   << '\n';
-		ss << "timepointIds: " << '\n';
+		ss << "timepointIds: " << details::vec_to_string(timepoint_ids) << '\n';
 
 		return ss.str();
 	}

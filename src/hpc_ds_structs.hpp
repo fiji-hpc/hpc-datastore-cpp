@@ -1,16 +1,41 @@
 #pragma once
 #include <array>
+#include <cassert>
+#include <fmt/core.h>
+#include <map>
 #include <optional>
+#include <ostream>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <map>
-#include <sstream>
-#include <fmt/core.h>
-#include <cassert>
 
-namespace datastore
-{
-    template <typename T>
+namespace details {
+namespace datastore {
+template <typename T>
+std::string vec_to_string(std::vector<T> vec) {
+	std::stringstream ss;
+	ss << "[";
+	const char* delim = "";
+	for (auto& v : vec) {
+		ss << delim << v;
+		delim = ", ";
+	}
+
+	ss << "]";
+	return ss.str();
+}
+
+} // namespace datastore
+} // namespace details
+
+namespace datastore {
+
+template <typename T>
+concept Scalar = requires(T) {
+	std::is_scalar_v<T>;
+};
+
+template <typename T>
 class Vector3D {
   public:
 	Vector3D() = default;
@@ -38,8 +63,13 @@ class Vector3D {
 		return fmt::format("[{}, {}, {}]", x(), y(), z());
 	}
 
+	friend std::ostream& operator<<(std::ostream& stream, Vector3D vec) {
+		stream << std::string(vec);
+		return stream;
+	}
+
   private:
-	std::array<T, 3> _values;
+	std::array<T, 3> _values{};
 };
 
 class DatasetProperties {
@@ -65,11 +95,40 @@ class DatasetProperties {
 	operator std::string() const {
 		std::stringstream ss;
 
-		// TODO finish
 		ss << "UUID: " << uuid << '\n';
-		ss << "VoxelType: " << voxel_type << '\n';
+		ss << "voxelType: " << voxel_type << '\n';
+		ss << "dimensions: " << std::string(dimensions) << '\n';
+		ss << "channels: " << channels << '\n';
+		ss << "angles: " << angles << '\n';
+		ss << "transformations: " << transformations.value_or("null") << '\n';
+		ss << "voxelUnit: " << voxel_unit << '\n';
+		ss << "voxelResolution: " << std::string(voxel_resolution) << '\n';
+		ss << "timepointResolution: "
+		   << (timepoint_resolution ? std::string(timepoint_resolution.value())
+		                            : "null")
+		   << '\n';
+
+		ss << "channelResolution: "
+		   << (channel_resolution ? std::string(channel_resolution.value())
+		                          : "null")
+		   << '\n';
+
+		ss << "angleResolution: "
+		   << (angle_resolution ? std::string(angle_resolution.value())
+		                        : "null")
+		   << '\n';
+
+		ss << "compression: " << compression << '\n';
+
+		// TODO implement printing
+		ss << "resolutionLevels: " << '\n';
+		ss << "versions: " << '\n';
+		ss << "label: " << label << '\n';
+		ss << "viewRegistrations: " << view_registrations.value_or("null")
+		   << '\n';
+		ss << "timepointIds: " << '\n';
 
 		return ss.str();
 	}
 };
-}
+} // namespace datastore

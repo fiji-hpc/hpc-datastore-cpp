@@ -1,12 +1,11 @@
 #pragma once
-#include "hpc_ds_structs.hpp"
 #include "hpc_ds_details.hpp"
+#include "hpc_ds_structs.hpp"
 #include <fmt/core.h>
 #include <i3d/image3d.h>
-#include <vector>
 #include <string>
 #include <type_traits>
-
+#include <vector>
 
 namespace datastore {
 inline DatasetProperties get_dataset_properties(const std::string& ip,
@@ -15,7 +14,7 @@ inline DatasetProperties get_dataset_properties(const std::string& ip,
 
 // TODO finish implementation
 // TODO docs
-template <details::Scalar T>
+template <Scalar T>
 i3d::Image3d<T> read_image(const std::string& url,
                            const std::string& uuid,
                            int channel = 0,
@@ -26,7 +25,7 @@ i3d::Image3d<T> read_image(const std::string& url,
 
 // TODO finish implementation
 // TODO docs
-template <details::Scalar T>
+template <Scalar T>
 bool write_image(const i3d::Image3d<T>& img,
                  const std::string& url,
                  const std::string& uuid,
@@ -49,45 +48,45 @@ class ImageView {
 
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	i3d::Image3d<T> read_block(Vector3D<int> coords) const;
 
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	bool read_block(Vector3D<int> coords,
 	                i3d::Image3d<T>& dest,
 	                Vector3D<int> dest_offset = {0, 0, 0}) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	std::vector<i3d::Image3d<T>>
 	read_blocks(const std::vector<Vector3D<int>>& coords) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	bool read_blocks(const std::vector<Vector3D<int>>& coords,
 	                 i3d::Image3d<T>& dest,
 	                 const std::vector<Vector3D<int>>& offsets) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	i3d::Image3d<T> read_image() const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	bool write_block(const i3d::Image3d<T>& src,
 	                 Vector3D<int> coords,
 	                 Vector3D<int> src_offset = {0, 0, 0}) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	bool write_blocks(const i3d::Image3d<T>& src,
 	                  const std::vector<Vector3D<int>>& coords,
 	                  const std::vector<Vector3D<int>>& src_offsets) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	bool write_image(const i3d::Image3d<T>& img) const;
 
   private:
@@ -114,7 +113,7 @@ class Connection {
 	                   const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	i3d::Image3d<T> read_block(Vector3D<int> coords,
 	                           int channel,
 	                           int timepoint,
@@ -123,7 +122,7 @@ class Connection {
 	                           const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	bool read_block(Vector3D<int> coords,
 	                int channel,
 	                int timepoint,
@@ -134,7 +133,7 @@ class Connection {
 	                Vector3D<int> dest_offset = {0, 0, 0}) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	std::vector<i3d::Image3d<T>>
 	read_blocks(const std::vector<Vector3D<int>>& coords,
 	            int channel,
@@ -144,7 +143,7 @@ class Connection {
 	            const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	bool read_blocks(const std::vector<Vector3D<int>>& coords,
 	                 int channel,
 	                 int timepoint,
@@ -155,7 +154,7 @@ class Connection {
 	                 const std::vector<Vector3D<int>>& dest_offsets) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	i3d::Image3d<T> read_image(int channel,
 	                           int timepoint,
 	                           int angle,
@@ -163,7 +162,7 @@ class Connection {
 	                           const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	bool write_block(const i3d::Image3d<T>& src,
 	                 Vector3D<int> coords,
 	                 Vector3D<int> src_offset,
@@ -174,7 +173,7 @@ class Connection {
 	                 const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	bool write_blocks(const i3d::Image3d<T>& src,
 	                  const std::vector<Vector3D<int>>& coords,
 	                  const std::vector<Vector3D<int>>& src_offsets,
@@ -185,7 +184,7 @@ class Connection {
 	                  const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <details::Scalar T>
+	template <Scalar T>
 	bool write_image(const i3d::Image3d<T>& src,
 	                 int channel,
 	                 int timepoint,
@@ -207,8 +206,8 @@ namespace datastore {
 /* inline */ DatasetProperties get_dataset_properties(const std::string& ip,
                                                       int port,
                                                       const std::string& uuid) {
-	std::string json = details::get_dataset_json_str(ip, port, uuid);
-	return details::get_properties_from_json_str(json);
+	std::string json = details::datastore::get_dataset_json_str(ip, port, uuid);
+	return details::datastore::get_properties_from_json_str(json);
 }
 
 /* ===================================== ImageView */

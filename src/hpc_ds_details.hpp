@@ -1,8 +1,5 @@
 #pragma once
 #include "hpc_ds_structs.hpp"
-#include <type_traits>
-#include <string>
-#include <source_location>
 #include <Poco/JSON/Object.h>
 #include <Poco/JSON/Parser.h>
 #include <Poco/Net/HTTPClientSession.h>
@@ -10,19 +7,19 @@
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/URI.h>
+#include <optional>
+#include <source_location>
+#include <string>
+#include <type_traits>
 /* ==================== DETAILS HEADERS ============================ */
 
 namespace details {
+namespace datastore {
 #ifndef NDEBUG
 constexpr inline bool debug = true;
 #else
 constexpr inline bool debug = false;
 #endif
-
-template <typename T>
-concept Scalar = requires(T) {
-	std::is_scalar_v<T>;
-};
 
 // TODO docs
 inline std::string
@@ -51,25 +48,42 @@ inline std::string
 get_dataset_json_str(const std::string& ip, int port, const std::string& uuid);
 
 // TODO docs
-inline datastore::DatasetProperties
+inline ::datastore::DatasetProperties
 get_properties_from_json_str(const std::string& json_str);
-} // namespace details
 
 namespace props_parser {
 using namespace Poco::JSON;
+using ::datastore::Vector3D;
 
-using datastore::Vector3D;
-
+// TODO finish implementations
 std::string get_uuid(Object::Ptr root);
 std::string get_voxel_type(Object::Ptr root);
 Vector3D<int> get_dimensions(Object::Ptr root);
 int get_channels(Object::Ptr root);
 int get_angles(Object::Ptr root);
+std::optional<std::string> get_transformations(Object::Ptr root);
+std::string get_voxel_unit(Object::Ptr root);
+Vector3D<double> get_voxel_resolution(Object::Ptr root);
+std::optional<Vector3D<double>> get_timepoint_resolution(Object::Ptr root);
+std::optional<Vector3D<double>> get_channel_resolution(Object::Ptr root);
+std::optional<Vector3D<double>> get_angle_resolution(Object::Ptr root);
+std::string get_compression(Object::Ptr root);
+
+std::vector<std::map<std::string, Vector3D<int>>>
+get_resolution_levels(Object::Ptr root);
+
+std::vector<int> get_versions(Object::Ptr root);
+std::string get_label(Object::Ptr root);
+std::optional<std::string> get_view_registrations(Object::Ptr root);
+std::vector<int> get_timepoint_ids(Object::Ptr root);
 
 } // namespace props_parser
+} // namespace datastore
+} // namespace details
 
 /* ================= IMPLEMENTATION FOLLOWS ======================== */
 namespace details {
+namespace datastore {
 
 /* inline */ std::string
 get_dataset_url(const std::string& ip, int port, const std::string& uuid) {
@@ -84,7 +98,7 @@ get_dataset_url(const std::string& ip, int port, const std::string& uuid) {
 	if constexpr (!debug)
 		return;
 
-	std::cout << fmt::format("[{}] {} at row {}:\n{} \n", type,
+	std::cout << fmt::format("[{}] {} at row {}:\n{} \n\n", type,
 	                         location.function_name(), location.line(), msg);
 	if (type.find("ERROR") != std::string::npos)
 		std::cout << std::flush;
@@ -111,7 +125,7 @@ warning(const std::string& msg,
 
 /* inline */ std::string
 get_dataset_json_str(const std::string& ip, int port, const std::string& uuid) {
-	std::string dataset_url = details::get_dataset_url(ip, port, uuid);
+	std::string dataset_url = get_dataset_url(ip, port, uuid);
 
 	Poco::URI uri(dataset_url);
 	std::string path(uri.getPathAndQuery());
@@ -121,21 +135,21 @@ get_dataset_json_str(const std::string& ip, int port, const std::string& uuid) {
 	Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_GET, path,
 	                               Poco::Net::HTTPMessage::HTTP_1_1);
 
-	details::info("Sending HTTP-GET request to get dataset properties");
+	info("Sending HTTP-GET request to get dataset properties");
 	session.sendRequest(request);
 
 	Poco::Net::HTTPResponse response;
 	std::istream& rs = session.receiveResponse(response);
 
-	details::info(fmt::format("Fetched response with status: {}, reason: {}",
-	                          response.getStatus(), response.getReason()));
+	info(fmt::format("Fetched response with status: {}, reason: {}",
+	                 response.getStatus(), response.getReason()));
 
 	std::string out;
 	rs >> out;
 	return out;
 }
 
-inline datastore::DatasetProperties
+inline ::datastore::DatasetProperties
 get_properties_from_json_str(const std::string& json_str) {
 
 	using namespace Poco::JSON;
@@ -143,9 +157,10 @@ get_properties_from_json_str(const std::string& json_str) {
 	Parser parser;
 	Poco::Dynamic::Var result = parser.parse(json_str);
 
-	datastore::DatasetProperties props;
+	::datastore::DatasetProperties props;
 	auto root = result.extract<Object::Ptr>();
 
+	using namespace details::datastore::props_parser;
 	// UUID
 	if (root->has("uuid"))
 		props.uuid = root->getValue<std::string>("uuid");
@@ -170,10 +185,28 @@ get_properties_from_json_str(const std::string& json_str) {
 	} else
 		warning("dimensions were not found");
 
-	//
+	/*
+	props.uuid = get_uuid(root);
+	props.voxel_type = get_voxel_type(root);
+	props.dimensions = get_dimensions(root);
+	props.channels = get_channels(root);
+	props.angles = get_angles(root);
+	props.transformations = get_transformations(root);
+	props.voxel_unit = get_voxel_unit(root);
+	props.voxel_resolution = get_voxel_resolution(root);
+	props.timepoint_resolution = get_timepoint_resolution(root);
+	props.channel_resolution = get_channel_resolution(root);
+	props.angle_resolution = get_angle_resolution(root);
+	props.compression = get_compression(root);
+	props.resolution_levels = get_resolution_levels(root);
+	props.versions = get_versions(root);
+	props.label = get_label(root);
+	props.view_registrations = get_view_registrations(root);
+	props.timepoint_ids = get_timepoint_ids(root);
+	*/
 
 	info("Parsing has finished");
 	return props;
 }
-
+} // namespace datastore
 } // namespace details

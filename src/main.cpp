@@ -9,7 +9,9 @@ const std::string uuid = "64aec83b-332e-45a6-9aed-0051d7bb2cf8";
 
 int main() {
 	datastore::ImageView view(ip, port, uuid, 0, 0, 0, {1, 1, 1}, "latest");
-	i3d::Image3d<int> img; // ({0, 0, 0}, {128, 64, 32});
+
+	i3d::Image3d<int> img;
+	img.MakeRoom(128, 64, 32);
 
 	view.read_blocks({{0, 0, 0}}, img, {{0, 0, 0}});
 

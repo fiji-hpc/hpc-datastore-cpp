@@ -8,6 +8,7 @@
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/URI.h>
 #include <i3d/image3d.h>
+#include <i3d/vector3d.h>
 #include <optional>
 #include <source_location>
 #include <string>
@@ -45,9 +46,19 @@ get_dataset_json_str(const std::string& ip, int port, const std::string& uuid);
 inline DatasetProperties
 get_properties_from_json_str(const std::string& json_str);
 
-inline bool is_block_valid(i3d::Vector3d<int> block,
-                           i3d::Vector3d<int> resolution,
-                           const DatasetProperties& props);
+inline std::optional<i3d::Vector3d<int>>
+get_block_dimensions(i3d::Vector3d<int> resolution,
+                     const DatasetProperties& props);
+
+inline bool check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
+                               i3d::Vector3d<int> resolution,
+                               const DatasetProperties& props);
+
+template <typename T>
+bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
+                         const i3d::Image3d<T>& img,
+                         i3d::Vector3d<int> resolution,
+                         const DatasetProperties& props);
 
 namespace props_parser {
 using namespace Poco::JSON;
@@ -180,20 +191,75 @@ get_properties_from_json_str(const std::string& json_str) {
 	return props;
 }
 
-inline bool is_block_coord_valid(i3d::Vector3d<int> coord,
-                                 i3d::Vector3d<int> resolution,
-                                 const DatasetProperties& props) {
-
+/* inline */ std::optional<i3d::Vector3d<int>>
+get_block_dimensions(i3d::Vector3d<int> resolution,
+                     const DatasetProperties& props) {
 	for (const auto& res_level : props.resolution_levels)
-		if (res_level.at("resolutions") == resolution) {
-			for (int i = 0; i < 3; ++i)
-				if (coord[i] * res_level.at("blockDimensions")[i] >=
-				    props.dimensions[i])
-					return false;
-			return true;
-		}
+		if (res_level.at("resolutions") == resolution)
+			return res_level.at("blockDimensions");
 
-	return false;
+	error(fmt::format("Dimensions for resolution {} not found",
+	                  vec_to_string(resolution)));
+	return {};
+}
+
+/* inline */ bool
+check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
+                   i3d::Vector3d<int> resolution,
+                   const DatasetProperties& props) {
+	if constexpr (!debug)
+		return true;
+
+	details::info("Checking validity of given block coordinates");
+
+	std::optional<i3d::Vector3d<int>> block_dims =
+	    get_block_dimensions(resolution, props);
+
+	if (!block_dims)
+		return false;
+
+	for (i3d::Vector3d<int> coord : coords)
+		for (int i = 0; i < 3; ++i)
+			if (coord[i] * block_dims.value()[i] >= props.dimensions[i]) {
+				details::error(
+				    fmt::format("Block coordinate {} is out of valid range",
+				                vec_to_string(coord)));
+
+				return false;
+			}
+
+	details::info("Check successfullly finished");
+	return true;
+}
+
+template <typename T>
+bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
+                         const i3d::Image3d<T>& img,
+                         i3d::Vector3d<int> resolution,
+                         const DatasetProperties& props) {
+	if constexpr (!debug)
+		return true;
+
+	details::info("Checking validity of given offset coordinates");
+	std::optional<i3d::Vector3d<int>> block_dims =
+	    get_block_dimensions(resolution, props);
+
+	if (!block_dims)
+		return false;
+
+	for (i3d::Vector3d<int> coord : coords)
+		for (int i = 0; i < 3; ++i)
+			if (img.GetSize()[i] <
+			    std::size_t(coord[i] + block_dims.value()[i])) {
+				details::error(
+				    fmt::format("Offset coordinate {} is out of valid range",
+				                vec_to_string(coord)));
+
+				return false;
+			}
+
+	details::info("Check successfullly finished");
+	return true;
 }
 
 namespace props_parser {

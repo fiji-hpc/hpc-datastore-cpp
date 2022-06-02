@@ -231,20 +231,15 @@ ImageView::ImageView(std::string ip,
 template <Scalar T>
 bool ImageView::read_blocks(
     const std::vector<i3d::Vector3d<int>>& coords,
-    i3d::Image3d<T>& /* dest */,
-    const std::vector<i3d::Vector3d<int>>& /* offsets */) const {
+    i3d::Image3d<T>& dest,
+    const std::vector<i3d::Vector3d<int>>& offsets) const {
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
 
-	// TODO offload to details
-	details::info("Checking validity of given coordinates");
-	for (i3d::Vector3d<int> coord : coords)
-		if (!details::is_block_coord_valid(coord, _resolution, props)) {
-			details::error(
-			    fmt::format("Block coordinate {} is out of valid range",
-			                details::vec_to_string(coord)));
-			return false;
-		}
-	details::info("Check successfully finished");
+	if (!details::check_block_coords(coords, _resolution, props))
+		return {};
+
+	if (!details::check_offset_coords(offsets, dest, _resolution, props))
+		return {};
 
 	return {};
 	// TODO

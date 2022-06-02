@@ -102,6 +102,8 @@ class Vector3D {
 		return stream;
 	}
 
+	friend auto operator<=>(const Vector3D<T>&, const Vector3D<T>&) = default;
+
   private:
 	std::array<T, 3> _values{};
 };

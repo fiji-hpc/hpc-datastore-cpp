@@ -1,4 +1,5 @@
 #include "hpc_ds_api.hpp"
+#include <i3d/image3d.h>
 #include <iostream>
 #include <string>
 
@@ -7,7 +8,11 @@ constexpr unsigned short port = 9080;
 const std::string uuid = "64aec83b-332e-45a6-9aed-0051d7bb2cf8";
 
 int main() {
-	std::cout << std::string(datastore::get_dataset_properties(ip, port, uuid))
-	          << '\n';
+	datastore::ImageView view(ip, port, uuid, 0, 0, 0, {1, 1, 1}, "latest");
+	i3d::Image3d<int> img; // ({0, 0, 0}, {128, 64, 32});
+
+	view.read_blocks({{0, 0, 0}}, img, {{0, 0, 0}});
+
+	std::cout << "Done" << '\n';
 }
 

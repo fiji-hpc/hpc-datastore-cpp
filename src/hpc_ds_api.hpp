@@ -15,7 +15,8 @@ inline DatasetProperties get_dataset_properties(const std::string& ip,
 // TODO finish implementation
 // TODO docs
 template <Scalar T>
-i3d::Image3d<T> read_image(const std::string& url,
+i3d::Image3d<T> read_image(const std::string& ip,
+                           int port,
                            const std::string& uuid,
                            int channel = 0,
                            int timepoint = 0,
@@ -27,7 +28,8 @@ i3d::Image3d<T> read_image(const std::string& url,
 // TODO docs
 template <Scalar T>
 bool write_image(const i3d::Image3d<T>& img,
-                 const std::string& url,
+                 const std::string& ip,
+                 int port,
                  const std::string& uuid,
                  int channel = 0,
                  int timepoint = 0,
@@ -37,8 +39,8 @@ bool write_image(const i3d::Image3d<T>& img,
 
 class ImageView {
   public:
-	// TODO finish implementation
-	ImageView(std::string url,
+	ImageView(std::string ip,
+	          int port,
 	          std::string uuid,
 	          int channel,
 	          int timepoint,
@@ -90,7 +92,8 @@ class ImageView {
 	bool write_image(const i3d::Image3d<T>& img) const;
 
   private:
-	std::string _url;
+	std::string _ip;
+	int _port;
 	std::string _uuid;
 	int _channel;
 	int _timepoint;
@@ -103,7 +106,7 @@ class Connection {
   public:
 	// TODO finish implementation
 	// TODO docs
-	Connection(std::string url, std::string uuid);
+	Connection(std::string ip, int port, std::string uuid);
 	// TODO finish implementation
 	// TODO docs
 	ImageView get_view(int channel,
@@ -193,7 +196,8 @@ class Connection {
 	                 const std::string& version) const;
 
   private:
-	std::string _url;
+	std::string _ip;
+	int _port;
 	std::string _uuid;
 };
 
@@ -212,19 +216,42 @@ namespace datastore {
 
 /* ===================================== ImageView */
 
-ImageView::ImageView(std::string url,
+ImageView::ImageView(std::string ip,
+                     int port,
                      std::string uuid,
                      int channel,
                      int timepoint,
                      int angle,
                      Vector3D<int> resolution,
                      std::string version)
-    : _url(std::move(url)), _uuid(std::move(uuid)), _channel(channel),
-      _timepoint(timepoint), _angle(angle), _resolution(resolution),
-      _version(std::move(version)) {}
+    : _ip(std::move(ip)), _port(port), _uuid(std::move(uuid)),
+      _channel(channel), _timepoint(timepoint), _angle(angle),
+      _resolution(resolution), _version(std::move(version)) {}
+
+template <Scalar T>
+bool ImageView::read_blocks(
+    const std::vector<Vector3D<int>>& coords,
+    i3d::Image3d<T>& /* dest */,
+    const std::vector<Vector3D<int>>& /* offsets */) const {
+	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+
+	// TODO offload to details
+	details::info("Checking validity of given coordinates");
+	for (Vector3D<int> coord : coords)
+		if (!details::is_block_coord_valid(coord, _resolution, props)) {
+			details::error(
+			    fmt::format("Block coordinate {} is out of valid range",
+			                std::string(coord)));
+			return false;
+		}
+	details::info("Check successfully finished");
+
+	return {};
+	// TODO
+}
 
 /* ===================================== Connection */
 
-Connection::Connection(std::string url, std::string uuid)
-    : _url(std::move(url)), _uuid(std::move(uuid)) {}
+Connection::Connection(std::string ip, int port, std::string uuid)
+    : _ip(std::move(ip)), _port(port), _uuid(std::move(uuid)) {}
 } // namespace datastore

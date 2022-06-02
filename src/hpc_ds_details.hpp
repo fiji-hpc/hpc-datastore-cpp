@@ -21,40 +21,35 @@ constexpr inline bool debug = true;
 constexpr inline bool debug = false;
 #endif
 
-// TODO docs
 inline std::string
 get_dataset_url(const std::string& ip, int port, const std::string& uuid);
 
-// TODO docs
 inline void _log(const std::string& msg, const std::source_location& location);
 
-// TODO docs
 inline void
 info(const std::string& msg,
      const std::source_location& location = std::source_location::current());
 
-// TODO docs
 inline void
 warning(const std::string& msg,
         const std::source_location& location = std::source_location::current());
 
-// TODO docs
 inline void
 error(const std::string& msg,
       const std::source_location& location = std::source_location::current());
 
-// TODO docs
 inline std::string
 get_dataset_json_str(const std::string& ip, int port, const std::string& uuid);
 
-// TODO docs
-inline ::datastore::DatasetProperties
+inline DatasetProperties
 get_properties_from_json_str(const std::string& json_str);
+
+inline bool is_block_valid(Vector3D<int> block,
+                           Vector3D<int> resolution,
+                           const DatasetProperties& props);
 
 namespace props_parser {
 using namespace Poco::JSON;
-
-// TODO finish implementations
 
 template <Basic T>
 T get_elem(Object::Ptr root, const std::string& name);
@@ -182,6 +177,22 @@ get_properties_from_json_str(const std::string& json_str) {
 
 	info("Parsing has finished");
 	return props;
+}
+
+inline bool is_block_coord_valid(Vector3D<int> coord,
+                                 Vector3D<int> resolution,
+                                 const DatasetProperties& props) {
+
+	for (const auto& res_level : props.resolution_levels)
+		if (res_level.at("resolutions") == resolution) {
+			for (int i = 0; i < 3; ++i)
+				if (coord[i] * res_level.at("blockDimensions")[i] >=
+				    props.dimensions[i])
+					return false;
+			return true;
+		}
+
+	return false;
 }
 
 namespace props_parser {

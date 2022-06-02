@@ -2,6 +2,8 @@
 #include <array>
 #include <cassert>
 #include <fmt/core.h>
+#include <i3d/image3d.h>
+#include <i3d/vector3d.h>
 #include <map>
 #include <optional>
 #include <ostream>
@@ -37,6 +39,11 @@ std::string vec_to_string(const std::vector<T>& vec) {
 	ss << "]";
 	return ss.str();
 }
+
+template <typename T>
+std::string vec_to_string(const i3d::Vector3d<T>& vec) {
+	return fmt::format("[{}, {}, {}]", vec.x, vec.y, vec.z);
+}
 } // namespace details
 
 template <typename T>
@@ -59,70 +66,27 @@ concept Optional_cnpt = requires(T) {
 	requires std::is_same_v<std::optional<typename T::value_type>, T>;
 };
 
-template <Basic T>
-class Vector3D;
-
 template <typename T>
-concept Vector3D_cnpt = requires(T) {
-	requires std::is_same_v<Vector3D<typename T::value_type>, T>;
-	requires Basic<typename T::value_type>;
-};
-
-template <Basic T>
-class Vector3D {
-  public:
-	using value_type = T;
-	Vector3D() = default;
-	Vector3D(T xyz) : _values({xyz, xyz, xyz}) {}
-	Vector3D(T x, T y, T z) : _values({x, y, z}) {}
-
-	T& x() { return _values[0]; }
-	T& y() { return _values[1]; }
-	T& z() { return _values[2]; }
-
-	T x() const { return _values[0]; }
-	T y() const { return _values[1]; }
-	T z() const { return _values[2]; }
-
-	T& operator[](std::size_t idx) {
-		assert(idx < 3);
-		return _values[idx];
-	}
-	T operator[](std::size_t idx) const {
-		assert(idx < 3);
-		return _values[idx];
-	}
-
-	operator std::string() const {
-		return fmt::format("[{}, {}, {}]", x(), y(), z());
-	}
-
-	friend std::ostream& operator<<(std::ostream& stream, Vector3D vec) {
-		stream << std::string(vec);
-		return stream;
-	}
-
-	friend auto operator<=>(const Vector3D<T>&, const Vector3D<T>&) = default;
-
-  private:
-	std::array<T, 3> _values{};
+concept Vector3d_cnpt = requires(T a) {
+	requires std::is_same_v<i3d::Vector3d<decltype(a.x)>, T>;
+	requires Basic<decltype(a.x)>;
 };
 
 class DatasetProperties {
   public:
 	std::string uuid;
 	std::string voxel_type;
-	Vector3D<int> dimensions;
+	i3d::Vector3d<int> dimensions;
 	int channels;
 	int angles;
 	std::optional<std::string> transformations;
 	std::string voxel_unit;
-	std::optional<Vector3D<double>> voxel_resolution;
-	std::optional<Vector3D<double>> timepoint_resolution;
-	std::optional<Vector3D<double>> channel_resolution;
-	std::optional<Vector3D<double>> angle_resolution;
+	std::optional<i3d::Vector3d<double>> voxel_resolution;
+	std::optional<i3d::Vector3d<double>> timepoint_resolution;
+	std::optional<i3d::Vector3d<double>> channel_resolution;
+	std::optional<i3d::Vector3d<double>> angle_resolution;
 	std::string compression;
-	std::vector<std::map<std::string, Vector3D<int>>> resolution_levels;
+	std::vector<std::map<std::string, i3d::Vector3d<int>>> resolution_levels;
 	std::vector<int> versions;
 	std::string label;
 	std::optional<std::string> view_registrations;
@@ -133,28 +97,32 @@ class DatasetProperties {
 
 		ss << "UUID: " << uuid << '\n';
 		ss << "voxelType: " << voxel_type << '\n';
-		ss << "dimensions: " << std::string(dimensions) << '\n';
+		ss << "dimensions: " << details::vec_to_string(dimensions) << '\n';
 		ss << "channels: " << channels << '\n';
 		ss << "angles: " << angles << '\n';
 		ss << "transformations: " << transformations.value_or("null") << '\n';
 		ss << "voxelUnit: " << voxel_unit << '\n';
 		ss << "voxelResolution: "
-		   << (voxel_resolution ? std::string(voxel_resolution.value())
-		                        : "null")
+		   << (voxel_resolution
+		           ? details::vec_to_string(voxel_resolution.value())
+		           : "null")
 		   << '\n';
 		ss << "timepointResolution: "
-		   << (timepoint_resolution ? std::string(timepoint_resolution.value())
-		                            : "null")
+		   << (timepoint_resolution
+		           ? details::vec_to_string(timepoint_resolution.value())
+		           : "null")
 		   << '\n';
 
 		ss << "channelResolution: "
-		   << (channel_resolution ? std::string(channel_resolution.value())
-		                          : "null")
+		   << (channel_resolution
+		           ? details::vec_to_string(channel_resolution.value())
+		           : "null")
 		   << '\n';
 
 		ss << "angleResolution: "
-		   << (angle_resolution ? std::string(angle_resolution.value())
-		                        : "null")
+		   << (angle_resolution
+		           ? details::vec_to_string(angle_resolution.value())
+		           : "null")
 		   << '\n';
 
 		ss << "compression: " << compression << '\n';

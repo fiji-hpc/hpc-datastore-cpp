@@ -14,6 +14,6 @@ find_package(Poco CONFIG REQUIRED Net XML Zip Data JSON)
 set(LIBS ${LIBS} Poco::Net Poco::XML Poco::Zip Poco::Data Poco::JSON)
 
 add_executable(main src/main.cpp)
-target_link_libraries(main PRIVATE ${LIBS})
+target_link_libraries(main PRIVATE ${LIBS} i3dalgo i3dcore)
 set_target_properties(main PROPERTIES CXX_STANDARD 20)
 

@@ -21,7 +21,7 @@ i3d::Image3d<T> read_image(const std::string& ip,
                            int channel = 0,
                            int timepoint = 0,
                            int angle = 0,
-                           Vector3D<int> resolution = {1, 1, 1},
+                           i3d::Vector3d<int> resolution = {1, 1, 1},
                            const std::string& version = "latest");
 
 // TODO finish implementation
@@ -34,7 +34,7 @@ bool write_image(const i3d::Image3d<T>& img,
                  int channel = 0,
                  int timepoint = 0,
                  int angle = 0,
-                 Vector3D<int> resolution = {1, 1, 1},
+                 i3d::Vector3d<int> resolution = {1, 1, 1},
                  const std::string version = "latest");
 
 class ImageView {
@@ -45,31 +45,31 @@ class ImageView {
 	          int channel,
 	          int timepoint,
 	          int angle,
-	          Vector3D<int> resolution,
+	          i3d::Vector3d<int> resolution,
 	          std::string version);
 
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
-	i3d::Image3d<T> read_block(Vector3D<int> coords) const;
+	i3d::Image3d<T> read_block(i3d::Vector3d<int> coords) const;
 
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
-	bool read_block(Vector3D<int> coords,
+	bool read_block(i3d::Vector3d<int> coords,
 	                i3d::Image3d<T>& dest,
-	                Vector3D<int> dest_offset = {0, 0, 0}) const;
+	                i3d::Vector3d<int> dest_offset = {0, 0, 0}) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
 	std::vector<i3d::Image3d<T>>
-	read_blocks(const std::vector<Vector3D<int>>& coords) const;
+	read_blocks(const std::vector<i3d::Vector3d<int>>& coords) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
-	bool read_blocks(const std::vector<Vector3D<int>>& coords,
+	bool read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 i3d::Image3d<T>& dest,
-	                 const std::vector<Vector3D<int>>& offsets) const;
+	                 const std::vector<i3d::Vector3d<int>>& offsets) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
@@ -78,14 +78,14 @@ class ImageView {
 	// TODO docs
 	template <Scalar T>
 	bool write_block(const i3d::Image3d<T>& src,
-	                 Vector3D<int> coords,
-	                 Vector3D<int> src_offset = {0, 0, 0}) const;
+	                 i3d::Vector3d<int> coords,
+	                 i3d::Vector3d<int> src_offset = {0, 0, 0}) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
 	bool write_blocks(const i3d::Image3d<T>& src,
-	                  const std::vector<Vector3D<int>>& coords,
-	                  const std::vector<Vector3D<int>>& src_offsets) const;
+	                  const std::vector<i3d::Vector3d<int>>& coords,
+	                  const std::vector<i3d::Vector3d<int>>& src_offsets) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
@@ -98,7 +98,7 @@ class ImageView {
 	int _channel;
 	int _timepoint;
 	int _angle;
-	Vector3D<int> _resolution;
+	i3d::Vector3d<int> _resolution;
 	std::string _version;
 };
 
@@ -112,78 +112,78 @@ class Connection {
 	ImageView get_view(int channel,
 	                   int timepoint,
 	                   int angle,
-	                   Vector3D<int> resolution,
+	                   i3d::Vector3d<int> resolution,
 	                   const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
-	i3d::Image3d<T> read_block(Vector3D<int> coords,
+	i3d::Image3d<T> read_block(i3d::Vector3d<int> coords,
 	                           int channel,
 	                           int timepoint,
 	                           int angle,
-	                           Vector3D<int> resolution,
+	                           i3d::Vector3d<int> resolution,
 	                           const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
-	bool read_block(Vector3D<int> coords,
+	bool read_block(i3d::Vector3d<int> coords,
 	                int channel,
 	                int timepoint,
 	                int angle,
-	                Vector3D<int> resolution,
+	                i3d::Vector3d<int> resolution,
 	                const std::string& version,
 	                i3d::Image3d<T>& dest,
-	                Vector3D<int> dest_offset = {0, 0, 0}) const;
+	                i3d::Vector3d<int> dest_offset = {0, 0, 0}) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
 	std::vector<i3d::Image3d<T>>
-	read_blocks(const std::vector<Vector3D<int>>& coords,
+	read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	            int channel,
 	            int timepoint,
 	            int angle,
-	            Vector3D<int> resolution,
+	            i3d::Vector3d<int> resolution,
 	            const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
-	bool read_blocks(const std::vector<Vector3D<int>>& coords,
+	bool read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 int channel,
 	                 int timepoint,
 	                 int angle,
-	                 Vector3D<int> resolution,
+	                 i3d::Vector3d<int> resolution,
 	                 const std::string& version,
 	                 i3d::Image3d<T>& dest,
-	                 const std::vector<Vector3D<int>>& dest_offsets) const;
+	                 const std::vector<i3d::Vector3d<int>>& dest_offsets) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
 	i3d::Image3d<T> read_image(int channel,
 	                           int timepoint,
 	                           int angle,
-	                           Vector3D<int> resolution,
+	                           i3d::Vector3d<int> resolution,
 	                           const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
 	bool write_block(const i3d::Image3d<T>& src,
-	                 Vector3D<int> coords,
-	                 Vector3D<int> src_offset,
+	                 i3d::Vector3d<int> coords,
+	                 i3d::Vector3d<int> src_offset,
 	                 int channel,
 	                 int timepoint,
 	                 int angle,
-	                 Vector3D<int> resolution,
+	                 i3d::Vector3d<int> resolution,
 	                 const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
 	template <Scalar T>
 	bool write_blocks(const i3d::Image3d<T>& src,
-	                  const std::vector<Vector3D<int>>& coords,
-	                  const std::vector<Vector3D<int>>& src_offsets,
+	                  const std::vector<i3d::Vector3d<int>>& coords,
+	                  const std::vector<i3d::Vector3d<int>>& src_offsets,
 	                  int channel,
 	                  int timepoint,
 	                  int angle,
-	                  Vector3D<int> resolution,
+	                  i3d::Vector3d<int> resolution,
 	                  const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
@@ -192,7 +192,7 @@ class Connection {
 	                 int channel,
 	                 int timepoint,
 	                 int angle,
-	                 Vector3D<int> resolution,
+	                 i3d::Vector3d<int> resolution,
 	                 const std::string& version) const;
 
   private:
@@ -222,7 +222,7 @@ ImageView::ImageView(std::string ip,
                      int channel,
                      int timepoint,
                      int angle,
-                     Vector3D<int> resolution,
+                     i3d::Vector3d<int> resolution,
                      std::string version)
     : _ip(std::move(ip)), _port(port), _uuid(std::move(uuid)),
       _channel(channel), _timepoint(timepoint), _angle(angle),
@@ -230,18 +230,18 @@ ImageView::ImageView(std::string ip,
 
 template <Scalar T>
 bool ImageView::read_blocks(
-    const std::vector<Vector3D<int>>& coords,
+    const std::vector<i3d::Vector3d<int>>& coords,
     i3d::Image3d<T>& /* dest */,
-    const std::vector<Vector3D<int>>& /* offsets */) const {
+    const std::vector<i3d::Vector3d<int>>& /* offsets */) const {
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
 
 	// TODO offload to details
 	details::info("Checking validity of given coordinates");
-	for (Vector3D<int> coord : coords)
+	for (i3d::Vector3d<int> coord : coords)
 		if (!details::is_block_coord_valid(coord, _resolution, props)) {
 			details::error(
 			    fmt::format("Block coordinate {} is out of valid range",
-			                std::string(coord)));
+			                details::vec_to_string(coord)));
 			return false;
 		}
 	details::info("Check successfully finished");

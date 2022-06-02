@@ -7,6 +7,7 @@
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/URI.h>
+#include <i3d/image3d.h>
 #include <optional>
 #include <source_location>
 #include <string>
@@ -44,8 +45,8 @@ get_dataset_json_str(const std::string& ip, int port, const std::string& uuid);
 inline DatasetProperties
 get_properties_from_json_str(const std::string& json_str);
 
-inline bool is_block_valid(Vector3D<int> block,
-                           Vector3D<int> resolution,
+inline bool is_block_valid(i3d::Vector3d<int> block,
+                           i3d::Vector3d<int> resolution,
                            const DatasetProperties& props);
 
 namespace props_parser {
@@ -54,7 +55,7 @@ using namespace Poco::JSON;
 template <Basic T>
 T get_elem(Object::Ptr root, const std::string& name);
 
-template <Vector3D_cnpt T>
+template <Vector3d_cnpt T>
 T get_elem(Object::Ptr root, const std::string& name);
 
 template <Vector_cnpt T>
@@ -63,7 +64,7 @@ T get_elem(Object::Ptr root, const std::string& name);
 template <Optional_cnpt T>
 T get_elem(Object::Ptr root, const std::string& name);
 
-inline std::vector<std::map<std::string, Vector3D<int>>>
+inline std::vector<std::map<std::string, i3d::Vector3d<int>>>
 get_resolution_levels(Object::Ptr root);
 
 } // namespace props_parser
@@ -153,20 +154,20 @@ get_properties_from_json_str(const std::string& json_str) {
 
 	props.uuid = get_elem<std::string>(root, "uuid");
 	props.voxel_type = get_elem<std::string>(root, "voxelType");
-	props.dimensions = get_elem<Vector3D<int>>(root, "dimensions");
+	props.dimensions = get_elem<i3d::Vector3d<int>>(root, "dimensions");
 	props.channels = get_elem<int>(root, "channels");
 	props.angles = get_elem<int>(root, "angles");
 	props.transformations =
 	    get_elem<std::optional<std::string>>(root, "transformations");
 	props.voxel_unit = get_elem<std::string>(root, "voxelUnit");
 	props.voxel_resolution =
-	    get_elem<std::optional<Vector3D<double>>>(root, "voxelResolution");
-	props.timepoint_resolution =
-	    get_elem<std::optional<Vector3D<double>>>(root, "timepointResolution");
-	props.channel_resolution =
-	    get_elem<std::optional<Vector3D<double>>>(root, "channelResolution");
+	    get_elem<std::optional<i3d::Vector3d<double>>>(root, "voxelResolution");
+	props.timepoint_resolution = get_elem<std::optional<i3d::Vector3d<double>>>(
+	    root, "timepointResolution");
+	props.channel_resolution = get_elem<std::optional<i3d::Vector3d<double>>>(
+	    root, "channelResolution");
 	props.angle_resolution =
-	    get_elem<std::optional<Vector3D<double>>>(root, "angleResolution");
+	    get_elem<std::optional<i3d::Vector3d<double>>>(root, "angleResolution");
 	props.compression = get_elem<std::string>(root, "compression");
 	props.resolution_levels = get_resolution_levels(root);
 	props.versions = get_elem<std::vector<int>>(root, "versions");
@@ -179,8 +180,8 @@ get_properties_from_json_str(const std::string& json_str) {
 	return props;
 }
 
-inline bool is_block_coord_valid(Vector3D<int> coord,
-                                 Vector3D<int> resolution,
+inline bool is_block_coord_valid(i3d::Vector3d<int> coord,
+                                 i3d::Vector3d<int> resolution,
                                  const DatasetProperties& props) {
 
 	for (const auto& res_level : props.resolution_levels)
@@ -206,9 +207,9 @@ T get_elem(Object::Ptr root, const std::string& name) {
 	return root->getValue<T>(name);
 }
 
-template <Vector3D_cnpt T>
+template <Vector3d_cnpt T>
 T get_elem(Object::Ptr root, const std::string& name) {
-	using V = typename T::value_type;
+	using V = decltype(T{}.x);
 	if (!root->has(name)) {
 		warning(fmt::format("{} were not found", name));
 		return {};
@@ -260,7 +261,7 @@ T get_elem(Object::Ptr root, const std::string& name) {
 	return out;
 }
 
-/* inline */ std::vector<std::map<std::string, Vector3D<int>>>
+/* inline */ std::vector<std::map<std::string, i3d::Vector3d<int>>>
 get_resolution_levels(Object::Ptr root) {
 	std::string name = "resolutionLevels";
 
@@ -269,15 +270,15 @@ get_resolution_levels(Object::Ptr root) {
 		return {};
 	}
 
-	std::vector<std::map<std::string, Vector3D<int>>> out;
+	std::vector<std::map<std::string, i3d::Vector3d<int>>> out;
 
 	Array::Ptr array = root->getArray(name);
 	for (unsigned i = 0; i < array->size(); ++i) {
-		std::map<std::string, Vector3D<int>> map;
+		std::map<std::string, i3d::Vector3d<int>> map;
 		Object::Ptr map_ptr = array->getObject(i);
 
 		for (const auto& name : map_ptr->getNames()) {
-			map[name] = get_elem<Vector3D<int>>(map_ptr, name);
+			map[name] = get_elem<i3d::Vector3d<int>>(map_ptr, name);
 		}
 
 		out.push_back(map);

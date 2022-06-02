@@ -68,6 +68,9 @@ T get_elem(Object::Ptr root, const std::string& name);
 template <Optional_cnpt T>
 T get_elem(Object::Ptr root, const std::string& name);
 
+inline std::vector<std::map<std::string, Vector3D<int>>>
+get_resolution_levels(Object::Ptr root);
+
 } // namespace props_parser
 } // namespace details
 } // namespace datastore
@@ -167,12 +170,14 @@ get_properties_from_json_str(const std::string& json_str) {
 	    get_elem<std::optional<Vector3D<double>>>(root, "timepointResolution");
 	props.channel_resolution =
 	    get_elem<std::optional<Vector3D<double>>>(root, "channelResolution");
-	// props.angle_resolution = get_angle_resolution(root);
+	props.angle_resolution =
+	    get_elem<std::optional<Vector3D<double>>>(root, "angleResolution");
 	props.compression = get_elem<std::string>(root, "compression");
-	// props.resolution_levels = get_resolution_levels(root);
+	props.resolution_levels = get_resolution_levels(root);
 	props.versions = get_elem<std::vector<int>>(root, "versions");
 	props.label = get_elem<std::string>(root, "label");
-	// props.view_registrations = get_view_registrations(root);
+	props.view_registrations =
+	    get_elem<std::optional<std::string>>(root, "viewRegistrations");
 	props.timepoint_ids = get_elem<std::vector<int>>(root, "timepointIds");
 
 	info("Parsing has finished");
@@ -241,6 +246,32 @@ T get_elem(Object::Ptr root, const std::string& name) {
 
 	T out;
 	out = get_elem<typename T::value_type>(root, name);
+	return out;
+}
+
+/* inline */ std::vector<std::map<std::string, Vector3D<int>>>
+get_resolution_levels(Object::Ptr root) {
+	std::string name = "resolutionLevels";
+
+	if (!root->has(name)) {
+		warning("resolutionLevels were not found");
+		return {};
+	}
+
+	std::vector<std::map<std::string, Vector3D<int>>> out;
+
+	Array::Ptr array = root->getArray(name);
+	for (unsigned i = 0; i < array->size(); ++i) {
+		std::map<std::string, Vector3D<int>> map;
+		Object::Ptr map_ptr = array->getObject(i);
+
+		for (const auto& name : map_ptr->getNames()) {
+			map[name] = get_elem<Vector3D<int>>(map_ptr, name);
+		}
+
+		out.push_back(map);
+	}
+
 	return out;
 }
 

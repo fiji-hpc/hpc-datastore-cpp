@@ -234,8 +234,12 @@ bool ImageView::read_blocks(
     i3d::Image3d<T>& dest,
     const std::vector<i3d::Vector3d<int>>& offsets) const {
 
-	// TODO change to reading more blocks :D
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+
+	if (coords.size() != offsets.size()) {
+		details::error("Count of coordinates != count of offsets");
+		return false;
+	}
 
 	if (!details::check_block_coords(coords, _resolution, props))
 		return false;
@@ -246,16 +250,20 @@ bool ImageView::read_blocks(
 	std::string ds_url = details::get_dataset_url(_ip, _port, _uuid);
 	std::string session_url = details::requests::session_url_request(
 	    ds_url, _resolution, _version, access_mode::READ);
+
 	if (session_url.ends_with('/'))
 		session_url.pop_back();
 
-	for (auto& coord : coords) {
+	for (std::size_t i = 0; i < coords.size(); ++i) {
+		auto& coord = coords[i];
+		auto& offset = offsets[i];
+
 		std::string url =
 		    fmt::format("{}/{}/{}/{}/{}/{}/{}", session_url, coord.x, coord.y,
 		                coord.z, _timepoint, _channel, _angle);
 		auto [data, response] = details::requests::make_request(url);
 
-		details::fill_block(data, props.voxel_type, dest, offsets[0]);
+		details::fill_block(data, props.voxel_type, dest, offset);
 	}
 	return true;
 }

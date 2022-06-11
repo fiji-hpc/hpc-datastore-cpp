@@ -11,6 +11,7 @@
 #include <i3d/vector3d.h>
 #include <optional>
 #include <source_location>
+#include <span>
 #include <string>
 #include <type_traits>
 /* ==================== DETAILS HEADERS ============================ */
@@ -59,6 +60,23 @@ bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
                          const i3d::Image3d<T>& img,
                          i3d::Vector3d<int> resolution,
                          const DatasetProperties& props);
+
+template <typename T>
+T get_elem_at(std::span<const char> data,
+              const std::string& voxel_type,
+              int index);
+
+template <typename T>
+T get_elem_at(std::span<const char> data,
+              const std::string& voxel_type,
+              i3d::Vector3d<int> block_dim,
+              i3d::Vector3d<int> coord);
+
+template <typename T>
+void fill_block(std::span<const char> data,
+                const std::string& voxel_type,
+                i3d::Image3d<T>& block,
+                i3d::Vector3d<int> offset);
 
 namespace props_parser {
 using namespace Poco::JSON;
@@ -263,6 +281,57 @@ bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
 
 	details::info("Check successfullly finished");
 	return true;
+}
+
+template <typename T>
+T get_elem_at(std::span<const char> data,
+              const std::string& voxel_type,
+              int index) {
+	int elem_size = type_byte_size.at(voxel_type);
+
+	std::array<char, sizeof(T)> buffer{};
+	std::copy_backward(data.begin() + index,             // source start
+	                   data.begin() + index + elem_size, // source end
+	                   buffer.end());                    // dest end
+
+	std::ranges::reverse(buffer);
+
+	return *reinterpret_cast<T*>(&buffer[0]);
+}
+
+template <typename T>
+T get_elem_at(std::span<const char> data,
+              const std::string& voxel_type,
+              i3d::Vector3d<int> block_dim,
+              i3d::Vector3d<int> coord) {
+
+	int elem_size = type_byte_size.at(voxel_type);
+
+	int index = 12 +                                   // header_offset
+	            (coord.x * block_dim.y * block_dim.z + // Main axis
+	             coord.y * block_dim.z +               // secondary axis
+	             coord.z) *                            // last axis
+	                elem_size;                         // byte size
+	return get_elem_at<T>(data, voxel_type, index);
+}
+
+template <typename T>
+void fill_block(std::span<const char> data,
+                const std::string& voxel_type,
+                i3d::Image3d<T>& block,
+                i3d::Vector3d<int> offset) {
+	i3d::Vector3d<int> block_dim;
+	for (int i = 0; i < 3; ++i)
+		block_dim[i] = get_elem_at<int>(data, "uint32", i * 4);
+
+	for (int x = 0; x < block_dim.x; ++x)
+		for (int y = 0; y < block_dim.y; ++y)
+			for (int z = 0; z < block_dim.z; ++z) {
+				T* voxel_ptr = block.GetVoxelAddr(x + offset.x, y + offset.y,
+				                                  z + offset.z);
+				*voxel_ptr =
+				    get_elem_at<T>(data, voxel_type, block_dim, {x, y, z});
+			}
 }
 
 namespace props_parser {

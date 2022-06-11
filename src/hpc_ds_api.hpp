@@ -255,8 +255,7 @@ bool ImageView::read_blocks(
 		                coord.z, _timepoint, _channel, _angle);
 		auto [data, response] = details::requests::make_request(url);
 
-		for (int i = 0; i < 12; ++i)
-			std::cout << int(uint8_t(data[i])) << '\n';
+		details::fill_block(data, props.voxel_type, dest, offsets[0]);
 	}
 	return true;
 }

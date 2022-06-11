@@ -16,6 +16,12 @@ namespace datastore {
 enum class access_mode { READ, WRITE };
 
 namespace details {
+
+const inline std::map<std::string, int> type_byte_size{
+    {"uint8", 1}, {"uint16", 2}, {"uint32", 4}, {"uint64", 8}};
+
+constexpr inline std::size_t MAX_URL_LENGTH = 2048;
+
 template <typename key_t, typename value_t>
 std::ostream& operator<<(std::ostream& stream,
                          const std::map<key_t, value_t>& map) {

@@ -61,6 +61,13 @@ bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
                          i3d::Vector3d<int> resolution,
                          const DatasetProperties& props);
 
+inline int get_data_size(const DatasetProperties& props,
+                         i3d::Vector3d<int> resolution);
+
+inline int get_linear_index(i3d::Vector3d<int> coord,
+                            i3d::Vector3d<int> block_dim,
+                            const std::string& voxel_type);
+
 template <typename T>
 T get_elem_at(std::span<const char> data,
               const std::string& voxel_type,
@@ -73,10 +80,30 @@ T get_elem_at(std::span<const char> data,
               i3d::Vector3d<int> coord);
 
 template <typename T>
-void fill_block(std::span<const char> data,
+void set_elem_at(std::span<const char> data,
+                 const std::string& voxel_type,
+                 int index,
+                 T elem);
+
+template <typename T>
+void set_elem_at(std::span<const char> data,
+                 const std::string& voxel_type,
+                 i3d::Vector3d<int> block_dim,
+                 i3d::Vector3d<int> coord,
+                 T elem);
+
+template <typename T>
+void read_data(std::span<const char> data,
+               const std::string& voxel_type,
+               i3d::Image3d<T>& dest,
+               i3d::Vector3d<int> offset);
+
+template <typename T>
+void write_data(const i3d::Image3d<T>& src,
                 const std::string& voxel_type,
-                i3d::Image3d<T>& block,
-                i3d::Vector3d<int> offset);
+                i3d::Vector3d<int> block_dim,
+                i3d::Vector3d<int> offset,
+                std::span<char> data);
 
 namespace props_parser {
 using namespace Poco::JSON;
@@ -165,9 +192,7 @@ get_dataset_json_str(const std::string& ip, int port, const std::string& uuid) {
 		warning(fmt::format(
 		    "Request returned with code: {}. json may be invalid", res_code));
 
-	auto x = std::string(data.begin(), data.end());
-	std::cout << x << '\n';
-	return x;
+	return std::string(data.begin(), data.end());
 }
 
 inline DatasetProperties
@@ -178,7 +203,6 @@ get_properties_from_json_str(const std::string& json_str) {
 	Parser parser;
 	Poco::Dynamic::Var result = parser.parse(json_str);
 
-	error("Parsed");
 	DatasetProperties props;
 	auto root = result.extract<Object::Ptr>();
 
@@ -283,6 +307,29 @@ bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
 	return true;
 }
 
+/* inline */ int get_data_size(const DatasetProperties& props,
+                               i3d::Vector3d<int> resolution) {
+	std::optional<i3d::Vector3d<int>> block_dim =
+	    get_block_dimensions(resolution, props);
+	if (!block_dim)
+		return -1;
+
+	int elem_size = type_byte_size.at(props.voxel_type);
+	return block_dim->x * block_dim->y * block_dim->z * elem_size + 12;
+}
+
+/* inline */ int get_linear_index(i3d::Vector3d<int> coord,
+                                  i3d::Vector3d<int> block_dim,
+                                  const std::string& voxel_type) {
+	int elem_size = type_byte_size.at(voxel_type);
+
+	return 12 +                                   // header_offset
+	       (coord.x * block_dim.y * block_dim.z + // Main axis
+	        coord.y * block_dim.z +               // secondary axis
+	        coord.z) *                            // last axis
+	           elem_size;                         // byte size
+}
+
 template <typename T>
 T get_elem_at(std::span<const char> data,
               const std::string& voxel_type,
@@ -290,9 +337,9 @@ T get_elem_at(std::span<const char> data,
 	int elem_size = type_byte_size.at(voxel_type);
 
 	std::array<char, sizeof(T)> buffer{};
-	std::copy_backward(data.begin() + index,             // source start
-	                   data.begin() + index + elem_size, // source end
-	                   buffer.end());                    // dest end
+	std::copy_n(data.begin() + index,      // source start
+	            elem_size,                 // count
+	            buffer.end() - elem_size); // dest start
 
 	std::ranges::reverse(buffer);
 
@@ -305,21 +352,40 @@ T get_elem_at(std::span<const char> data,
               i3d::Vector3d<int> block_dim,
               i3d::Vector3d<int> coord) {
 
-	int elem_size = type_byte_size.at(voxel_type);
-
-	int index = 12 +                                   // header_offset
-	            (coord.x * block_dim.y * block_dim.z + // Main axis
-	             coord.y * block_dim.z +               // secondary axis
-	             coord.z) *                            // last axis
-	                elem_size;                         // byte size
+	int index = get_linear_index(coord, block_dim, voxel_type);
 	return get_elem_at<T>(data, voxel_type, index);
 }
 
 template <typename T>
-void fill_block(std::span<const char> data,
-                const std::string& voxel_type,
-                i3d::Image3d<T>& block,
-                i3d::Vector3d<int> offset) {
+void set_elem_at(std::span<const char> data,
+                 const std::string& voxel_type,
+                 int index,
+                 T elem) {
+	int elem_size = type_byte_size.at(voxel_type);
+
+	auto buffer = reinterpret_cast<std::array<char, sizeof(T)>>(elem);
+	std::ranges::reverse(buffer);
+
+	std::copy_n(buffer.end() - elem_size, // source start
+	            elem_size,                // count
+	            data.begin() + index);    // dest start
+}
+
+template <typename T>
+void set_elem_at(std::span<const char> data,
+                 const std::string& voxel_type,
+                 i3d::Vector3d<int> block_dim,
+                 i3d::Vector3d<int> coord,
+                 T elem) {
+	int index = get_linear_index(coord, block_dim, voxel_type);
+	set_elem_at(data, voxel_type, index, elem);
+}
+
+template <typename T>
+void read_data(std::span<const char> data,
+               const std::string& voxel_type,
+               i3d::Image3d<T>& dest,
+               i3d::Vector3d<int> offset) {
 	i3d::Vector3d<int> block_dim;
 	for (int i = 0; i < 3; ++i)
 		block_dim[i] = get_elem_at<int>(data, "uint32", i * 4);
@@ -327,11 +393,20 @@ void fill_block(std::span<const char> data,
 	for (int x = 0; x < block_dim.x; ++x)
 		for (int y = 0; y < block_dim.y; ++y)
 			for (int z = 0; z < block_dim.z; ++z) {
-				T* voxel_ptr = block.GetVoxelAddr(x + offset.x, y + offset.y,
-				                                  z + offset.z);
+				T* voxel_ptr =
+				    dest.GetVoxelAddr(x + offset.x, y + offset.y, z + offset.z);
 				*voxel_ptr =
 				    get_elem_at<T>(data, voxel_type, block_dim, {x, y, z});
 			}
+}
+
+template <typename T>
+void write_data(const i3d::Image3d<T>& src,
+                const std::string& voxel_type,
+                i3d::Vector3d<int> block_dim,
+                i3d::Vector3d<int> offset,
+                std::span<char> data) {
+	// TODO
 }
 
 namespace props_parser {

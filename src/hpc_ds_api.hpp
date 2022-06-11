@@ -263,8 +263,40 @@ bool ImageView::read_blocks(
 		                coord.z, _timepoint, _channel, _angle);
 		auto [data, response] = details::requests::make_request(url);
 
-		details::fill_block(data, props.voxel_type, dest, offset);
+		details::read_data(data, props.voxel_type, dest, offset);
 	}
+	return true;
+}
+
+template <Scalar T>
+bool ImageView::write_blocks(
+    const i3d::Image3d<T>& src,
+    const std::vector<i3d::Vector3d<int>>& coords,
+    const std::vector<i3d::Vector3d<int>>& src_offsets) const {
+	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+
+	if (coords.size() != src_offsets.size()) {
+		details::error("Count of coordinates != count of offsets");
+		return false;
+	}
+
+	if (!details::check_block_coords(coords, _resolution, props))
+		return false;
+
+	if (!details::check_offset_coords(src_offsets, src, _resolution, props))
+		return false;
+
+	std::string ds_url = details::get_dataset_url(_ip, _port, _uuid);
+	std::string session_url = details::requests::session_url_request(
+	    ds_url, _resolution, _version, access_mode::WRITE);
+
+	if (session_url.ends_with('/'))
+		session_url.pop_back();
+
+	// TODO writing blocks
+	for (std::size_t i = 0; i < coords.size(); ++i) {
+	}
+
 	return true;
 }
 

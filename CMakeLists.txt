@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 project(HPCDatastoreClient C CXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wconversion -Werror -fmax-errors=1")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wconversion -fmax-errors=1")
 set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_C_COMPILER gcc)
 

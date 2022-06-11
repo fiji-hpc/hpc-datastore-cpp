@@ -86,8 +86,8 @@ inline std::string session_url_request(const std::string& ds_url,
                                        const std::string& version,
                                        access_mode mode);
 
-inline std::pair<std::string, Poco::Net::HTTPResponse>
-make_request(const std::string& url, const std::string& data = "");
+inline std::pair<std::vector<char>, Poco::Net::HTTPResponse>
+make_request(const std::string& url, const std::vector<char>& data = {});
 } // namespace requests
 
 } // namespace details
@@ -140,14 +140,16 @@ warning(const std::string& msg,
 get_dataset_json_str(const std::string& ip, int port, const std::string& uuid) {
 	std::string dataset_url = get_dataset_url(ip, port, uuid);
 
-	auto [json_str, response] = requests::make_request(dataset_url);
+	auto [data, response] = requests::make_request(dataset_url);
 	int res_code = response.getStatus();
 
 	if (res_code != 200)
 		warning(fmt::format(
 		    "Request returned with code: {}. json may be invalid", res_code));
 
-	return json_str;
+	auto x = std::string(data.begin(), data.end());
+	std::cout << x << '\n';
+	return x;
 }
 
 inline DatasetProperties
@@ -158,6 +160,7 @@ get_properties_from_json_str(const std::string& json_str) {
 	Parser parser;
 	Poco::Dynamic::Var result = parser.parse(json_str);
 
+	error("Parsed");
 	DatasetProperties props;
 	auto root = result.extract<Object::Ptr>();
 
@@ -381,8 +384,8 @@ namespace requests {
 	return response.get("Location");
 }
 
-/* inline */ std::pair<std::string, Poco::Net::HTTPResponse>
-make_request(const std::string& url, const std::string& data /* = "" */) {
+/* inline */ std::pair<std::vector<char>, Poco::Net::HTTPResponse>
+make_request(const std::string& url, const std::vector<char>& data /* = {} */) {
 	Poco::URI uri(url);
 	std::string path(uri.getPathAndQuery());
 
@@ -393,16 +396,18 @@ make_request(const std::string& url, const std::string& data /* = "" */) {
 
 	info(fmt::format("Sending HTTP-GET request to url: {}", url));
 	std::ostream& os = session.sendRequest(request);
-	os << data;
+	for (char ch : data)
+		os << ch;
 
 	Poco::Net::HTTPResponse response;
 	std::istream& rs = session.receiveResponse(response);
 
-	info(fmt::format("Fetched response with status: {}, reason: {}",
-	                 response.getStatus(), response.getReason()));
+	std::vector<char> out{std::istreambuf_iterator<char>(rs),
+	                      std::istreambuf_iterator<char>()};
 
-	std::string out;
-	rs >> out;
+	info(fmt::format(
+	    "Fetched response with status: {}, reason: {}, content size: {}",
+	    response.getStatus(), response.getReason(), out.size()));
 
 	return {out, response};
 }

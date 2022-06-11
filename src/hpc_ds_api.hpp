@@ -236,13 +236,17 @@ bool ImageView::read_blocks(
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
 
 	if (!details::check_block_coords(coords, _resolution, props))
-		return {};
+		return false;
 
 	if (!details::check_offset_coords(offsets, dest, _resolution, props))
-		return {};
+		return false;
 
-	return {};
-	// TODO
+	std::string ds_url = details::get_dataset_url(_ip, _port, _uuid);
+	std::string session_url = details::requests::session_url_request(
+	    ds_url, _resolution, _version, access_mode::READ);
+
+
+	return true;
 }
 
 /* ===================================== Connection */

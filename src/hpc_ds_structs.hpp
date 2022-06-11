@@ -13,6 +13,8 @@
 
 namespace datastore {
 
+enum class access_mode { READ, WRITE };
+
 namespace details {
 template <typename key_t, typename value_t>
 std::ostream& operator<<(std::ostream& stream,
@@ -38,6 +40,17 @@ std::string vec_to_string(const std::vector<T>& vec) {
 
 	ss << "]";
 	return ss.str();
+}
+
+inline std::string mode_to_string(access_mode mode) {
+	switch (mode) {
+	case access_mode::READ:
+		return "read";
+	case access_mode::WRITE:
+		return "write";
+	}
+
+	throw std::out_of_range("Unknown value of access_mode\n");
 }
 
 template <typename T>

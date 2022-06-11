@@ -79,6 +79,17 @@ inline std::vector<std::map<std::string, i3d::Vector3d<int>>>
 get_resolution_levels(Object::Ptr root);
 
 } // namespace props_parser
+
+namespace requests {
+inline std::string session_url_request(const std::string& ds_url,
+                                       i3d::Vector3d<int> resolution,
+                                       const std::string& version,
+                                       access_mode mode);
+
+inline std::pair<std::string, Poco::Net::HTTPResponse>
+make_request(const std::string& url, const std::string& data = "");
+} // namespace requests
+
 } // namespace details
 } // namespace datastore
 
@@ -88,9 +99,10 @@ namespace details {
 
 /* inline */ std::string
 get_dataset_url(const std::string& ip, int port, const std::string& uuid) {
+	std::string out;
 	if (!ip.starts_with("http://"))
-		return fmt::format("https://{}:{}/datasets/{}", ip, port, uuid);
-	return fmt::format("{}:{}/datasets/{}", ip, port, uuid);
+		out = "https://";
+	return out + fmt::format("{}:{}/datasets/{}", ip, port, uuid);
 }
 
 /* inline */ void _log(const std::string& msg,
@@ -128,26 +140,14 @@ warning(const std::string& msg,
 get_dataset_json_str(const std::string& ip, int port, const std::string& uuid) {
 	std::string dataset_url = get_dataset_url(ip, port, uuid);
 
-	Poco::URI uri(dataset_url);
-	std::string path(uri.getPathAndQuery());
+	auto [json_str, response] = requests::make_request(dataset_url);
+	int res_code = response.getStatus();
 
-	Poco::Net::HTTPClientSession session(uri.getHost(), uri.getPort());
+	if (res_code != 200)
+		warning(fmt::format(
+		    "Request returned with code: {}. json may be invalid", res_code));
 
-	Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_GET, path,
-	                               Poco::Net::HTTPMessage::HTTP_1_1);
-
-	info("Sending HTTP-GET request to get dataset properties");
-	session.sendRequest(request);
-
-	Poco::Net::HTTPResponse response;
-	std::istream& rs = session.receiveResponse(response);
-
-	info(fmt::format("Fetched response with status: {}, reason: {}",
-	                 response.getStatus(), response.getReason()));
-
-	std::string out;
-	rs >> out;
-	return out;
+	return json_str;
 }
 
 inline DatasetProperties
@@ -354,5 +354,59 @@ get_resolution_levels(Object::Ptr root) {
 }
 
 } // namespace props_parser
+
+namespace requests {
+/* inline */ std::string session_url_request(const std::string& ds_url,
+                                             i3d::Vector3d<int> resolution,
+                                             const std::string& version,
+                                             access_mode mode) {
+
+	std::string mode_str = mode_to_string(mode);
+
+	info(fmt::format(
+	    "Obtaining session url for resolution: {}, version: {}, mode: {}",
+	    vec_to_string(resolution), version, mode_str));
+	std::string req_url =
+	    fmt::format("{}/{}/{}/{}/{}/{}", ds_url, resolution.x, resolution.y,
+	                resolution.z, version, mode_str);
+
+	auto [_, response] = make_request(req_url);
+
+	int res_code = response.getStatus();
+	if (res_code != 307)
+		warning(fmt::format(
+		    "Request ended with status: {}, redirection may be incorrect",
+		    res_code));
+
+	return response.get("Location");
+}
+
+/* inline */ std::pair<std::string, Poco::Net::HTTPResponse>
+make_request(const std::string& url, const std::string& data /* = "" */) {
+	Poco::URI uri(url);
+	std::string path(uri.getPathAndQuery());
+
+	Poco::Net::HTTPClientSession session(uri.getHost(), uri.getPort());
+
+	Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_GET, path,
+	                               Poco::Net::HTTPMessage::HTTP_1_1);
+
+	info(fmt::format("Sending HTTP-GET request to url: {}", url));
+	std::ostream& os = session.sendRequest(request);
+	os << data;
+
+	Poco::Net::HTTPResponse response;
+	std::istream& rs = session.receiveResponse(response);
+
+	info(fmt::format("Fetched response with status: {}, reason: {}",
+	                 response.getStatus(), response.getReason()));
+
+	std::string out;
+	rs >> out;
+
+	return {out, response};
+}
+
+} // namespace requests
 } // namespace details
 } // namespace datastore

@@ -66,6 +66,12 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "valarray": "cpp",
-        "__nullptr": "cpp"
+        "__nullptr": "cpp",
+        "codecvt": "cpp",
+        "unordered_set": "cpp",
+        "fstream": "cpp",
+        "future": "cpp",
+        "span": "cpp",
+        "variant": "cpp"
     }
 }

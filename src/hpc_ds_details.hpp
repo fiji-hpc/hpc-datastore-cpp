@@ -108,16 +108,16 @@ void write_data(const i3d::Image3d<T>& src,
 namespace props_parser {
 using namespace Poco::JSON;
 
-template <Basic T>
+template <cnpts::Basic T>
 T get_elem(Object::Ptr root, const std::string& name);
 
-template <Vector3d_cnpt T>
+template <cnpts::Vector3d T>
 T get_elem(Object::Ptr root, const std::string& name);
 
-template <Vector_cnpt T>
+template <cnpts::Vector T>
 T get_elem(Object::Ptr root, const std::string& name);
 
-template <Optional_cnpt T>
+template <cnpts::Optional T>
 T get_elem(Object::Ptr root, const std::string& name);
 
 inline std::vector<std::map<std::string, i3d::Vector3d<int>>>
@@ -128,8 +128,7 @@ get_resolution_levels(Object::Ptr root);
 namespace requests {
 inline std::string session_url_request(const std::string& ds_url,
                                        i3d::Vector3d<int> resolution,
-                                       const std::string& version,
-                                       access_mode mode);
+                                       const std::string& version);
 
 inline std::pair<std::vector<char>, Poco::Net::HTTPResponse>
 make_request(const std::string& url,
@@ -247,7 +246,7 @@ get_block_dimensions(i3d::Vector3d<int> resolution,
 			return res_level.at("blockDimensions");
 
 	error(fmt::format("Dimensions for resolution {} not found",
-	                  vec_to_string(resolution)));
+	                  to_string(resolution)));
 	return {};
 }
 
@@ -271,7 +270,7 @@ check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
 			if (coord[i] * block_dims.value()[i] >= props.dimensions[i]) {
 				details::error(
 				    fmt::format("Block coordinate {} is out of valid range",
-				                vec_to_string(coord)));
+				                to_string(coord)));
 
 				return false;
 			}
@@ -301,7 +300,7 @@ bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
 			    std::size_t(coord[i] + block_dims.value()[i])) {
 				details::error(
 				    fmt::format("Offset coordinate {} is out of valid range",
-				                vec_to_string(coord)));
+				                to_string(coord)));
 
 				return false;
 			}
@@ -421,7 +420,7 @@ void write_data(const i3d::Image3d<T>& src,
 
 namespace props_parser {
 
-template <Basic T>
+template <cnpts::Basic T>
 T get_elem(Object::Ptr root, const std::string& name) {
 	if (!root->has(name)) {
 		warning(fmt::format("{} was not found", name));
@@ -430,7 +429,7 @@ T get_elem(Object::Ptr root, const std::string& name) {
 	return root->getValue<T>(name);
 }
 
-template <Vector3d_cnpt T>
+template <cnpts::Vector3d T>
 T get_elem(Object::Ptr root, const std::string& name) {
 	using V = decltype(T{}.x);
 	if (!root->has(name)) {
@@ -451,7 +450,7 @@ T get_elem(Object::Ptr root, const std::string& name) {
 	return out;
 }
 
-template <Vector_cnpt T>
+template <cnpts::Vector T>
 T get_elem(Object::Ptr root, const std::string& name) {
 	using V = typename T::value_type;
 	if (!root->has(name)) {
@@ -469,7 +468,7 @@ T get_elem(Object::Ptr root, const std::string& name) {
 	return out;
 }
 
-template <Optional_cnpt T>
+template <cnpts::Optional T>
 T get_elem(Object::Ptr root, const std::string& name) {
 	if (!root->has(name)) {
 		warning(fmt::format("{} were not found", name));
@@ -515,17 +514,14 @@ get_resolution_levels(Object::Ptr root) {
 namespace requests {
 /* inline */ std::string session_url_request(const std::string& ds_url,
                                              i3d::Vector3d<int> resolution,
-                                             const std::string& version,
-                                             access_mode mode) {
-
-	std::string mode_str = mode_to_string(mode);
+                                             const std::string& version) {
 
 	info(fmt::format(
-	    "Obtaining session url for resolution: {}, version: {}, mode: {}",
-	    vec_to_string(resolution), version, mode_str));
+	    "Obtaining session url for resolution: {}, version: {}",
+	    to_string(resolution), version));
 	std::string req_url =
-	    fmt::format("{}/{}/{}/{}/{}/{}", ds_url, resolution.x, resolution.y,
-	                resolution.z, version, mode_str);
+	    fmt::format("{}/{}/{}/{}/{}/read-write", ds_url, resolution.x, resolution.y,
+	                resolution.z, version);
 
 	auto [_, response] = make_request(req_url);
 

@@ -13,58 +13,7 @@
 
 namespace datastore {
 
-enum class access_mode { READ, WRITE };
-
-namespace details {
-
-const inline std::map<std::string, int> type_byte_size{
-    {"uint8", 1}, {"uint16", 2}, {"uint32", 4}, {"uint64", 8}};
-
-constexpr inline std::size_t MAX_URL_LENGTH = 2048;
-
-template <typename key_t, typename value_t>
-std::ostream& operator<<(std::ostream& stream,
-                         const std::map<key_t, value_t>& map) {
-	stream << "{\n";
-
-	for (const auto& [k, v] : map) {
-		stream << k << ": " << v << '\n';
-	}
-	stream << "}\n";
-	return stream;
-}
-
-template <typename T>
-std::string vec_to_string(const std::vector<T>& vec) {
-	std::stringstream ss;
-	ss << "[";
-	const char* delim = "";
-	for (auto& v : vec) {
-		ss << delim << v;
-		delim = ", ";
-	}
-
-	ss << "]";
-	return ss.str();
-}
-
-inline std::string mode_to_string(access_mode mode) {
-	switch (mode) {
-	case access_mode::READ:
-		return "read";
-	case access_mode::WRITE:
-		return "write";
-	}
-
-	throw std::out_of_range("Unknown value of access_mode\n");
-}
-
-template <typename T>
-std::string vec_to_string(const i3d::Vector3d<T>& vec) {
-	return fmt::format("[{}, {}, {}]", vec.x, vec.y, vec.z);
-}
-} // namespace details
-
+namespace cnpts {
 template <typename T>
 concept Scalar = requires(T) {
 	requires std::is_scalar_v<T>;
@@ -76,20 +25,97 @@ concept Basic = requires(T) {
 };
 
 template <typename T>
-concept Vector_cnpt = requires(T) {
+concept Vector = requires(T) {
 	requires std::is_same_v<std::vector<typename T::value_type>, T>;
 };
 
 template <typename T>
-concept Optional_cnpt = requires(T) {
+concept Optional = requires(T) {
 	requires std::is_same_v<std::optional<typename T::value_type>, T>;
 };
 
 template <typename T>
-concept Vector3d_cnpt = requires(T a) {
+concept Vector3d = requires(T a) {
 	requires std::is_same_v<i3d::Vector3d<decltype(a.x)>, T>;
 	requires Basic<decltype(a.x)>;
 };
+
+template <typename T>
+concept Streamable = requires(T a) {
+	{std::cout << a};
+};
+
+template <typename T>
+concept Map = requires(T) {
+	requires std::is_same_v<
+	    std::map<typename T::key_type, typename T::mapped_type>, T>;
+};
+} // namespace cnpts
+
+namespace details {
+
+const inline std::map<std::string, int> type_byte_size{
+    {"uint8", 1}, {"uint16", 2}, {"uint32", 4}, {"uint64", 8},  {"int8", 1},
+    {"int16", 2}, {"int32", 4},  {"int64", 8},  {"float32", 4}, {"float64", 8}};
+
+constexpr inline std::size_t MAX_URL_LENGTH = 2048;
+
+/** Forward declarations to enable 'recursion' **/
+template <cnpts::Streamable T>
+std::string to_string(const T&);
+
+template <cnpts::Vector T>
+std::string to_string(const T&);
+
+template <cnpts::Map T>
+std::string to_string(const T&);
+
+template <cnpts::Optional T>
+std::string to_string(const T&);
+
+/** Definitions **/
+template <cnpts::Streamable T>
+std::string to_string(const T& val) {
+	std::stringstream ss;
+	ss << val;
+	return ss.str();
+}
+
+template <cnpts::Vector T>
+std::string to_string(const T& vec) {
+	std::stringstream ss;
+	ss << "(";
+
+	const char* delim = "";
+	for (auto& v : vec) {
+		ss << delim << to_string(v);
+		delim = ", ";
+	}
+
+	ss << ")";
+	return ss.str();
+}
+
+template <cnpts::Map T>
+std::string to_string(const T& map) {
+	std::stringstream ss;
+	ss << "{\n";
+
+	for (const auto& [k, v] : map) {
+		ss << to_string(k) << ": " << to_string(v) << '\n';
+	}
+	ss << "}\n";
+	return ss.str();
+}
+
+template <cnpts::Optional T>
+std::string to_string(const T& val) {
+	if (!val)
+		return "null";
+	return to_string(val.value());
+}
+
+} // namespace details
 
 class DatasetProperties {
   public:
@@ -113,45 +139,26 @@ class DatasetProperties {
 
 	operator std::string() const {
 		std::stringstream ss;
+		using details::to_string;
 
 		ss << "UUID: " << uuid << '\n';
 		ss << "voxelType: " << voxel_type << '\n';
-		ss << "dimensions: " << details::vec_to_string(dimensions) << '\n';
+		ss << "dimensions: " << dimensions << '\n';
 		ss << "channels: " << channels << '\n';
 		ss << "angles: " << angles << '\n';
-		ss << "transformations: " << transformations.value_or("null") << '\n';
+		ss << "transformations: " << to_string(transformations) << '\n';
 		ss << "voxelUnit: " << voxel_unit << '\n';
-		ss << "voxelResolution: "
-		   << (voxel_resolution
-		           ? details::vec_to_string(voxel_resolution.value())
-		           : "null")
+		ss << "voxelResolution: " << to_string(voxel_resolution) << '\n';
+		ss << "timepointResolution: " << to_string(timepoint_resolution)
 		   << '\n';
-		ss << "timepointResolution: "
-		   << (timepoint_resolution
-		           ? details::vec_to_string(timepoint_resolution.value())
-		           : "null")
-		   << '\n';
-
-		ss << "channelResolution: "
-		   << (channel_resolution
-		           ? details::vec_to_string(channel_resolution.value())
-		           : "null")
-		   << '\n';
-
-		ss << "angleResolution: "
-		   << (angle_resolution
-		           ? details::vec_to_string(angle_resolution.value())
-		           : "null")
-		   << '\n';
-
+		ss << "channelResolution: " << to_string(channel_resolution) << '\n';
+		ss << "angleResolution: " << to_string(angle_resolution) << '\n';
 		ss << "compression: " << compression << '\n';
-		ss << "resolutionLevels: " << details::vec_to_string(resolution_levels)
-		   << '\n';
-		ss << "versions: " << details::vec_to_string(versions) << '\n';
+		ss << "resolutionLevels: " << to_string(resolution_levels) << '\n';
+		ss << "versions: " << to_string(versions) << '\n';
 		ss << "label: " << label << '\n';
-		ss << "viewRegistrations: " << view_registrations.value_or("null")
-		   << '\n';
-		ss << "timepointIds: " << details::vec_to_string(timepoint_ids) << '\n';
+		ss << "viewRegistrations: " << to_string(view_registrations) << '\n';
+		ss << "timepointIds: " << to_string(timepoint_ids) << '\n';
 
 		return ss.str();
 	}

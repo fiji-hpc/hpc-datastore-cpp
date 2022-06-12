@@ -14,7 +14,7 @@ inline DatasetProperties get_dataset_properties(const std::string& ip,
 
 // TODO finish implementation
 // TODO docs
-template <Scalar T>
+template <cnpts::Scalar T>
 i3d::Image3d<T> read_image(const std::string& ip,
                            int port,
                            const std::string& uuid,
@@ -26,7 +26,7 @@ i3d::Image3d<T> read_image(const std::string& ip,
 
 // TODO finish implementation
 // TODO docs
-template <Scalar T>
+template <cnpts::Scalar T>
 bool write_image(const i3d::Image3d<T>& img,
                  const std::string& ip,
                  int port,
@@ -50,45 +50,45 @@ class ImageView {
 
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_block(i3d::Vector3d<int> coords) const;
 
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	bool read_block(i3d::Vector3d<int> coords,
 	                i3d::Image3d<T>& dest,
 	                i3d::Vector3d<int> dest_offset = {0, 0, 0}) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	std::vector<i3d::Image3d<T>>
 	read_blocks(const std::vector<i3d::Vector3d<int>>& coords) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	bool read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 i3d::Image3d<T>& dest,
 	                 const std::vector<i3d::Vector3d<int>>& offsets) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_image() const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	bool write_block(const i3d::Image3d<T>& src,
 	                 i3d::Vector3d<int> coords,
 	                 i3d::Vector3d<int> src_offset = {0, 0, 0}) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	bool write_blocks(const i3d::Image3d<T>& src,
 	                  const std::vector<i3d::Vector3d<int>>& coords,
 	                  const std::vector<i3d::Vector3d<int>>& src_offsets) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	bool write_image(const i3d::Image3d<T>& img) const;
 
   private:
@@ -116,7 +116,7 @@ class Connection {
 	                   const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_block(i3d::Vector3d<int> coords,
 	                           int channel,
 	                           int timepoint,
@@ -125,7 +125,7 @@ class Connection {
 	                           const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	bool read_block(i3d::Vector3d<int> coords,
 	                int channel,
 	                int timepoint,
@@ -136,7 +136,7 @@ class Connection {
 	                i3d::Vector3d<int> dest_offset = {0, 0, 0}) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	std::vector<i3d::Image3d<T>>
 	read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	            int channel,
@@ -146,7 +146,7 @@ class Connection {
 	            const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	bool read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 int channel,
 	                 int timepoint,
@@ -157,7 +157,7 @@ class Connection {
 	                 const std::vector<i3d::Vector3d<int>>& dest_offsets) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_image(int channel,
 	                           int timepoint,
 	                           int angle,
@@ -165,7 +165,7 @@ class Connection {
 	                           const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	bool write_block(const i3d::Image3d<T>& src,
 	                 i3d::Vector3d<int> coords,
 	                 i3d::Vector3d<int> src_offset,
@@ -176,7 +176,7 @@ class Connection {
 	                 const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	bool write_blocks(const i3d::Image3d<T>& src,
 	                  const std::vector<i3d::Vector3d<int>>& coords,
 	                  const std::vector<i3d::Vector3d<int>>& src_offsets,
@@ -187,7 +187,7 @@ class Connection {
 	                  const std::string& version) const;
 	// TODO finish implementation
 	// TODO docs
-	template <Scalar T>
+	template <cnpts::Scalar T>
 	bool write_image(const i3d::Image3d<T>& src,
 	                 int channel,
 	                 int timepoint,
@@ -228,7 +228,7 @@ ImageView::ImageView(std::string ip,
       _channel(channel), _timepoint(timepoint), _angle(angle),
       _resolution(resolution), _version(std::move(version)) {}
 
-template <Scalar T>
+template <cnpts::Scalar T>
 bool ImageView::read_blocks(
     const std::vector<i3d::Vector3d<int>>& coords,
     i3d::Image3d<T>& dest,
@@ -249,7 +249,7 @@ bool ImageView::read_blocks(
 
 	std::string ds_url = details::get_dataset_url(_ip, _port, _uuid);
 	std::string session_url = details::requests::session_url_request(
-	    ds_url, _resolution, _version, access_mode::READ);
+	    ds_url, _resolution, _version);
 
 	if (session_url.ends_with('/'))
 		session_url.pop_back();
@@ -268,7 +268,7 @@ bool ImageView::read_blocks(
 	return true;
 }
 
-template <Scalar T>
+template <cnpts::Scalar T>
 bool ImageView::write_blocks(
     const i3d::Image3d<T>& src,
     const std::vector<i3d::Vector3d<int>>& coords,
@@ -288,7 +288,7 @@ bool ImageView::write_blocks(
 
 	std::string ds_url = details::get_dataset_url(_ip, _port, _uuid);
 	std::string session_url = details::requests::session_url_request(
-	    ds_url, _resolution, _version, access_mode::WRITE);
+	    ds_url, _resolution, _version);
 
 	if (session_url.ends_with('/'))
 		session_url.pop_back();

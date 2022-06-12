@@ -67,22 +67,21 @@ class ImageView {
 	bool read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 i3d::Image3d<T>& dest,
 	                 const std::vector<i3d::Vector3d<int>>& offsets) const;
-	// TODO finish implementation
+
+	// TODO docs
 	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_image() const;
-	// TODO finish implementation
+
 	// TODO docs
 	template <cnpts::Scalar T>
 	bool write_block(const i3d::Image3d<T>& src,
-	                 i3d::Vector3d<int> coords,
+	                 i3d::Vector3d<int> coord,
 	                 i3d::Vector3d<int> src_offset = {0, 0, 0}) const;
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
 	bool write_blocks(const i3d::Image3d<T>& src,
 	                  const std::vector<i3d::Vector3d<int>>& coords,
 	                  const std::vector<i3d::Vector3d<int>>& src_offsets) const;
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
 	bool write_image(const i3d::Image3d<T>& img) const;
@@ -323,6 +322,14 @@ i3d::Image3d<T> ImageView::read_image() const {
 	return out;
 }
 
+template <cnpts::Scalar T>
+bool ImageView::write_block(
+    const i3d::Image3d<T>& src,
+    i3d::Vector3d<int> coord,
+    i3d::Vector3d<int> src_offset /*  = {0, 0, 0} */) const {
+	return write_blocks(src, {coord}, {src_offset});
+}
+
 // TODO optimise
 template <cnpts::Scalar T>
 bool ImageView::write_blocks(
@@ -372,6 +379,30 @@ bool ImageView::write_blocks(
 	}
 
 	return true;
+}
+
+template <cnpts::Scalar T>
+bool ImageView::write_image(const i3d::Image3d<T>& img) const {
+	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+	i3d::Vector3d<int> block_dim =
+	    details::get_block_dimensions(props, _resolution);
+	i3d::Vector3d<int> block_count = props.dimensions / block_dim;
+
+	i3d::Image3d<T> out;
+	out.MakeRoom(props.dimensions);
+
+	std::vector<i3d::Vector3d<int>> blocks;
+	std::vector<i3d::Vector3d<int>> offsets;
+
+	for (int x = 0; x < block_count.x; ++x)
+		for (int y = 0; y < block_count.y; ++y)
+			for (int z = 0; z < block_count.z; ++z) {
+				blocks.emplace_back(x, y, z);
+				offsets.emplace_back(x * block_dim.x, y * block_dim.y,
+				                     z * block_dim.z);
+			}
+
+	return write_blocks(img, blocks, offsets);
 }
 
 /* ===================================== Connection */

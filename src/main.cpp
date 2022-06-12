@@ -10,6 +10,9 @@ const std::string uuid = "64aec83b-332e-45a6-9aed-0051d7bb2cf8";
 int main() {
 	datastore::ImageView view(ip, port, uuid, 0, 0, 0, {1, 1, 1}, "latest");
 
+	i3d::Image3d<uint16_t> src("mask020.tif");
+	view.write_image(src);
+
 	auto img = view.read_image<uint16_t>();
 	img.SaveImage("mask.tif");
 	/*

@@ -10,17 +10,21 @@ const std::string uuid = "64aec83b-332e-45a6-9aed-0051d7bb2cf8";
 int main() {
 	datastore::ImageView view(ip, port, uuid, 0, 0, 0, {1, 1, 1}, "latest");
 
-	i3d::Image3d<int> img;
-	img.MakeRoom(128, 64, 32);
-	img.SetVoxel(0, 0, 0, 71);
-	view.write_blocks(img, {{0, 0, 0}}, {{0, 0, 0}});
+	auto img = view.read_image<uint16_t>();
+	img.SaveImage("mask.tif");
+	/*
+	    i3d::Image3d<int> img;
+	    img.MakeRoom(128, 64, 32);
+	    img.SetVoxel(0, 0, 0, 71);
+	    view.write_blocks(img, {{0, 0, 0}}, {{0, 0, 0}});
 
-	
-	img.SetVoxel(0,0,0,0);
+	    img.SetVoxel(0, 0, 0, 0);
 
-	view.read_blocks({{0, 0, 0}}, img, {{0, 0, 0}});
-	std::cout << fmt::format("Voxel value: {}\n", *img.GetVoxelAddr(0, 0, 0));
-	
-	std::cout << "Done" << '\n';
+	    view.read_blocks({{0, 0, 0}}, img, {{0, 0, 0}});
+	    std::cout << fmt::format("Voxel value: {}\n", *img.GetVoxelAddr(0, 0,
+	   0));
+
+	    std::cout << "Done" << '\n';
+	*/
 }
 

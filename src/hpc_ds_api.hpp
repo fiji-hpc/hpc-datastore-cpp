@@ -48,30 +48,26 @@ class ImageView {
 	          i3d::Vector3d<int> resolution,
 	          std::string version);
 
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
-	i3d::Image3d<T> read_block(i3d::Vector3d<int> coords) const;
+	i3d::Image3d<T> read_block(i3d::Vector3d<int> coord) const;
 
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
-	bool read_block(i3d::Vector3d<int> coords,
+	bool read_block(i3d::Vector3d<int> coord,
 	                i3d::Image3d<T>& dest,
 	                i3d::Vector3d<int> dest_offset = {0, 0, 0}) const;
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
 	std::vector<i3d::Image3d<T>>
 	read_blocks(const std::vector<i3d::Vector3d<int>>& coords) const;
-	// TODO finish implementation
+
 	// TODO docs
 	template <cnpts::Scalar T>
 	bool read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 i3d::Image3d<T>& dest,
 	                 const std::vector<i3d::Vector3d<int>>& offsets) const;
 	// TODO finish implementation
-	// TODO docs
 	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_image() const;
 	// TODO finish implementation
@@ -229,6 +225,38 @@ ImageView::ImageView(std::string ip,
       _resolution(resolution), _version(std::move(version)) {}
 
 template <cnpts::Scalar T>
+i3d::Image3d<T> ImageView::read_block(i3d::Vector3d<int> coord) const {
+	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+	i3d::Vector3d<int> block_dim =
+	    details::get_block_dimensions(props, _resolution);
+
+	i3d::Image3d<T> img;
+	img.MakeRoom(block_dim);
+
+	read_block(coord, img);
+	return img;
+}
+
+template <cnpts::Scalar T>
+bool ImageView::read_block(
+    i3d::Vector3d<int> coord,
+    i3d::Image3d<T>& dest,
+    i3d::Vector3d<int> dest_offset /*  = {0, 0, 0} */) const {
+	return read_blocks({coord}, dest, {dest_offset});
+}
+
+template <cnpts::Scalar T>
+std::vector<i3d::Image3d<T>>
+ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords) const {
+	std::vector<i3d::Image3d<T>> out;
+	for (auto coord : coords)
+		out.push_back(read_block<T>(coord));
+
+	return out;
+}
+
+// TODO optimise
+template <cnpts::Scalar T>
 bool ImageView::read_blocks(
     const std::vector<i3d::Vector3d<int>>& coords,
     i3d::Image3d<T>& dest,
@@ -270,6 +298,32 @@ bool ImageView::read_blocks(
 	return true;
 }
 
+template <cnpts::Scalar T>
+i3d::Image3d<T> ImageView::read_image() const {
+	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+	i3d::Vector3d<int> block_dim =
+	    details::get_block_dimensions(props, _resolution);
+	i3d::Vector3d<int> block_count = props.dimensions / block_dim;
+
+	i3d::Image3d<T> out;
+	out.MakeRoom(props.dimensions);
+
+	std::vector<i3d::Vector3d<int>> blocks;
+	std::vector<i3d::Vector3d<int>> offsets;
+
+	for (int x = 0; x < block_count.x; ++x)
+		for (int y = 0; y < block_count.y; ++y)
+			for (int z = 0; z < block_count.z; ++z) {
+				blocks.emplace_back(x, y, z);
+				offsets.emplace_back(x * block_dim.x, y * block_dim.y,
+				                     z * block_dim.z);
+			}
+
+	read_blocks(blocks, out, offsets);
+	return out;
+}
+
+// TODO optimise
 template <cnpts::Scalar T>
 bool ImageView::write_blocks(
     const i3d::Image3d<T>& src,

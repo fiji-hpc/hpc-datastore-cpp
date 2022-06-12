@@ -27,42 +27,22 @@ constexpr inline bool debug = false;
 inline std::string
 get_dataset_url(const std::string& ip, int port, const std::string& uuid);
 
-inline void _log(const std::string& msg, const std::source_location& location);
+inline DatasetProperties get_dataset_properties(const std::string& dataset_url);
 
-inline void
-info(const std::string& msg,
-     const std::source_location& location = std::source_location::current());
-
-inline void
-warning(const std::string& msg,
-        const std::source_location& location = std::source_location::current());
-
-inline void
-error(const std::string& msg,
-      const std::source_location& location = std::source_location::current());
-
-inline std::string
-get_dataset_json_str(const std::string& ip, int port, const std::string& uuid);
-
-inline DatasetProperties
-get_properties_from_json_str(const std::string& json_str);
-
-inline std::optional<i3d::Vector3d<int>>
-get_block_dimensions(i3d::Vector3d<int> resolution,
-                     const DatasetProperties& props);
+inline i3d::Vector3d<int> get_block_dimensions(const DatasetProperties& props,
+                                               i3d::Vector3d<int> resolution);
 
 inline bool check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
-                               i3d::Vector3d<int> resolution,
-                               const DatasetProperties& props);
+                               i3d::Vector3d<int> img_dim,
+                               i3d::Vector3d<int> block_dim);
 
 template <typename T>
 bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
                          const i3d::Image3d<T>& img,
-                         i3d::Vector3d<int> resolution,
-                         const DatasetProperties& props);
-
-inline int get_data_size(const DatasetProperties& props,
-                         i3d::Vector3d<int> resolution);
+                         i3d::Vector3d<int> block_dim);
+namespace data_manip {
+inline int get_data_size(const i3d::Vector3d<int> block_dim,
+                         const std::string& voxel_type);
 
 inline int get_linear_index(i3d::Vector3d<int> coord,
                             i3d::Vector3d<int> block_dim,
@@ -76,8 +56,8 @@ T get_elem_at(std::span<const char> data,
 template <typename T>
 T get_elem_at(std::span<const char> data,
               const std::string& voxel_type,
-              i3d::Vector3d<int> block_dim,
-              i3d::Vector3d<int> coord);
+              i3d::Vector3d<int> coord,
+              i3d::Vector3d<int> block_dim);
 
 template <typename T>
 void set_elem_at(std::span<char> data,
@@ -88,8 +68,8 @@ void set_elem_at(std::span<char> data,
 template <typename T>
 void set_elem_at(std::span<char> data,
                  const std::string& voxel_type,
-                 i3d::Vector3d<int> block_dim,
                  i3d::Vector3d<int> coord,
+                 i3d::Vector3d<int> block_dim,
                  T elem);
 
 template <typename T>
@@ -100,10 +80,27 @@ void read_data(std::span<const char> data,
 
 template <typename T>
 void write_data(const i3d::Image3d<T>& src,
-                const std::string& voxel_type,
-                i3d::Vector3d<int> block_dim,
                 i3d::Vector3d<int> offset,
-                std::span<char> data);
+                std::span<char> data,
+                const std::string& voxel_type,
+                i3d::Vector3d<int> block_dim);
+} // namespace data_manip
+
+namespace log {
+inline void _log(const std::string& msg, const std::source_location& location);
+
+inline void
+info(const std::string& msg,
+     const std::source_location& location = std::source_location::current());
+
+inline void
+warning(const std::string& msg,
+        const std::source_location& location = std::source_location::current());
+
+inline void
+error(const std::string& msg,
+      const std::source_location& location = std::source_location::current());
+} // namespace log
 
 namespace props_parser {
 using namespace Poco::JSON;
@@ -152,56 +149,19 @@ get_dataset_url(const std::string& ip, int port, const std::string& uuid) {
 	return out + fmt::format("{}:{}/datasets/{}", ip, port, uuid);
 }
 
-/* inline */ void _log(const std::string& msg,
-                       const std::string& type,
-                       const std::source_location& location) {
-	if constexpr (!debug)
-		return;
-
-	std::cout << fmt::format("[{}] {} at row {}:\n{} \n\n", type,
-	                         location.function_name(), location.line(), msg);
-	if (type.find("ERROR") != std::string::npos)
-		std::cout << std::flush;
-}
-
-/* inline */ void info(const std::string& msg,
-                       const std::source_location&
-                           location /* = std::source_location::current() */) {
-	_log(msg, "INFO", location);
-}
-
-/* inline */ void
-warning(const std::string& msg,
-        const std::source_location&
-            location /* = std::source_location::current() */) {
-	_log(msg, "WARNING", location);
-}
-
-/* inline */ void error(const std::string& msg,
-                        const std::source_location&
-                            location /* = std::source_location::current() */) {
-	_log(msg, "ERROR", location);
-}
-
-/* inline */ std::string
-get_dataset_json_str(const std::string& ip, int port, const std::string& uuid) {
-	std::string dataset_url = get_dataset_url(ip, port, uuid);
+inline DatasetProperties
+get_dataset_properties(const std::string& dataset_url) {
+	using namespace Poco::JSON;
 
 	auto [data, response] = requests::make_request(dataset_url);
+	std::string json_str(data.begin(), data.end());
+
 	int res_code = response.getStatus();
-
 	if (res_code != 200)
-		warning(fmt::format(
-		    "Request returned with code: {}. json may be invalid", res_code));
+		log::warning(fmt::format(
+		    "Request ended with code: {}. json may not be valid", res_code));
 
-	return std::string(data.begin(), data.end());
-}
-
-inline DatasetProperties
-get_properties_from_json_str(const std::string& json_str) {
-
-	using namespace Poco::JSON;
-	info("Parsing dataset properties from JSON string");
+	log::info("Parsing dataset properties from JSON string");
 	Parser parser;
 	Poco::Dynamic::Var result = parser.parse(json_str);
 
@@ -234,90 +194,77 @@ get_properties_from_json_str(const std::string& json_str) {
 	    get_elem<std::optional<std::string>>(root, "viewRegistrations");
 	props.timepoint_ids = get_elem<std::vector<int>>(root, "timepointIds");
 
-	info("Parsing has finished");
+	log::info("Parsing has finished");
 	return props;
 }
 
-/* inline */ std::optional<i3d::Vector3d<int>>
-get_block_dimensions(i3d::Vector3d<int> resolution,
-                     const DatasetProperties& props) {
+/* inline */ i3d::Vector3d<int>
+get_block_dimensions(const DatasetProperties& props,
+                     i3d::Vector3d<int> resolution) {
 	for (const auto& res_level : props.resolution_levels)
 		if (res_level.at("resolutions") == resolution)
 			return res_level.at("blockDimensions");
 
-	error(fmt::format("Dimensions for resolution {} not found",
-	                  to_string(resolution)));
-	return {};
+	log::error(fmt::format("Dimensions for resolution {} not found",
+	                       to_string(resolution)));
+	return {-1, -1, -1};
 }
 
 /* inline */ bool
 check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
-                   i3d::Vector3d<int> resolution,
-                   const DatasetProperties& props) {
+                   i3d::Vector3d<int> img_dim,
+                   i3d::Vector3d<int> block_dim) {
 	if constexpr (!debug)
 		return true;
 
-	details::info("Checking validity of given block coordinates");
-
-	std::optional<i3d::Vector3d<int>> block_dims =
-	    get_block_dimensions(resolution, props);
-
-	if (!block_dims)
-		return false;
+	log::info("Checking validity of given block coordinates");
 
 	for (i3d::Vector3d<int> coord : coords)
-		for (int i = 0; i < 3; ++i)
-			if (coord[i] * block_dims.value()[i] >= props.dimensions[i]) {
-				details::error(
+		for (int i = 0; i < 3; ++i) {
+			int val = coord[i] * block_dim[i];
+			if (!(0 <= val && val < img_dim[i])) {
+				log::error(
 				    fmt::format("Block coordinate {} is out of valid range",
 				                to_string(coord)));
 
 				return false;
 			}
+		}
 
-	details::info("Check successfullly finished");
+	log::info("Check successfullly finished");
 	return true;
 }
 
 template <typename T>
 bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
                          const i3d::Image3d<T>& img,
-                         i3d::Vector3d<int> resolution,
-                         const DatasetProperties& props) {
+                         i3d::Vector3d<int> block_dim) {
 	if constexpr (!debug)
 		return true;
 
-	details::info("Checking validity of given offset coordinates");
-	std::optional<i3d::Vector3d<int>> block_dims =
-	    get_block_dimensions(resolution, props);
-
-	if (!block_dims)
-		return false;
+	log::info("Checking validity of given offset coordinates");
 
 	for (i3d::Vector3d<int> coord : coords)
 		for (int i = 0; i < 3; ++i)
-			if (img.GetSize()[i] <
-			    std::size_t(coord[i] + block_dims.value()[i])) {
-				details::error(
+			if (!(0 <= coord[i] &&
+			      std::size_t(coord[i] + block_dim[i]) <= img.GetSize()[i])) {
+				log::error(
 				    fmt::format("Offset coordinate {} is out of valid range",
 				                to_string(coord)));
 
 				return false;
 			}
 
-	details::info("Check successfullly finished");
+	log::info("Check successfullly finished");
 	return true;
 }
 
-/* inline */ int get_data_size(const DatasetProperties& props,
-                               i3d::Vector3d<int> resolution) {
-	std::optional<i3d::Vector3d<int>> block_dim =
-	    get_block_dimensions(resolution, props);
-	if (!block_dim)
-		return -1;
+namespace data_manip {
+/* inline */ int get_data_size(const i3d::Vector3d<int> block_dim,
+                               const std::string& voxel_type) {
 
-	int elem_size = type_byte_size.at(props.voxel_type);
-	return block_dim->x * block_dim->y * block_dim->z * elem_size + 12;
+	int elem_size = type_byte_size.at(voxel_type);
+	return block_dim.x * block_dim.y * block_dim.z * elem_size + 12;
 }
 
 /* inline */ int get_linear_index(i3d::Vector3d<int> coord,
@@ -351,8 +298,8 @@ T get_elem_at(std::span<const char> data,
 template <typename T>
 T get_elem_at(std::span<const char> data,
               const std::string& voxel_type,
-              i3d::Vector3d<int> block_dim,
-              i3d::Vector3d<int> coord) {
+              i3d::Vector3d<int> coord,
+              i3d::Vector3d<int> block_dim) {
 
 	int index = get_linear_index(coord, block_dim, voxel_type);
 	return get_elem_at<T>(data, voxel_type, index);
@@ -376,8 +323,8 @@ void set_elem_at(std::span<char> data,
 template <typename T>
 void set_elem_at(std::span<char> data,
                  const std::string& voxel_type,
-                 i3d::Vector3d<int> block_dim,
                  i3d::Vector3d<int> coord,
+                 i3d::Vector3d<int> block_dim,
                  T elem) {
 	int index = get_linear_index(coord, block_dim, voxel_type);
 	set_elem_at(data, voxel_type, index, elem);
@@ -397,15 +344,15 @@ void read_data(std::span<const char> data,
 			for (int z = 0; z < block_dim.z; ++z)
 				dest.SetVoxel(
 				    x + offset.x, y + offset.y, z + offset.z,
-				    get_elem_at<T>(data, voxel_type, block_dim, {x, y, z}));
+				    get_elem_at<T>(data, voxel_type, {x, y, z}, block_dim));
 }
 
 template <typename T>
 void write_data(const i3d::Image3d<T>& src,
-                const std::string& voxel_type,
-                i3d::Vector3d<int> block_dim,
                 i3d::Vector3d<int> offset,
-                std::span<char> data) {
+                std::span<char> data,
+                const std::string& voxel_type,
+                i3d::Vector3d<int> block_dim) {
 	set_elem_at(data, "uint32", 0, block_dim.x);
 	set_elem_at(data, "uint32", 4, block_dim.y);
 	set_elem_at(data, "uint32", 8, block_dim.z);
@@ -413,17 +360,51 @@ void write_data(const i3d::Image3d<T>& src,
 	for (int x = 0; x < block_dim.x; ++x)
 		for (int y = 0; y < block_dim.y; ++y)
 			for (int z = 0; z < block_dim.z; ++z)
-				set_elem_at(data, voxel_type, block_dim, {x, y, z},
+				set_elem_at(data, voxel_type, {x, y, z}, block_dim,
 				            *src.GetVoxelAddr(x + offset.x, y + offset.y,
 				                              z + offset.z));
 }
+} // namespace data_manip
+
+namespace log {
+/* inline */ void _log(const std::string& msg,
+                       const std::string& type,
+                       const std::source_location& location) {
+	if constexpr (!debug)
+		return;
+
+	std::cout << fmt::format("[{}] {} at row {}:\n{} \n\n", type,
+	                         location.function_name(), location.line(), msg);
+	if (type.find("ERROR") != std::string::npos)
+		std::cout << std::flush;
+}
+
+/* inline */ void info(const std::string& msg,
+                       const std::source_location&
+                           location /* = std::source_location::current() */) {
+	_log(msg, "INFO", location);
+}
+
+/* inline */ void
+warning(const std::string& msg,
+        const std::source_location&
+            location /* = std::source_location::current() */) {
+	_log(msg, "WARNING", location);
+}
+
+/* inline */ void error(const std::string& msg,
+                        const std::source_location&
+                            location /* = std::source_location::current() */) {
+	_log(msg, "ERROR", location);
+}
+} // namespace log
 
 namespace props_parser {
 
 template <cnpts::Basic T>
 T get_elem(Object::Ptr root, const std::string& name) {
 	if (!root->has(name)) {
-		warning(fmt::format("{} was not found", name));
+		log::warning(fmt::format("{} was not found", name));
 		return {};
 	}
 	return root->getValue<T>(name);
@@ -433,13 +414,13 @@ template <cnpts::Vector3d T>
 T get_elem(Object::Ptr root, const std::string& name) {
 	using V = decltype(T{}.x);
 	if (!root->has(name)) {
-		warning(fmt::format("{} were not found", name));
+		log::warning(fmt::format("{} were not found", name));
 		return {};
 	}
 
 	Array::Ptr values = root->getArray(name);
 	if (values->size() != 3) {
-		warning("Incorrect number of dimensions");
+		log::warning("Incorrect number of dimensions");
 		return {};
 	}
 
@@ -454,7 +435,7 @@ template <cnpts::Vector T>
 T get_elem(Object::Ptr root, const std::string& name) {
 	using V = typename T::value_type;
 	if (!root->has(name)) {
-		warning(fmt::format("{} were not found", name));
+		log::warning(fmt::format("{} were not found", name));
 		return {};
 	}
 
@@ -471,7 +452,7 @@ T get_elem(Object::Ptr root, const std::string& name) {
 template <cnpts::Optional T>
 T get_elem(Object::Ptr root, const std::string& name) {
 	if (!root->has(name)) {
-		warning(fmt::format("{} were not found", name));
+		log::warning(fmt::format("{} were not found", name));
 		return {};
 	}
 
@@ -488,7 +469,7 @@ get_resolution_levels(Object::Ptr root) {
 	std::string name = "resolutionLevels";
 
 	if (!root->has(name)) {
-		warning("resolutionLevels were not found");
+		log::warning("resolutionLevels were not found");
 		return {};
 	}
 
@@ -516,18 +497,18 @@ namespace requests {
                                              i3d::Vector3d<int> resolution,
                                              const std::string& version) {
 
-	info(fmt::format(
-	    "Obtaining session url for resolution: {}, version: {}",
-	    to_string(resolution), version));
+	log::info(
+	    fmt::format("Obtaining session url for resolution: {}, version: {}",
+	                to_string(resolution), version));
 	std::string req_url =
-	    fmt::format("{}/{}/{}/{}/{}/read-write", ds_url, resolution.x, resolution.y,
-	                resolution.z, version);
+	    fmt::format("{}/{}/{}/{}/{}/read-write", ds_url, resolution.x,
+	                resolution.y, resolution.z, version);
 
 	auto [_, response] = make_request(req_url);
 
 	int res_code = response.getStatus();
 	if (res_code != 307)
-		warning(fmt::format(
+		log::warning(fmt::format(
 		    "Request ended with status: {}, redirection may be incorrect",
 		    res_code));
 
@@ -552,7 +533,7 @@ make_request(const std::string& url,
 
 	request.setContentLength(data.size());
 
-	info(fmt::format("Sending {} request to url: {}", type, url));
+	log::info(fmt::format("Sending {} request to url: {}", type, url));
 	std::ostream& os = session.sendRequest(request);
 	for (char ch : data)
 		os << ch;
@@ -563,7 +544,7 @@ make_request(const std::string& url,
 	std::vector<char> out{std::istreambuf_iterator<char>(rs),
 	                      std::istreambuf_iterator<char>()};
 
-	info(fmt::format(
+	log::info(fmt::format(
 	    "Fetched response with status: {}, reason: {}, content size: {}",
 	    response.getStatus(), response.getReason(), out.size()));
 

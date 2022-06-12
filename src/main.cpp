@@ -12,14 +12,15 @@ int main() {
 
 	i3d::Image3d<int> img;
 	img.MakeRoom(128, 64, 32);
-	img.SetVoxel(0, 0, 0, 42);
+	img.SetVoxel(0, 0, 0, 71);
 	view.write_blocks(img, {{0, 0, 0}}, {{0, 0, 0}});
 
+	
 	img.SetVoxel(0,0,0,0);
 
 	view.read_blocks({{0, 0, 0}}, img, {{0, 0, 0}});
 	std::cout << fmt::format("Voxel value: {}\n", *img.GetVoxelAddr(0, 0, 0));
-
+	
 	std::cout << "Done" << '\n';
 }
 

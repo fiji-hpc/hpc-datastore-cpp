@@ -210,8 +210,8 @@ namespace datastore {
 /* inline */ DatasetProperties get_dataset_properties(const std::string& ip,
                                                       int port,
                                                       const std::string& uuid) {
-	std::string json = details::get_dataset_json_str(ip, port, uuid);
-	return details::get_properties_from_json_str(json);
+	std::string dataset_url = details::get_dataset_url(ip, port, uuid);
+	return details::get_dataset_properties(dataset_url);
 }
 
 /* ===================================== ImageView */
@@ -234,22 +234,24 @@ bool ImageView::read_blocks(
     i3d::Image3d<T>& dest,
     const std::vector<i3d::Vector3d<int>>& offsets) const {
 
-	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
+	DatasetProperties props = details::get_dataset_properties(dataset_url);
+	i3d::Vector3d<int> block_dim =
+	    details::get_block_dimensions(props, _resolution);
 
 	if (coords.size() != offsets.size()) {
-		details::error("Count of coordinates != count of offsets");
+		details::log::error("Count of coordinates != count of offsets");
 		return false;
 	}
 
-	if (!details::check_block_coords(coords, _resolution, props))
+	if (!details::check_block_coords(coords, props.dimensions, block_dim))
 		return false;
 
-	if (!details::check_offset_coords(offsets, dest, _resolution, props))
+	if (!details::check_offset_coords(offsets, dest, block_dim))
 		return false;
 
-	std::string ds_url = details::get_dataset_url(_ip, _port, _uuid);
 	std::string session_url = details::requests::session_url_request(
-	    ds_url, _resolution, _version);
+	    dataset_url, _resolution, _version);
 
 	if (session_url.ends_with('/'))
 		session_url.pop_back();
@@ -263,7 +265,7 @@ bool ImageView::read_blocks(
 		                coord.z, _timepoint, _channel, _angle);
 		auto [data, response] = details::requests::make_request(url);
 
-		details::read_data(data, props.voxel_type, dest, offset);
+		details::data_manip::read_data(data, props.voxel_type, dest, offset);
 	}
 	return true;
 }
@@ -273,36 +275,38 @@ bool ImageView::write_blocks(
     const i3d::Image3d<T>& src,
     const std::vector<i3d::Vector3d<int>>& coords,
     const std::vector<i3d::Vector3d<int>>& src_offsets) const {
-	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+
+	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
+	DatasetProperties props = details::get_dataset_properties(dataset_url);
+	i3d::Vector3d<int> block_dim =
+	    details::get_block_dimensions(props, _resolution);
 
 	if (coords.size() != src_offsets.size()) {
-		details::error("Count of coordinates != count of offsets");
+		details::log::error("Count of coordinates != count of offsets");
 		return false;
 	}
 
-	if (!details::check_block_coords(coords, _resolution, props))
+	if (!details::check_block_coords(coords, props.dimensions, block_dim))
 		return false;
 
-	if (!details::check_offset_coords(src_offsets, src, _resolution, props))
+	if (!details::check_offset_coords(src_offsets, src, block_dim))
 		return false;
 
-	std::string ds_url = details::get_dataset_url(_ip, _port, _uuid);
 	std::string session_url = details::requests::session_url_request(
-	    ds_url, _resolution, _version);
+	    dataset_url, _resolution, _version);
 
 	if (session_url.ends_with('/'))
 		session_url.pop_back();
 
-	i3d::Vector3d<int> block_dim =
-	    details::get_block_dimensions(_resolution, props).value();
-
 	for (std::size_t i = 0; i < coords.size(); ++i) {
-		std::vector<char> data(details::get_data_size(props, _resolution));
+		std::vector<char> data(
+		    details::data_manip::get_data_size(block_dim, props.voxel_type));
 
 		auto& coord = coords[i];
 		auto& offset = src_offsets[i];
 
-		details::write_data(src, props.voxel_type, block_dim, offset, data);
+		details::data_manip::write_data(src, offset, data, props.voxel_type,
+		                                block_dim);
 
 		std::string url =
 		    fmt::format("{}/{}/{}/{}/{}/{}/{}", session_url, coord.x, coord.y,

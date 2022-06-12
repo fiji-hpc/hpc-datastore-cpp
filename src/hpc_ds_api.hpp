@@ -293,8 +293,24 @@ bool ImageView::write_blocks(
 	if (session_url.ends_with('/'))
 		session_url.pop_back();
 
-	// TODO writing blocks
+	i3d::Vector3d<int> block_dim =
+	    details::get_block_dimensions(_resolution, props).value();
+
 	for (std::size_t i = 0; i < coords.size(); ++i) {
+		std::vector<char> data(details::get_data_size(props, _resolution));
+
+		auto& coord = coords[i];
+		auto& offset = src_offsets[i];
+
+		details::write_data(src, props.voxel_type, block_dim, offset, data);
+
+		std::string url =
+		    fmt::format("{}/{}/{}/{}/{}/{}/{}", session_url, coord.x, coord.y,
+		                coord.z, _timepoint, _channel, _angle);
+
+		auto [_, response] = details::requests::make_request(
+		    url, Poco::Net::HTTPRequest::HTTP_POST, data,
+		    {{"Content-Type", "application/octet-stream"}});
 	}
 
 	return true;

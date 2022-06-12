@@ -80,13 +80,13 @@ T get_elem_at(std::span<const char> data,
               i3d::Vector3d<int> coord);
 
 template <typename T>
-void set_elem_at(std::span<const char> data,
+void set_elem_at(std::span<char> data,
                  const std::string& voxel_type,
                  int index,
                  T elem);
 
 template <typename T>
-void set_elem_at(std::span<const char> data,
+void set_elem_at(std::span<char> data,
                  const std::string& voxel_type,
                  i3d::Vector3d<int> block_dim,
                  i3d::Vector3d<int> coord,
@@ -132,7 +132,10 @@ inline std::string session_url_request(const std::string& ds_url,
                                        access_mode mode);
 
 inline std::pair<std::vector<char>, Poco::Net::HTTPResponse>
-make_request(const std::string& url, const std::vector<char>& data = {});
+make_request(const std::string& url,
+             const std::string& type = Poco::Net::HTTPRequest::HTTP_GET,
+             const std::vector<char>& data = {},
+             const std::map<std::string, std::string>& headers = {});
 } // namespace requests
 
 } // namespace details
@@ -357,13 +360,13 @@ T get_elem_at(std::span<const char> data,
 }
 
 template <typename T>
-void set_elem_at(std::span<const char> data,
+void set_elem_at(std::span<char> data,
                  const std::string& voxel_type,
                  int index,
                  T elem) {
 	int elem_size = type_byte_size.at(voxel_type);
 
-	auto buffer = reinterpret_cast<std::array<char, sizeof(T)>>(elem);
+	auto buffer = *reinterpret_cast<std::array<char, sizeof(T)>*>(&elem);
 	std::ranges::reverse(buffer);
 
 	std::copy_n(buffer.end() - elem_size, // source start
@@ -372,7 +375,7 @@ void set_elem_at(std::span<const char> data,
 }
 
 template <typename T>
-void set_elem_at(std::span<const char> data,
+void set_elem_at(std::span<char> data,
                  const std::string& voxel_type,
                  i3d::Vector3d<int> block_dim,
                  i3d::Vector3d<int> coord,
@@ -392,12 +395,10 @@ void read_data(std::span<const char> data,
 
 	for (int x = 0; x < block_dim.x; ++x)
 		for (int y = 0; y < block_dim.y; ++y)
-			for (int z = 0; z < block_dim.z; ++z) {
-				T* voxel_ptr =
-				    dest.GetVoxelAddr(x + offset.x, y + offset.y, z + offset.z);
-				*voxel_ptr =
-				    get_elem_at<T>(data, voxel_type, block_dim, {x, y, z});
-			}
+			for (int z = 0; z < block_dim.z; ++z)
+				dest.SetVoxel(
+				    x + offset.x, y + offset.y, z + offset.z,
+				    get_elem_at<T>(data, voxel_type, block_dim, {x, y, z}));
 }
 
 template <typename T>
@@ -406,7 +407,16 @@ void write_data(const i3d::Image3d<T>& src,
                 i3d::Vector3d<int> block_dim,
                 i3d::Vector3d<int> offset,
                 std::span<char> data) {
-	// TODO
+	set_elem_at(data, "uint32", 0, block_dim.x);
+	set_elem_at(data, "uint32", 4, block_dim.y);
+	set_elem_at(data, "uint32", 8, block_dim.z);
+
+	for (int x = 0; x < block_dim.x; ++x)
+		for (int y = 0; y < block_dim.y; ++y)
+			for (int z = 0; z < block_dim.z; ++z)
+				set_elem_at(data, voxel_type, block_dim, {x, y, z},
+				            *src.GetVoxelAddr(x + offset.x, y + offset.y,
+				                              z + offset.z));
 }
 
 namespace props_parser {
@@ -529,16 +539,24 @@ namespace requests {
 }
 
 /* inline */ std::pair<std::vector<char>, Poco::Net::HTTPResponse>
-make_request(const std::string& url, const std::vector<char>& data /* = {} */) {
+make_request(const std::string& url,
+             const std::string& type /*  = Poco::Net::HTTPRequest::HTTP_GET */,
+             const std::vector<char>& data /*  = {} */,
+             const std::map<std::string, std::string>& headers /* = {} */) {
 	Poco::URI uri(url);
 	std::string path(uri.getPathAndQuery());
 
 	Poco::Net::HTTPClientSession session(uri.getHost(), uri.getPort());
 
-	Poco::Net::HTTPRequest request(Poco::Net::HTTPRequest::HTTP_GET, path,
+	Poco::Net::HTTPRequest request(type, path,
 	                               Poco::Net::HTTPMessage::HTTP_1_1);
 
-	info(fmt::format("Sending HTTP-GET request to url: {}", url));
+	for (auto& [key, value] : headers)
+		request.set(key, value);
+
+	request.setContentLength(data.size());
+
+	info(fmt::format("Sending {} request to url: {}", type, url));
 	std::ostream& os = session.sendRequest(request);
 	for (char ch : data)
 		os << ch;

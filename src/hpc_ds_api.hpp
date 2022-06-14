@@ -230,7 +230,10 @@ i3d::Image3d<T> ImageView::read_block(i3d::Vector3d<int> coord) const {
 	    details::get_block_dimensions(props, _resolution);
 
 	i3d::Image3d<T> img;
-	img.MakeRoom(block_dim);
+	i3d::Vector3d<int> block_size =
+	    details::data_manip::get_block_size(coord, block_dim, props.dimensions);
+
+	img.MakeRoom(block_size);
 
 	read_block(coord, img);
 	return img;
@@ -274,7 +277,8 @@ bool ImageView::read_blocks(
 	if (!details::check_block_coords(coords, props.dimensions, block_dim))
 		return false;
 
-	if (!details::check_offset_coords(offsets, dest, block_dim))
+	if (!details::check_offset_coords(offsets, coords, dest, block_dim,
+	                                  props.dimensions))
 		return false;
 
 	std::string session_url = details::requests::session_url_request(
@@ -302,7 +306,9 @@ i3d::Image3d<T> ImageView::read_image() const {
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
 	i3d::Vector3d<int> block_dim =
 	    details::get_block_dimensions(props, _resolution);
-	i3d::Vector3d<int> block_count = props.dimensions / block_dim;
+
+	i3d::Vector3d<int> block_count =
+	    (props.dimensions + block_dim - 1) / block_dim; // Ceiling
 
 	i3d::Image3d<T> out;
 	out.MakeRoom(props.dimensions);
@@ -350,7 +356,8 @@ bool ImageView::write_blocks(
 	if (!details::check_block_coords(coords, props.dimensions, block_dim))
 		return false;
 
-	if (!details::check_offset_coords(src_offsets, src, block_dim))
+	if (!details::check_offset_coords(src_offsets, coords, src, block_dim,
+	                                  props.dimensions))
 		return false;
 
 	std::string session_url = details::requests::session_url_request(
@@ -360,14 +367,17 @@ bool ImageView::write_blocks(
 		session_url.pop_back();
 
 	for (std::size_t i = 0; i < coords.size(); ++i) {
-		std::vector<char> data(
-		    details::data_manip::get_data_size(block_dim, props.voxel_type));
-
 		auto& coord = coords[i];
 		auto& offset = src_offsets[i];
 
+		i3d::Vector3d<int> block_size = details::data_manip::get_block_size(
+		    coord, block_dim, props.dimensions);
+
+		std::vector<char> data(details::data_manip::get_block_data_size(
+		    block_size, props.voxel_type));
+
 		details::data_manip::write_data(src, offset, data, props.voxel_type,
-		                                block_dim);
+		                                block_size);
 
 		std::string url =
 		    fmt::format("{}/{}/{}/{}/{}/{}/{}", session_url, coord.x, coord.y,
@@ -386,7 +396,8 @@ bool ImageView::write_image(const i3d::Image3d<T>& img) const {
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
 	i3d::Vector3d<int> block_dim =
 	    details::get_block_dimensions(props, _resolution);
-	i3d::Vector3d<int> block_count = props.dimensions / block_dim;
+	i3d::Vector3d<int> block_count =
+	    (props.dimensions + block_dim - 1) / block_dim; // Ceiling
 
 	i3d::Image3d<T> out;
 	out.MakeRoom(props.dimensions);

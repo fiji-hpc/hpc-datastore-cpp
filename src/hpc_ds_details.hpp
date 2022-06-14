@@ -37,12 +37,18 @@ inline bool check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
                                i3d::Vector3d<int> block_dim);
 
 template <typename T>
-bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
+bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& offsets,
+                         const std::vector<i3d::Vector3d<int>>& coords,
                          const i3d::Image3d<T>& img,
-                         i3d::Vector3d<int> block_dim);
+                         i3d::Vector3d<int> block_dim,
+                         i3d::Vector3d<int> img_dim);
 namespace data_manip {
-inline int get_data_size(const i3d::Vector3d<int> block_dim,
-                         const std::string& voxel_type);
+inline int get_block_data_size(i3d::Vector3d<int> block_size,
+                               const std::string& voxel_type);
+
+inline i3d::Vector3d<int> get_block_size(i3d::Vector3d<int> coord,
+                                         i3d::Vector3d<int> block_dim,
+                                         i3d::Vector3d<int> img_dim);
 
 inline int get_linear_index(i3d::Vector3d<int> coord,
                             i3d::Vector3d<int> block_dim,
@@ -83,7 +89,7 @@ void write_data(const i3d::Image3d<T>& src,
                 i3d::Vector3d<int> offset,
                 std::span<char> data,
                 const std::string& voxel_type,
-                i3d::Vector3d<int> block_dim);
+                i3d::Vector3d<int> block_size);
 } // namespace data_manip
 
 namespace log {
@@ -220,51 +226,71 @@ check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
 	log::info("Checking validity of given block coordinates");
 
 	for (i3d::Vector3d<int> coord : coords)
-		for (int i = 0; i < 3; ++i) {
-			int val = coord[i] * block_dim[i];
-			if (!(0 <= val && val < img_dim[i])) {
-				log::error(
-				    fmt::format("Block coordinate {} is out of valid range",
-				                to_string(coord)));
+		if (data_manip::get_block_size(coord, block_dim, img_dim) ==
+		    i3d::Vector3d(0, 0, 0)) {
+			log::error(fmt::format("Block coordinate {} is out of valid range",
+			                       to_string(coord)));
 
-				return false;
-			}
+			return false;
 		}
-
 	log::info("Check successfullly finished");
 	return true;
 }
 
 template <typename T>
-bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& coords,
+bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& offsets,
+                         const std::vector<i3d::Vector3d<int>>& coords,
                          const i3d::Image3d<T>& img,
-                         i3d::Vector3d<int> block_dim) {
+                         i3d::Vector3d<int> block_dim,
+                         i3d::Vector3d<int> img_dim) {
 	if constexpr (!debug)
 		return true;
 
+	if (offsets.size() != coords.size())
+		return false;
+
 	log::info("Checking validity of given offset coordinates");
 
-	for (i3d::Vector3d<int> coord : coords)
+	for (std::size_t i = 0; i < coords.size(); ++i) {
+		auto& coord = coords[i];
+		auto& offset = offsets[i];
+
+		i3d::Vector3d<int> block_size =
+		    data_manip::get_block_size(coord, block_dim, img_dim);
 		for (int i = 0; i < 3; ++i)
 			if (!(0 <= coord[i] &&
-			      std::size_t(coord[i] + block_dim[i]) <= img.GetSize()[i])) {
+			      std::size_t(offset[i] + block_size[i]) <= img.GetSize()[i])) {
 				log::error(
 				    fmt::format("Offset coordinate {} is out of valid range",
 				                to_string(coord)));
 
 				return false;
 			}
-
+	}
 	log::info("Check successfullly finished");
 	return true;
 }
 
 namespace data_manip {
-/* inline */ int get_data_size(const i3d::Vector3d<int> block_dim,
-                               const std::string& voxel_type) {
+/* inline */ int get_block_data_size(i3d::Vector3d<int> block_size,
+                                     const std::string& voxel_type) {
 
 	int elem_size = type_byte_size.at(voxel_type);
-	return block_dim.x * block_dim.y * block_dim.z * elem_size + 12;
+	return block_size.x * block_size.y * block_size.z * elem_size + 12;
+}
+
+/* inline */ i3d::Vector3d<int> get_block_size(i3d::Vector3d<int> coord,
+                                               i3d::Vector3d<int> block_dim,
+                                               i3d::Vector3d<int> img_dim) {
+	i3d::Vector3d<int> start = (coord * block_dim);
+	i3d::Vector3d<int> end = (coord + 1) * block_dim;
+
+	i3d::Vector3d<int> out;
+	for (int i = 0; i < 3; ++i) {
+		out[i] =
+		    std::max(0, std::min(img_dim[i], end[i]) - std::max(start[i], 0));
+	}
+	return out;
 }
 
 /* inline */ int get_linear_index(i3d::Vector3d<int> coord,
@@ -352,17 +378,17 @@ void write_data(const i3d::Image3d<T>& src,
                 i3d::Vector3d<int> offset,
                 std::span<char> data,
                 const std::string& voxel_type,
-                i3d::Vector3d<int> block_dim) {
-	set_elem_at(data, "uint32", 0, block_dim.x);
-	set_elem_at(data, "uint32", 4, block_dim.y);
-	set_elem_at(data, "uint32", 8, block_dim.z);
+                i3d::Vector3d<int> block_size) {
+	set_elem_at(data, "uint32", 0, block_size.x);
+	set_elem_at(data, "uint32", 4, block_size.y);
+	set_elem_at(data, "uint32", 8, block_size.z);
 
-	for (int x = 0; x < block_dim.x; ++x)
-		for (int y = 0; y < block_dim.y; ++y)
-			for (int z = 0; z < block_dim.z; ++z)
-				set_elem_at(data, voxel_type, {x, y, z}, block_dim,
-				            *src.GetVoxelAddr(x + offset.x, y + offset.y,
-				                              z + offset.z));
+	for (int x = 0; x < block_size.x; ++x)
+		for (int y = 0; y < block_size.y; ++y)
+			for (int z = 0; z < block_size.z; ++z)
+				set_elem_at(
+				    data, voxel_type, {x, y, z}, block_size,
+				    src.GetVoxel(x + offset.x, y + offset.y, z + offset.z));
 }
 } // namespace data_manip
 

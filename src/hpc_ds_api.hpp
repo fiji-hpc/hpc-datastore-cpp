@@ -8,11 +8,41 @@
 #include <vector>
 
 namespace datastore {
+	/**
+	 * @brief Get the dataset properties object
+	 * 
+	 * Creates a HTTP requests to server <ip>:<port> and collects data about dataset <uuid>.
+	 * If some property is not found, atribute is left at its default value (Warning is emmited if in DEBUG). 
+	 * 
+	 * @param ip IP address of server (http:// at the beginning is not necessary)
+	 * @param port Port, where the server is listening for requests
+	 * @param uuid Unique identifier of dataset
+	 * @return DatasetProperties
+	 */
 inline DatasetProperties get_dataset_properties(const std::string& ip,
                                                 int port,
                                                 const std::string& uuid);
 
-// TODO docs
+/**
+ * @brief Read full image
+ * 
+ * Creates (several if needed) HTTP requests and collects whole image and returns it. All image properties
+ * are collected from server side. 
+ * 
+ * As there is no (meaningfull) way for C++ to choose correct underlying type in runtime,
+ * make sure to specify correct template type.  
+ * 
+ * @tparam T Scalar used as underlying type for image representation
+ * @param ip IP address of server (http:// at the beginning is not necessary)
+ * @param port Port, where the server is listening for requests
+ * @param uuid Unique identifier of dataset
+ * @param channel Channel, at which the image is located
+ * @param timepoint Timepoint, at which the image is located
+ * @param angle Angle, at which the image is located
+ * @param resolution Resolution, at which the image is located
+ * @param version Version, at which the image is located (integer identifier or "latest")
+ * @return i3d::Image3d<T> 
+ */
 template <cnpts::Scalar T>
 i3d::Image3d<T> read_image(const std::string& ip,
                            int port,
@@ -23,7 +53,31 @@ i3d::Image3d<T> read_image(const std::string& ip,
                            i3d::Vector3d<int> resolution = {1, 1, 1},
                            const std::string& version = "latest");
 
-// TODO docs
+/**
+ * @brief Write full image
+ * 
+ * Creates (several if needed) HTTP requests and sends whole image to datastore.
+ * If given image is larger, that the one on the server side, image is approprietely cropped.
+ * 
+ * If in DEBUG, function will check if image is not smaller then the one at server side.
+ * 
+ * To prevent 'unreasonable' behaviour, please make sure that the image is exactly the same
+ * size as on the server side. The above mention information is more like description of what 
+ * will probably happen, not definition of behaviour.
+ * 
+ * @tparam T Scalar used as underlying type for image representation 
+ * @param img Input image to be send to server
+ * @param ip IP address of server (http:// at the beginning is not necessary)
+ * @param port Port, where the server is listening for requests
+ * @param uuid Unique identifier of dataset
+ * @param channel Channel, at which the image is located
+ * @param timepoint Timepoint, at which the image is located
+ * @param angle Angle, at which the image is located
+ * @param resolution Resolution, at which the image is located
+ * @param version Version, at which the image is located (integer identifier or "latest")
+ * @return true if sending was successfull
+ * @return false if error occured (Description will be emitted if in DEBUG)
+ */
 template <cnpts::Scalar T>
 bool write_image(const i3d::Image3d<T>& img,
                  const std::string& ip,
@@ -35,8 +89,29 @@ bool write_image(const i3d::Image3d<T>& img,
                  i3d::Vector3d<int> resolution = {1, 1, 1},
                  const std::string version = "latest");
 
+/**
+ * @brief Representation of connection to specific image
+ * 
+ * Class representing connection to specific image on the server.
+ * This class provides basic methods for read/write operation necessary to
+ * transfer images from/to server. This class does not cache or precollect
+ * any data, so the first HTTP request will be send only when corresponding function
+ * is called. 
+ */
 class ImageView {
   public:
+  /**
+   * @brief Construct a new Image View object
+   * 
+   * @param ip IP address of server (http:// at the beginning is not necessary)
+   * @param port Port, where the server is listening for requests
+   * @param uuid Unique identifier of dataset
+   * @param channel Channel, at which the image is located
+   * @param timepoint Timepoint, at which the image is located
+   * @param angle Angle, at which the image is located
+   * @param resolution Resolution, at which the image is located
+   * @param version Version, at which the image is located (integer identifier or "latest")
+   */
 	ImageView(std::string ip,
 	          int port,
 	          std::string uuid,
@@ -46,27 +121,104 @@ class ImageView {
 	          i3d::Vector3d<int> resolution,
 	          std::string version);
 
-	// TODO docs
+	/**
+	 * @brief Read one block from server
+	 * 
+	 * Reads one block of image located at <coord> and returns it.
+	 * The information about size of the image is collected from the server.
+	 * 
+	 * If in DEBUG, function will check wheter given coordinate corresponds 
+	 * to valid block. 
+	 * 
+	 * As there is no (meaningfull) way for C++ to choose correct underlying type in runtime,
+     * make sure to specify correct template type. 
+	 * 
+	 * @tparam T Scalar used as underlying type for image representation
+	 * @param coord Block coordinate
+	 * @return Image containing selected block
+	 */
 	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_block(i3d::Vector3d<int> coord) const;
 
-	// TODO docs
+	/**
+	 * @brief Read one block from server to image
+	 * 
+	 * Reads one block of image located at <coord> and saves it to <dest> with offset <dest_offset>.
+	 * 
+	 * If in DEBUG, function will check wheter given coordinate corresponds 
+	 * to valid block as well as wheter the block fits into the image (taking offset into account).
+	 * 
+	 * @tparam T Scalar used as underlying type for image representation
+	 * @param coord Block coordinate
+	 * @param dest Image to write data to
+	 * @param dest_offset Offset by which the corresponding write should be moved
+	 * @return true At read success
+	 * @return false At read failiure
+	 */
 	template <cnpts::Scalar T>
 	bool read_block(i3d::Vector3d<int> coord,
 	                i3d::Image3d<T>& dest,
 	                i3d::Vector3d<int> dest_offset = {0, 0, 0}) const;
-	// TODO docs
+
+	/**
+	 * @brief Read blocks from server and return them
+	 * 
+	 * Reads blocks specified in <coords> and returns them. Corresponding 
+	 * sizes are collected from server and calculated specificaly for each block.
+	 * 
+	 * This function is not optimized, meaning that for each coord in <coord>, 
+	 * one HTTP request will be sent out to the server. This can heavily slow
+	 * down speed of the application as communication via network is not cheap.
+	 * If you do not have specific needs,most of the time it will be faster 
+	 * to collect blocks into prealocated image (second overload of read_blocks), 
+	 * however it will eat more RAM.
+	 * 
+	 * If in DEBUG, the fucntion checks if coordinates given in <coords> points to a valid blocks.
+	 * 
+	 * As there is no (meaningfull) way for C++ to choose correct underlying type in runtime,
+     * make sure to specify correct template type.
+	 * 
+	 * @tparam T Scalar used as underlying type for image representation
+	 * @param coords Block coordinates
+	 * @return std::vector<i3d::Image3d<T>> Vector of fetched blocks (the order is the same as given in <coords>)
+	 */
 	template <cnpts::Scalar T>
 	std::vector<i3d::Image3d<T>>
 	read_blocks(const std::vector<i3d::Vector3d<int>>& coords) const;
 
-	// TODO docs
+	/**
+	 * @brief Read blocks from server and saves them into prealocated image
+	 * 
+	 * Read blocks specified in <coords> and saves them into locations given in 
+	 * <offsets>.
+	 * 
+	 * If in DEBUG, the fucntion checks if coordinates given in <coords> points to a valid blocks,
+	 * as well as wheter the offsets specified for each block are within image boundaries.
+	 * 
+	 * @tparam T Scalar used as underlying type for image representation
+	 * @param coords Block coordinates
+	 * @param dest Prealocated destination image
+	 * @param offsets Offsets at wich the corresponding blocks should be saved
+	 * @return true At read success
+	 * @return false At read failure
+	 */
 	template <cnpts::Scalar T>
 	bool read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 i3d::Image3d<T>& dest,
 	                 const std::vector<i3d::Vector3d<int>>& offsets) const;
 
-	// TODO docs
+/**
+ * @brief Read full image
+ *  
+ * 	Read full image from the server and return it. The information about 
+ *  dimensions are fetched from the server. 
+ * 
+ * As there is no (meaningfull) way for C++ to choose correct underlying type in runtime,
+ * make sure to specify correct template type.
+ * 
+ * @tparam T Scalar used as underlying type for image representation 
+ * @return i3d::Image3d<T> Fetched image
+ */
 	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_image() const;
 

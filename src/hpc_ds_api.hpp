@@ -7,8 +7,6 @@
 #include <type_traits>
 #include <vector>
 
-// TODO add support for different dimensions
-
 namespace datastore {
 inline DatasetProperties get_dataset_properties(const std::string& ip,
                                                 int port,
@@ -249,8 +247,8 @@ i3d::Image3d<T> ImageView::read_block(i3d::Vector3d<int> coord) const {
 	    details::get_block_dimensions(props, _resolution);
 
 	i3d::Image3d<T> img;
-	i3d::Vector3d<int> block_size =
-	    details::data_manip::get_block_size(coord, block_dim, props.dimensions);
+	i3d::Vector3d<int> block_size = details::data_manip::get_block_size(
+	    coord, block_dim, props.dimensions / _resolution);
 
 	img.MakeRoom(block_size);
 
@@ -288,16 +286,18 @@ bool ImageView::read_blocks(
 	i3d::Vector3d<int> block_dim =
 	    details::get_block_dimensions(props, _resolution);
 
+	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
+
 	if (coords.size() != offsets.size()) {
 		details::log::error("Count of coordinates != count of offsets");
 		return false;
 	}
 
-	if (!details::check_block_coords(coords, props.dimensions, block_dim))
+	if (!details::check_block_coords(coords, img_dim, block_dim))
 		return false;
 
 	if (!details::check_offset_coords(offsets, coords, dest, block_dim,
-	                                  props.dimensions))
+	                                  img_dim))
 		return false;
 
 	std::string session_url = details::requests::session_url_request(
@@ -325,12 +325,13 @@ i3d::Image3d<T> ImageView::read_image() const {
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
 	i3d::Vector3d<int> block_dim =
 	    details::get_block_dimensions(props, _resolution);
+	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 
 	i3d::Vector3d<int> block_count =
-	    (props.dimensions + block_dim - 1) / block_dim; // Ceiling
+	    (img_dim + block_dim - 1) / block_dim; // Ceiling
 
 	i3d::Image3d<T> out;
-	out.MakeRoom(props.dimensions);
+	out.MakeRoom(img_dim);
 
 	std::vector<i3d::Vector3d<int>> blocks;
 	std::vector<i3d::Vector3d<int>> offsets;
@@ -366,17 +367,18 @@ bool ImageView::write_blocks(
 	DatasetProperties props = details::get_dataset_properties(dataset_url);
 	i3d::Vector3d<int> block_dim =
 	    details::get_block_dimensions(props, _resolution);
+	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 
 	if (coords.size() != src_offsets.size()) {
 		details::log::error("Count of coordinates != count of offsets");
 		return false;
 	}
 
-	if (!details::check_block_coords(coords, props.dimensions, block_dim))
+	if (!details::check_block_coords(coords, img_dim, block_dim))
 		return false;
 
 	if (!details::check_offset_coords(src_offsets, coords, src, block_dim,
-	                                  props.dimensions))
+	                                  img_dim))
 		return false;
 
 	std::string session_url = details::requests::session_url_request(
@@ -389,8 +391,8 @@ bool ImageView::write_blocks(
 		auto& coord = coords[i];
 		auto& offset = src_offsets[i];
 
-		i3d::Vector3d<int> block_size = details::data_manip::get_block_size(
-		    coord, block_dim, props.dimensions);
+		i3d::Vector3d<int> block_size =
+		    details::data_manip::get_block_size(coord, block_dim, img_dim);
 
 		std::vector<char> data(details::data_manip::get_block_data_size(
 		    block_size, props.voxel_type));
@@ -415,11 +417,9 @@ bool ImageView::write_image(const i3d::Image3d<T>& img) const {
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
 	i3d::Vector3d<int> block_dim =
 	    details::get_block_dimensions(props, _resolution);
+	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 	i3d::Vector3d<int> block_count =
-	    (props.dimensions + block_dim - 1) / block_dim; // Ceiling
-
-	i3d::Image3d<T> out;
-	out.MakeRoom(props.dimensions);
+	    (img_dim + block_dim - 1) / block_dim; // Ceiling
 
 	std::vector<i3d::Vector3d<int>> blocks;
 	std::vector<i3d::Vector3d<int>> offsets;

@@ -18,10 +18,14 @@
 
 namespace datastore {
 namespace details {
-#ifndef NDEBUG
-constexpr inline bool debug = true;
-#else
+#ifdef DATASTORE_NDEBUG 
 constexpr inline bool debug = false;
+#else
+#ifdef NDEBUG
+constexpr inline bool debug = false;
+#else 
+constexpr inline bool debug = true;
+#endif
 #endif
 
 inline std::string
@@ -120,8 +124,8 @@ T get_elem(Object::Ptr root, const std::string& name);
 template <cnpts::Vector T>
 T get_elem(Object::Ptr root, const std::string& name);
 
-template <cnpts::Resolution T>
-Resolution get_elem(Object::Ptr root, const std::string& name);
+template <cnpts::ResolutionUnit T>
+T get_elem(Object::Ptr root, const std::string& name);
 
 template <cnpts::Optional T>
 T get_elem(Object::Ptr root, const std::string& name);
@@ -190,11 +194,11 @@ get_dataset_properties(const std::string& dataset_url) {
 	props.voxel_resolution =
 	    get_elem<std::optional<i3d::Vector3d<double>>>(root, "voxelResolution");
 	props.timepoint_resolution =
-	    get_elem<std::optional<Resolution>>(root, "timepointResolution");
+	    get_elem<std::optional<ResolutionUnit>>(root, "timepointResolution");
 	props.channel_resolution =
-	    get_elem<std::optional<Resolution>>(root, "channelResolution");
+	    get_elem<std::optional<ResolutionUnit>>(root, "channelResolution");
 	props.angle_resolution =
-	    get_elem<std::optional<Resolution>>(root, "angleResolution");
+	    get_elem<std::optional<ResolutionUnit>>(root, "angleResolution");
 	props.compression = get_elem<std::string>(root, "compression");
 	props.resolution_levels = get_resolution_levels(root);
 	props.versions = get_elem<std::vector<int>>(root, "versions");
@@ -478,15 +482,15 @@ T get_elem(Object::Ptr root, const std::string& name) {
 	return out;
 }
 
-template <cnpts::Resolution T>
-Resolution get_elem(Object::Ptr root, const std::string& name) {
+template <cnpts::ResolutionUnit T>
+T get_elem(Object::Ptr root, const std::string& name) {
 	if (!root->has(name)) {
 		log::warning(fmt::format("{} was not found", name));
 		return {};
 	}
 
 	Object::Ptr res_ptr = root->getObject(name);
-	Resolution res;
+	ResolutionUnit res;
 
 	if (res_ptr->has("value")) {
 		res.value = res_ptr->getValue<double>("value");

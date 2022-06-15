@@ -18,13 +18,13 @@ const inline std::map<std::string, int> type_byte_size{
 
 constexpr inline std::size_t MAX_URL_LENGTH = 2048;
 
-class Resolution {
+class ResolutionUnit {
   public:
 	double value = 0.0;
 	std::string unit = "";
 
 	friend std::ostream& operator<<(std::ostream& stream,
-	                                const Resolution& res) {
+	                                const ResolutionUnit& res) {
 		stream << fmt::format("{} {}", res.value, res.unit);
 		return stream;
 	}
@@ -69,8 +69,8 @@ concept Map = requires(T) {
 };
 
 template <typename T>
-concept Resolution = requires(T) {
-	requires std::is_same_v<T, Resolution>;
+concept ResolutionUnit = requires(T) {
+	requires std::is_same_v<T, datastore::ResolutionUnit>;
 };
 } // namespace cnpts
 
@@ -143,9 +143,9 @@ class DatasetProperties {
 	std::optional<std::string> transformations;
 	std::string voxel_unit;
 	std::optional<i3d::Vector3d<double>> voxel_resolution;
-	std::optional<Resolution> timepoint_resolution;
-	std::optional<Resolution> channel_resolution;
-	std::optional<Resolution> angle_resolution;
+	std::optional<ResolutionUnit> timepoint_resolution;
+	std::optional<ResolutionUnit> channel_resolution;
+	std::optional<ResolutionUnit> angle_resolution;
 	std::string compression;
 	std::vector<std::map<std::string, i3d::Vector3d<int>>> resolution_levels;
 	std::vector<int> versions;

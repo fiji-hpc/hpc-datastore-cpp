@@ -302,9 +302,9 @@ namespace data_manip {
 	int elem_size = type_byte_size.at(voxel_type);
 
 	return 12 +                                   // header_offset
-	       (coord.x * block_dim.y * block_dim.z + // Main axis
-	        coord.y * block_dim.z +               // secondary axis
-	        coord.z) *                            // last axis
+	       (coord.z * block_dim.x * block_dim.y + // Main axis
+	        coord.y * block_dim.x +               // secondary axis
+	        coord.x) *                            // last axis
 	           elem_size;                         // byte size
 }
 

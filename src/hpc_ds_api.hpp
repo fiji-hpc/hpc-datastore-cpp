@@ -7,6 +7,8 @@
 #include <type_traits>
 #include <vector>
 
+// TODO add support for different dimensions
+
 namespace datastore {
 inline DatasetProperties get_dataset_properties(const std::string& ip,
                                                 int port,

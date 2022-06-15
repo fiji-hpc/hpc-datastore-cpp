@@ -12,7 +12,6 @@ inline DatasetProperties get_dataset_properties(const std::string& ip,
                                                 int port,
                                                 const std::string& uuid);
 
-// TODO finish implementation
 // TODO docs
 template <cnpts::Scalar T>
 i3d::Image3d<T> read_image(const std::string& ip,
@@ -24,7 +23,6 @@ i3d::Image3d<T> read_image(const std::string& ip,
                            i3d::Vector3d<int> resolution = {1, 1, 1},
                            const std::string& version = "latest");
 
-// TODO finish implementation
 // TODO docs
 template <cnpts::Scalar T>
 bool write_image(const i3d::Image3d<T>& img,
@@ -99,37 +97,32 @@ class ImageView {
 
 class Connection {
   public:
-	// TODO finish implementation
 	// TODO docs
 	Connection(std::string ip, int port, std::string uuid);
-	// TODO finish implementation
 	// TODO docs
 	ImageView get_view(int channel,
 	                   int timepoint,
 	                   int angle,
 	                   i3d::Vector3d<int> resolution,
 	                   const std::string& version) const;
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
-	i3d::Image3d<T> read_block(i3d::Vector3d<int> coords,
+	i3d::Image3d<T> read_block(i3d::Vector3d<int> coord,
 	                           int channel,
 	                           int timepoint,
 	                           int angle,
 	                           i3d::Vector3d<int> resolution,
 	                           const std::string& version) const;
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
-	bool read_block(i3d::Vector3d<int> coords,
+	bool read_block(i3d::Vector3d<int> coord,
+	                i3d::Image3d<T>& dest,
+	                i3d::Vector3d<int> dest_offset,
 	                int channel,
 	                int timepoint,
 	                int angle,
 	                i3d::Vector3d<int> resolution,
-	                const std::string& version,
-	                i3d::Image3d<T>& dest,
-	                i3d::Vector3d<int> dest_offset = {0, 0, 0}) const;
-	// TODO finish implementation
+	                const std::string& version) const;
 	// TODO docs
 	template <cnpts::Scalar T>
 	std::vector<i3d::Image3d<T>>
@@ -139,18 +132,16 @@ class Connection {
 	            int angle,
 	            i3d::Vector3d<int> resolution,
 	            const std::string& version) const;
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
 	bool read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
+	                 i3d::Image3d<T>& dest,
+	                 const std::vector<i3d::Vector3d<int>>& dest_offsets,
 	                 int channel,
 	                 int timepoint,
 	                 int angle,
 	                 i3d::Vector3d<int> resolution,
-	                 const std::string& version,
-	                 i3d::Image3d<T>& dest,
-	                 const std::vector<i3d::Vector3d<int>>& dest_offsets) const;
-	// TODO finish implementation
+	                 const std::string& version) const;
 	// TODO docs
 	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_image(int channel,
@@ -158,18 +149,16 @@ class Connection {
 	                           int angle,
 	                           i3d::Vector3d<int> resolution,
 	                           const std::string& version) const;
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
 	bool write_block(const i3d::Image3d<T>& src,
-	                 i3d::Vector3d<int> coords,
+	                 i3d::Vector3d<int> coord,
 	                 i3d::Vector3d<int> src_offset,
 	                 int channel,
 	                 int timepoint,
 	                 int angle,
 	                 i3d::Vector3d<int> resolution,
 	                 const std::string& version) const;
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
 	bool write_blocks(const i3d::Image3d<T>& src,
@@ -180,7 +169,6 @@ class Connection {
 	                  int angle,
 	                  i3d::Vector3d<int> resolution,
 	                  const std::string& version) const;
-	// TODO finish implementation
 	// TODO docs
 	template <cnpts::Scalar T>
 	bool write_image(const i3d::Image3d<T>& src,
@@ -207,6 +195,35 @@ namespace datastore {
                                                       const std::string& uuid) {
 	std::string dataset_url = details::get_dataset_url(ip, port, uuid);
 	return details::get_dataset_properties(dataset_url);
+}
+
+template <cnpts::Scalar T>
+i3d::Image3d<T> read_image(const std::string& ip,
+                           int port,
+                           const std::string& uuid,
+                           int channel /* = 0 */,
+                           int timepoint /*  = 0 */,
+                           int angle /* = 0 */,
+                           i3d::Vector3d<int> resolution /* = {1, 1, 1} */,
+                           const std::string& version /* = "latest" */) {
+	return ImageView(ip, port, uuid, channel, timepoint, angle, resolution,
+	                 version)
+	    .read_image<T>();
+}
+
+template <cnpts::Scalar T>
+bool write_image(const i3d::Image3d<T>& img,
+                 const std::string& ip,
+                 int port,
+                 const std::string& uuid,
+                 int channel /* = 0 */,
+                 int timepoint /* = 0 */,
+                 int angle /* = 0 */,
+                 i3d::Vector3d<int> resolution /*  = {1, 1, 1} */,
+                 const std::string version /* = "latest" */) {
+	return ImageView(ip, port, uuid, channel, timepoint, angle, resolution,
+	                 version)
+	    .write_image(img);
 }
 
 /* ===================================== ImageView */
@@ -420,4 +437,112 @@ bool ImageView::write_image(const i3d::Image3d<T>& img) const {
 
 Connection::Connection(std::string ip, int port, std::string uuid)
     : _ip(std::move(ip)), _port(port), _uuid(std::move(uuid)) {}
+
+ImageView Connection::get_view(int channel,
+                               int timepoint,
+                               int angle,
+                               i3d::Vector3d<int> resolution,
+                               const std::string& version) const {
+	return ImageView(_ip, _port, _uuid, channel, timepoint, angle, resolution,
+	                 version);
+}
+
+template <cnpts::Scalar T>
+i3d::Image3d<T> Connection::read_block(i3d::Vector3d<int> coord,
+                                       int channel,
+                                       int timepoint,
+                                       int angle,
+                                       i3d::Vector3d<int> resolution,
+                                       const std::string& version) const {
+	return get_view(channel, timepoint, angle, resolution, version)
+	    .read_block<T>(coord);
+}
+
+template <cnpts::Scalar T>
+bool Connection::read_block(i3d::Vector3d<int> coord,
+                            i3d::Image3d<T>& dest,
+                            i3d::Vector3d<int> dest_offset,
+                            int channel,
+                            int timepoint,
+                            int angle,
+                            i3d::Vector3d<int> resolution,
+                            const std::string& version) const {
+	return get_view(channel, timepoint, angle, resolution, version)
+	    .read_block(coord, dest, dest_offset);
+}
+
+template <cnpts::Scalar T>
+std::vector<i3d::Image3d<T>>
+Connection::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
+                        int channel,
+                        int timepoint,
+                        int angle,
+                        i3d::Vector3d<int> resolution,
+                        const std::string& version) const {
+	return get_view(channel, timepoint, angle, resolution, version)
+	    .read_blocks<T>(coords);
+}
+
+template <cnpts::Scalar T>
+bool Connection::read_blocks(
+    const std::vector<i3d::Vector3d<int>>& coords,
+    i3d::Image3d<T>& dest,
+    const std::vector<i3d::Vector3d<int>>& dest_offsets,
+    int channel,
+    int timepoint,
+    int angle,
+    i3d::Vector3d<int> resolution,
+    const std::string& version) const {
+	return get_view(channel, timepoint, angle, resolution, version)
+	    .read_blocks(coords, dest, dest_offsets);
+}
+
+template <cnpts::Scalar T>
+i3d::Image3d<T> Connection::read_image(int channel,
+                                       int timepoint,
+                                       int angle,
+                                       i3d::Vector3d<int> resolution,
+                                       const std::string& version) const {
+	return get_view(channel, timepoint, angle, resolution, version)
+	    .read_image<T>();
+}
+
+template <cnpts::Scalar T>
+bool Connection::write_block(const i3d::Image3d<T>& src,
+                             i3d::Vector3d<int> coord,
+                             i3d::Vector3d<int> src_offset,
+                             int channel,
+                             int timepoint,
+                             int angle,
+                             i3d::Vector3d<int> resolution,
+                             const std::string& version) const {
+	return get_view(channel, timepoint, angle, resolution, version)
+	    .write_block(src, coord, src_offset);
+}
+
+template <cnpts::Scalar T>
+bool Connection::write_blocks(
+    const i3d::Image3d<T>& src,
+    const std::vector<i3d::Vector3d<int>>& coords,
+    const std::vector<i3d::Vector3d<int>>& src_offsets,
+    int channel,
+    int timepoint,
+    int angle,
+    i3d::Vector3d<int> resolution,
+    const std::string& version) const {
+	return get_view(channel, timepoint, angle, resolution, version)
+	    .write_blocks(src, coords, src_offsets);
+}
+
+template <cnpts::Scalar T>
+bool Connection::write_image(const i3d::Image3d<T>& src,
+                             int channel,
+                             int timepoint,
+                             int angle,
+                             i3d::Vector3d<int> resolution,
+                             const std::string& version) const {
+	return get_view(channel, timepoint, angle, resolution, version)
+	    .write_image(src);
+}
+
 } // namespace datastore

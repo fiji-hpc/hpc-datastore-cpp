@@ -5,7 +5,7 @@
 
 const std::string ip = "http://127.0.0.1";
 constexpr unsigned short port = 9080;
-const std::string uuid = "64aec83b-332e-45a6-9aed-0051d7bb2cf8";
+const std::string uuid = "156ddbf9-880d-4e17-aafd-f9e29db58c0d";
 
 void compare() {
 	i3d::Image3d<uint16_t> src("mask020.tif");
@@ -22,13 +22,15 @@ void compare() {
 int main() {
 	datastore::ImageView view(ip, port, uuid, 0, 0, 0, {1, 1, 1}, "latest");
 
+	/*
 	i3d::Image3d<uint16_t> src("mask020.tif");
 	view.write_image(src);
+	*/
 
 	auto img = view.read_image<uint16_t>();
 	img.SaveImage("mask.tif");
 
-	compare();
+	// compare();
 
 	/*
 	    i3d::Image3d<int> img;

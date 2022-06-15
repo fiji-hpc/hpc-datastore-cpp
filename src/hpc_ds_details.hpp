@@ -479,8 +479,24 @@ T get_elem(Object::Ptr root, const std::string& name) {
 }
 
 template <cnpts::Resolution T>
-Resolution get_elem(Object::Ptr /* root*/, const std::string& /* name */) {
-	return {};
+Resolution get_elem(Object::Ptr root, const std::string& name) {
+	if (!root->has(name)) {
+		log::warning(fmt::format("{} was not found", name));
+		return {};
+	}
+
+	Object::Ptr res_ptr = root->getObject(name);
+	Resolution res;
+
+	if (res_ptr->has("value")) {
+		res.value = res_ptr->getValue<double>("value");
+	}
+
+	if (res_ptr->has("unit")) {
+		res.unit = res_ptr->getValue<std::string>("unit");
+	}
+
+	return res;
 }
 
 template <cnpts::Optional T>

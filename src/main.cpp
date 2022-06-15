@@ -29,12 +29,13 @@ int main() {
 
 	std::cout << datastore::get_dataset_properties(ip, port, uuid) << '\n';
 
+	/*
 	auto img = view.read_image<uint16_t>();
 	img.SaveImage("mask.tif");
 
 	// compare();
 
-	/*
+
 	    i3d::Image3d<int> img;
 	    img.MakeRoom(128, 64, 32);
 	    img.SetVoxel(0, 0, 0, 71);

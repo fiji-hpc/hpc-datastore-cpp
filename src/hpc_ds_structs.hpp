@@ -20,8 +20,8 @@ constexpr inline std::size_t MAX_URL_LENGTH = 2048;
 
 class Resolution {
   public:
-	double value;
-	std::string unit;
+	double value = 0.0;
+	std::string unit = "";
 
 	friend std::ostream& operator<<(std::ostream& stream,
 	                                const Resolution& res) {

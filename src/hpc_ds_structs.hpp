@@ -12,6 +12,23 @@
 #include <vector>
 
 namespace datastore {
+const inline std::map<std::string, int> type_byte_size{
+    {"uint8", 1}, {"uint16", 2}, {"uint32", 4}, {"uint64", 8},  {"int8", 1},
+    {"int16", 2}, {"int32", 4},  {"int64", 8},  {"float32", 4}, {"float64", 8}};
+
+constexpr inline std::size_t MAX_URL_LENGTH = 2048;
+
+class Resolution {
+  public:
+	double value;
+	std::string unit;
+
+	friend std::ostream& operator<<(std::ostream& stream,
+	                                const Resolution& res) {
+		stream << fmt::format("{} {}", res.value, res.unit);
+		return stream;
+	}
+};
 
 namespace cnpts {
 template <typename T>
@@ -50,15 +67,14 @@ concept Map = requires(T) {
 	requires std::is_same_v<
 	    std::map<typename T::key_type, typename T::mapped_type>, T>;
 };
+
+template <typename T>
+concept Resolution = requires(T) {
+	requires std::is_same_v<T, Resolution>;
+};
 } // namespace cnpts
 
 namespace details {
-
-const inline std::map<std::string, int> type_byte_size{
-    {"uint8", 1}, {"uint16", 2}, {"uint32", 4}, {"uint64", 8},  {"int8", 1},
-    {"int16", 2}, {"int32", 4},  {"int64", 8},  {"float32", 4}, {"float64", 8}};
-
-constexpr inline std::size_t MAX_URL_LENGTH = 2048;
 
 /** Forward declarations to enable 'recursion' **/
 template <cnpts::Streamable T>
@@ -127,9 +143,9 @@ class DatasetProperties {
 	std::optional<std::string> transformations;
 	std::string voxel_unit;
 	std::optional<i3d::Vector3d<double>> voxel_resolution;
-	std::optional<i3d::Vector3d<double>> timepoint_resolution;
-	std::optional<i3d::Vector3d<double>> channel_resolution;
-	std::optional<i3d::Vector3d<double>> angle_resolution;
+	std::optional<Resolution> timepoint_resolution;
+	std::optional<Resolution> channel_resolution;
+	std::optional<Resolution> angle_resolution;
 	std::string compression;
 	std::vector<std::map<std::string, i3d::Vector3d<int>>> resolution_levels;
 	std::vector<int> versions;
@@ -137,30 +153,33 @@ class DatasetProperties {
 	std::optional<std::string> view_registrations;
 	std::vector<int> timepoint_ids;
 
-	operator std::string() const {
-		std::stringstream ss;
+	friend std::ostream& operator<<(std::ostream& stream,
+	                                const DatasetProperties& ds) {
 		using details::to_string;
 
-		ss << "UUID: " << uuid << '\n';
-		ss << "voxelType: " << voxel_type << '\n';
-		ss << "dimensions: " << dimensions << '\n';
-		ss << "channels: " << channels << '\n';
-		ss << "angles: " << angles << '\n';
-		ss << "transformations: " << to_string(transformations) << '\n';
-		ss << "voxelUnit: " << voxel_unit << '\n';
-		ss << "voxelResolution: " << to_string(voxel_resolution) << '\n';
-		ss << "timepointResolution: " << to_string(timepoint_resolution)
-		   << '\n';
-		ss << "channelResolution: " << to_string(channel_resolution) << '\n';
-		ss << "angleResolution: " << to_string(angle_resolution) << '\n';
-		ss << "compression: " << compression << '\n';
-		ss << "resolutionLevels: " << to_string(resolution_levels) << '\n';
-		ss << "versions: " << to_string(versions) << '\n';
-		ss << "label: " << label << '\n';
-		ss << "viewRegistrations: " << to_string(view_registrations) << '\n';
-		ss << "timepointIds: " << to_string(timepoint_ids) << '\n';
+		stream << "UUID: " << ds.uuid << '\n';
+		stream << "voxelType: " << ds.voxel_type << '\n';
+		stream << "dimensions: " << ds.dimensions << '\n';
+		stream << "channels: " << ds.channels << '\n';
+		stream << "angles: " << ds.angles << '\n';
+		stream << "transformations: " << to_string(ds.transformations) << '\n';
+		stream << "voxelUnit: " << ds.voxel_unit << '\n';
+		stream << "voxelResolution: " << to_string(ds.voxel_resolution) << '\n';
+		stream << "timepointResolution: " << to_string(ds.timepoint_resolution)
+		       << '\n';
+		stream << "channelResolution: " << to_string(ds.channel_resolution)
+		       << '\n';
+		stream << "angleResolution: " << to_string(ds.angle_resolution) << '\n';
+		stream << "comprestreamion: " << ds.compression << '\n';
+		stream << "resolutionLevels: " << to_string(ds.resolution_levels)
+		       << '\n';
+		stream << "versions: " << to_string(ds.versions) << '\n';
+		stream << "label: " << ds.label << '\n';
+		stream << "viewRegistrations: " << to_string(ds.view_registrations)
+		       << '\n';
+		stream << "timepointIds: " << to_string(ds.timepoint_ids) << '\n';
 
-		return ss.str();
+		return stream;
 	}
 };
 } // namespace datastore

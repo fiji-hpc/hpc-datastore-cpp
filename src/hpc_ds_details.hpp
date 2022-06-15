@@ -120,6 +120,9 @@ T get_elem(Object::Ptr root, const std::string& name);
 template <cnpts::Vector T>
 T get_elem(Object::Ptr root, const std::string& name);
 
+template <cnpts::Resolution T>
+Resolution get_elem(Object::Ptr root, const std::string& name);
+
 template <cnpts::Optional T>
 T get_elem(Object::Ptr root, const std::string& name);
 
@@ -186,12 +189,12 @@ get_dataset_properties(const std::string& dataset_url) {
 	props.voxel_unit = get_elem<std::string>(root, "voxelUnit");
 	props.voxel_resolution =
 	    get_elem<std::optional<i3d::Vector3d<double>>>(root, "voxelResolution");
-	props.timepoint_resolution = get_elem<std::optional<i3d::Vector3d<double>>>(
-	    root, "timepointResolution");
-	props.channel_resolution = get_elem<std::optional<i3d::Vector3d<double>>>(
-	    root, "channelResolution");
+	props.timepoint_resolution =
+	    get_elem<std::optional<Resolution>>(root, "timepointResolution");
+	props.channel_resolution =
+	    get_elem<std::optional<Resolution>>(root, "channelResolution");
 	props.angle_resolution =
-	    get_elem<std::optional<i3d::Vector3d<double>>>(root, "angleResolution");
+	    get_elem<std::optional<Resolution>>(root, "angleResolution");
 	props.compression = get_elem<std::string>(root, "compression");
 	props.resolution_levels = get_resolution_levels(root);
 	props.versions = get_elem<std::vector<int>>(root, "versions");
@@ -473,6 +476,11 @@ T get_elem(Object::Ptr root, const std::string& name) {
 		out[i] = values->getElement<V>(i);
 
 	return out;
+}
+
+template <cnpts::Resolution T>
+Resolution get_elem(Object::Ptr /* root*/, const std::string& /* name */) {
+	return {};
 }
 
 template <cnpts::Optional T>

@@ -669,16 +669,18 @@ ImageView::ImageView(std::string ip,
 
 template <cnpts::Scalar T>
 i3d::Image3d<T> ImageView::read_block(i3d::Vector3d<int> coord) const {
+	/* Fetch properties from server */
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
 	i3d::Vector3d<int> block_dim =
 	    details::get_block_dimensions(props, _resolution);
 
+	/* Prepare output image */
 	i3d::Image3d<T> img;
 	i3d::Vector3d<int> block_size = details::data_manip::get_block_size(
 	    coord, block_dim, props.dimensions / _resolution);
-
 	img.MakeRoom(block_size);
 
+	/* Fetch and return */
 	read_block(coord, img);
 	return img;
 }
@@ -694,6 +696,7 @@ bool ImageView::read_block(
 template <cnpts::Scalar T>
 std::vector<i3d::Image3d<T>>
 ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords) const {
+	/* Process blocks one by one */
 	std::vector<i3d::Image3d<T>> out;
 	for (auto coord : coords)
 		out.push_back(read_block<T>(coord));
@@ -708,6 +711,7 @@ bool ImageView::read_blocks(
     i3d::Image3d<T>& dest,
     const std::vector<i3d::Vector3d<int>>& offsets) const {
 
+	/* Fetched properties from server */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
 	DatasetProperties props = details::get_dataset_properties(dataset_url);
 	i3d::Vector3d<int> block_dim =
@@ -715,6 +719,7 @@ bool ImageView::read_blocks(
 
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 
+	/* Error checking (when not in debug, all checks automatically return true)*/
 	if (coords.size() != offsets.size()) {
 		details::log::error("Count of coordinates != count of offsets");
 		return false;
@@ -727,12 +732,14 @@ bool ImageView::read_blocks(
 	                                  img_dim))
 		return false;
 
+	/* prepare request url */
 	std::string session_url = details::requests::session_url_request(
 	    dataset_url, _resolution, _version);
 
 	if (session_url.ends_with('/'))
 		session_url.pop_back();
 
+	/* Fetch blocks one by one */
 	for (std::size_t i = 0; i < coords.size(); ++i) {
 		auto& coord = coords[i];
 		auto& offset = offsets[i];
@@ -749,6 +756,7 @@ bool ImageView::read_blocks(
 
 template <cnpts::Scalar T>
 i3d::Image3d<T> ImageView::read_image() const {
+	/* Fetch properties from server */
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
 	i3d::Vector3d<int> block_dim =
 	    details::get_block_dimensions(props, _resolution);
@@ -757,9 +765,11 @@ i3d::Image3d<T> ImageView::read_image() const {
 	i3d::Vector3d<int> block_count =
 	    (img_dim + block_dim - 1) / block_dim; // Ceiling
 
+	/* Prepare output image */
 	i3d::Image3d<T> out;
 	out.MakeRoom(img_dim);
 
+	/* Prepare coordinates of blocks and offsets to fetch whole image */
 	std::vector<i3d::Vector3d<int>> blocks;
 	std::vector<i3d::Vector3d<int>> offsets;
 
@@ -771,6 +781,7 @@ i3d::Image3d<T> ImageView::read_image() const {
 				                     z * block_dim.z);
 			}
 
+	/* Fetch whole image and return */
 	read_blocks(blocks, out, offsets);
 	return out;
 }
@@ -790,12 +801,14 @@ bool ImageView::write_blocks(
     const std::vector<i3d::Vector3d<int>>& coords,
     const std::vector<i3d::Vector3d<int>>& src_offsets) const {
 
+	/* Fetch server properties */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
 	DatasetProperties props = details::get_dataset_properties(dataset_url);
 	i3d::Vector3d<int> block_dim =
 	    details::get_block_dimensions(props, _resolution);
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 
+	/* Error checking (when not in debug, all checks automatically return true)*/
 	if (coords.size() != src_offsets.size()) {
 		details::log::error("Count of coordinates != count of offsets");
 		return false;
@@ -808,12 +821,14 @@ bool ImageView::write_blocks(
 	                                  img_dim))
 		return false;
 
+	/* prepare request url */
 	std::string session_url = details::requests::session_url_request(
 	    dataset_url, _resolution, _version);
 
 	if (session_url.ends_with('/'))
 		session_url.pop_back();
 
+	/* Write blocks to server one by one */
 	for (std::size_t i = 0; i < coords.size(); ++i) {
 		auto& coord = coords[i];
 		auto& offset = src_offsets[i];
@@ -821,9 +836,11 @@ bool ImageView::write_blocks(
 		i3d::Vector3d<int> block_size =
 		    details::data_manip::get_block_size(coord, block_dim, img_dim);
 
+		/* Prepare vector representing octet-data (will be send to server) */
 		std::vector<char> data(details::data_manip::get_block_data_size(
 		    block_size, props.voxel_type));
 
+		/* Transform image to octet-data */
 		details::data_manip::write_data(src, offset, data, props.voxel_type,
 		                                block_size);
 
@@ -841,6 +858,8 @@ bool ImageView::write_blocks(
 
 template <cnpts::Scalar T>
 bool ImageView::write_image(const i3d::Image3d<T>& img) const {
+
+	/* Fetch image properties from server */
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
 	i3d::Vector3d<int> block_dim =
 	    details::get_block_dimensions(props, _resolution);
@@ -848,6 +867,7 @@ bool ImageView::write_image(const i3d::Image3d<T>& img) const {
 	i3d::Vector3d<int> block_count =
 	    (img_dim + block_dim - 1) / block_dim; // Ceiling
 
+	/* Prepare coordinates of blocks and offsets to write whole image */
 	std::vector<i3d::Vector3d<int>> blocks;
 	std::vector<i3d::Vector3d<int>> offsets;
 
@@ -859,6 +879,7 @@ bool ImageView::write_image(const i3d::Image3d<T>& img) const {
 				                     z * block_dim.z);
 			}
 
+	/* write whole image */
 	return write_blocks(img, blocks, offsets);
 }
 

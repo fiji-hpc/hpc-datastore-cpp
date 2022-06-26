@@ -12,12 +12,19 @@
 #include <vector>
 
 namespace datastore {
+
+/* dataset 'voxel_type' to 'byte_size' map*/
 const inline std::map<std::string, int> type_byte_size{
     {"uint8", 1}, {"uint16", 2}, {"uint32", 4}, {"uint64", 8},  {"int8", 1},
     {"int16", 2}, {"int32", 4},  {"int64", 8},  {"float32", 4}, {"float64", 8}};
 
+/* Maximal legal URL length */
 constexpr inline std::size_t MAX_URL_LENGTH = 2048;
 
+/**
+ * @brief Class representing resolution unit (in DatasetProperties)
+ * 
+ */
 class ResolutionUnit {
   public:
 	double value = 0.0;
@@ -30,6 +37,7 @@ class ResolutionUnit {
 	}
 };
 
+/* Concepts definitions to make templates more readable */
 namespace cnpts {
 template <typename T>
 concept Scalar = requires(T) {
@@ -76,6 +84,7 @@ concept ResolutionUnit = requires(T) {
 
 namespace details {
 
+/** Unified way to convert structures into string **/
 /** Forward declarations to enable 'recursion' **/
 template <cnpts::Streamable T>
 std::string to_string(const T&);
@@ -133,6 +142,10 @@ std::string to_string(const T& val) {
 
 } // namespace details
 
+/**
+ * @brief Class representing dataset properties
+ * 
+ */
 class DatasetProperties {
   public:
 	std::string uuid;

@@ -18,28 +18,74 @@
 
 namespace datastore {
 namespace details {
-#ifdef DATASTORE_NDEBUG 
+#ifdef DATASTORE_NDEBUG
 constexpr inline bool debug = false;
 #else
 #ifdef NDEBUG
 constexpr inline bool debug = false;
-#else 
+#else
 constexpr inline bool debug = true;
 #endif
 #endif
 
+/**
+ * @brief Get the dataset url objimagect
+ *
+ * @param ip ip address of the server
+ * @param port port, where the server is listening on
+ * @param uuid unique identifier of dataset
+ * @return std::string dataset url
+ */
 inline std::string
 get_dataset_url(const std::string& ip, int port, const std::string& uuid);
 
+/**
+ * @brief Get the dataset properties
+ *
+ * @param dataset_url
+ * @return DatasetProperties
+ */
 inline DatasetProperties get_dataset_properties(const std::string& dataset_url);
 
+/**
+ * @brief Get the block dimensions
+ * 
+ * @param props dataset properties
+ * @param resolution requested resolution
+ * @return i3d::Vector3d<int> vector representing dimensions, {-1, -1, -1} where not found
+ */
 inline i3d::Vector3d<int> get_block_dimensions(const DatasetProperties& props,
                                                i3d::Vector3d<int> resolution);
 
+/**
+ * @brief Check consistency of block coordinates with respect to server
+ *
+ * Returns True when not in debug
+ *
+ * @param coords Coordinates
+ * @param img_dim image dimensions for requested resolution
+ * @param block_dim dimension of block for requested resolution
+ * @return true At no error
+ * @return false At error (ERROR is emmited)
+ */
 inline bool check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
                                i3d::Vector3d<int> img_dim,
                                i3d::Vector3d<int> block_dim);
 
+/**
+ * @brief Check if blocks are not written out of local image boundaries
+ *
+ * Returns True when not in debug
+ *
+ * @tparam T Image backend type
+ * @param offsets offsets into <img>
+ * @param coords block coordinages
+ * @param img local image
+ * @param block_dim regular block dimension
+ * @param img_dim server image dimensions
+ * @return true At no error
+ * @return false At error (ERROR is emmitted)
+ */
 template <typename T>
 bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& offsets,
                          const std::vector<i3d::Vector3d<int>>& coords,
@@ -82,12 +128,31 @@ void set_elem_at(std::span<char> data,
                  i3d::Vector3d<int> block_dim,
                  T elem);
 
+/**
+ * @brief Read data to image
+ *
+ * @tparam T Backend type of image
+ * @param data octet-data to read from
+ * @param voxel_type data type of image in <data>
+ * @param dest destination image
+ * @param offset offset to destination image
+ */
 template <typename T>
 void read_data(std::span<const char> data,
                const std::string& voxel_type,
                i3d::Image3d<T>& dest,
                i3d::Vector3d<int> offset);
 
+/**
+ * @brief Write image to data
+ *
+ * @tparam T Backend type of image
+ * @param src source image
+ * @param offset offset to source image
+ * @param data preallocated octet-data (ensure proper size)
+ * @param voxel_type data type of image in <data>
+ * @param block_size regular block size
+ */
 template <typename T>
 void write_data(const i3d::Image3d<T>& src,
                 i3d::Vector3d<int> offset,
@@ -97,21 +162,46 @@ void write_data(const i3d::Image3d<T>& src,
 } // namespace data_manip
 
 namespace log {
+/**
+ * @brief Print message to output
+ *
+ * @param msg Message
+ * @param location Message source properties
+ */
 inline void _log(const std::string& msg, const std::source_location& location);
 
+/**
+ * @brief Print info message
+ *
+ * @param msg Message
+ * @param location Automaticaly generated location info
+ */
 inline void
 info(const std::string& msg,
      const std::source_location& location = std::source_location::current());
 
+/**
+ * @brief Print warning message
+ *
+ * @param msg Message
+ * @param location Automaticaly generated location info
+ */
 inline void
 warning(const std::string& msg,
         const std::source_location& location = std::source_location::current());
 
+/**
+ * @brief Print error message
+ *
+ * @param msg Message
+ * @param location Automatically generated location info
+ */
 inline void
 error(const std::string& msg,
       const std::source_location& location = std::source_location::current());
 } // namespace log
 
+/* Helpers to parse Dataset Properties from JSON */
 namespace props_parser {
 using namespace Poco::JSON;
 
@@ -135,6 +225,7 @@ get_resolution_levels(Object::Ptr root);
 
 } // namespace props_parser
 
+/* Helpers providing requests functionality */
 namespace requests {
 inline std::string session_url_request(const std::string& ds_url,
                                        i3d::Vector3d<int> resolution,
@@ -146,7 +237,6 @@ make_request(const std::string& url,
              const std::vector<char>& data = {},
              const std::map<std::string, std::string>& headers = {});
 } // namespace requests
-
 } // namespace details
 } // namespace datastore
 
@@ -166,6 +256,7 @@ inline DatasetProperties
 get_dataset_properties(const std::string& dataset_url) {
 	using namespace Poco::JSON;
 
+	/* Fetch JSON from server */
 	auto [data, response] = requests::make_request(dataset_url);
 	std::string json_str(data.begin(), data.end());
 
@@ -182,6 +273,8 @@ get_dataset_properties(const std::string& dataset_url) {
 	auto root = result.extract<Object::Ptr>();
 
 	using namespace props_parser;
+
+	/* Parse elements from JSON */
 
 	props.uuid = get_elem<std::string>(root, "uuid");
 	props.voxel_type = get_elem<std::string>(root, "voxelType");
@@ -227,6 +320,7 @@ get_block_dimensions(const DatasetProperties& props,
 check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
                    i3d::Vector3d<int> img_dim,
                    i3d::Vector3d<int> block_dim) {
+	/* Act as NOOP if not in debug */
 	if constexpr (!debug)
 		return true;
 
@@ -250,6 +344,7 @@ bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& offsets,
                          const i3d::Image3d<T>& img,
                          i3d::Vector3d<int> block_dim,
                          i3d::Vector3d<int> img_dim) {
+	/* Act as NOOP if not in debug */						
 	if constexpr (!debug)
 		return true;
 

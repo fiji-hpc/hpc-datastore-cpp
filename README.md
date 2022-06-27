@@ -2,6 +2,10 @@
 
 This project is up to date with [HPC Datastore server 1.7.0](https://github.com/fiji-hpc/hpc-datastore).
 
+## Content
+* [Introduction](main#Introduction)
+
+
 ## Introduction
 
 This project is header-only C++ library providing basic communication with [HPC Datastore server](https://github.com/fiji-hpc/hpc-datastore).
@@ -95,10 +99,11 @@ These tests are located in [`tests/units/`](tests/units/) and are created to ens
 ### Speed tests
 These tests are located in [`tests/speeds/`](tests/speeds/) and are created to measure the speed at which you are able to communicate with server.
 There exists 4 different tests:
-    * Image download
-    * Image upload
-    * Block download
-    * Block upload
+
+* Image download
+* Image upload
+* Block download
+* Block upload
 
 The size of the sample to test is equal to the size of image specified in [`tests/common.hpp`](tests/common.hpp) on the server.
 

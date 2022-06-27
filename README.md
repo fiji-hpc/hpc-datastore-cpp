@@ -63,7 +63,7 @@ All samples are located in [`samples` folder](samples) and organized in subdirec
 For samples to work properly, you will have to have connection to **HPC datastore server** (It is possible to run it locally on your PC). 
 It is also recommended to create testing dataset, so you will not accidentaly overwrite important data. 
 
-Do not forget to write your server *IP*, *PORT* and dataset *uuid* to [`samples/common.hpp`](samples/common.hpp), where all the sample projects will find it. 
+Do not forget to write your server *IP*, *PORT*, dataset *uuid* and other properties to [`samples/common.hpp`](samples/common.hpp), where all the sample projects will find it. 
 
 ### Building sample(s) 
 Text bellow assumes you are using **vcpkg**.
@@ -74,7 +74,7 @@ To build all samples, locate yourself inside [`samples`](samples). To build one 
 
 1. Create build folder (e.g. `mkdir build`)
 2. Enter build folder (e.g. `cd build`)
-3. Initialize cmake (e.g. `cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg_dir>/scripts/builsystems/vcpkg.cmake` ../)
+3. Initialize cmake (e.g. `cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg_dir>/scripts/buildsystems/vcpkg.cmake ../`)
 4. Build project (e.g. `make`)
 
 After that, all compiled binaries will be located inside `build` folder.
@@ -82,4 +82,35 @@ After that, all compiled binaries will be located inside `build` folder.
 Note, that initialization of **vcpkg** for first time can take some time.
 
 ## Tests
+Tests samples are divided into two parts: Unit tests and Speed tests.
+
+For all tests to work properly, you will have to have connection to **HPC datastore server** (It is possible to run it locally on your PC).
+It is also recommended to create testing dataset, sou you will not accidentaly overwrite important data.
+
+Do not forget to write your *IP*, *PORT*, dataset *uuid* and other properties to [`tests/common.hpp`](tests/common.hpp), where all the tests will find it.
+
+### Unit tests
+These tests are located in [`tests/units/`](tests/units/) and are created to ensure, that everything is working as expected.
+
+### Speed tests
+These tests are located in [`tests/speeds/`](tests/speeds/) and are created to measure the speed at which you are able to communicate with server.
+There exists 4 different tests:
+    * Image download
+    * Image upload
+    * Block download
+    * Block upload
+
+The size of the sample to test is equal to the size of image specified in [`tests/common.hpp`](tests/common.hpp) on the server.
+
+### Building tests
+Text bellow assumes you are using **vcpkg**.
+
+To build the tests, locate yourself into corresponding subfolder ([`units`](tests/units/) or [`speeds`](tests/speeds)).
+
+1. Create build folder (e.g. `mkdir build`)
+2. Enter build folder (e.g. `cd build`)
+3. Initialize cmake (e.g. `cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg_dir>/scripts/buildsystems/vcpkg.cmake ../`)
+4. Build project (e.g. `make`)
+
+After that, all compiled binaries will be located inside `build` folder.
 

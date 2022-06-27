@@ -41,7 +41,45 @@ The documentation can be viewed directly in the source code, most importantly in
 There is also doxygen-generated documentation available in [html](docs/generated/html/index.html) and [pdf](docs/generated/latex/refman.pdf).
 
 ## Usage
+The only necessary file to include is [`hpc_ds_api.hpp`](src/hpc_ds_api.hpp).
+
+From that, you will obtain namespace `datastore`, where all functionality is provided. It is recommended you do not use anything outside of root of this namespace. Functions located in `datastore::details` are used for internal functionality.
+
+There are 3 categories of provided api
+### Global (datastore::) scope
+Provides `read_image` and `write_image` functions as well as `get_dataset_properties` to obtain dataset properties from the server.
+
+### Connection class
+Use this, if you want to connect to different images from one dataset. This class will remember the dataset address and you will not have to write it all over again.
+
+### ImageView class
+Use this, if you want to connect to one specified image (and use several read/write operations on it). This class will remember the image and you will not have to write it all over again.
 
 ## Samples
+There exist few samples, that can be used to check, if project is compilable, and to `quick start` your datastore journey.
+
+All samples are located in [`samples` folder](samples) and organized in subdirectories. 
+
+For samples to work properly, you will have to have connection to **HPC datastore server** (It is possible to run it locally on your PC). 
+It is also recommended to create testing dataset, so you will not accidentaly overwrite important data. 
+
+Do not forget to write your server *IP*, *PORT* and dataset *uuid* to [`samples/common.hpp`](samples/common.hpp), where all the sample projects will find it. 
+
+### Building sample(s) 
+Text bellow assumes you are using **vcpkg**.
+
+You can either build all samples at once, are build them separately.
+
+To build all samples, locate yourself inside [`samples`](samples). To build one sample, locate yourself into appropriate subdirectory. All other instructions are the same.
+
+1. Create build folder (e.g. `mkdir build`)
+2. Enter build folder (e.g. `cd build`)
+3. Initialize cmake (e.g. `cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg_dir>/scripts/builsystems/vcpkg.cmake` ../)
+4. Build project (e.g. `make`)
+
+After that, all compiled binaries will be located inside `build` folder.
+
+Note, that initialization of **vcpkg** for first time can take some time.
 
 ## Tests
+

@@ -3,8 +3,10 @@
 This project is up to date with [HPC Datastore server 1.7.0](https://github.com/fiji-hpc/hpc-datastore).
 
 ## Content
-* [Introduction](#Introduction)
-* [Instalation]
+1. [Introduction](#1-Introduction)
+2. [Instalation](#2-Instalation)
+    1. [Requirements](#21-Requirements)
+
 
 
 ## 1 Introduction

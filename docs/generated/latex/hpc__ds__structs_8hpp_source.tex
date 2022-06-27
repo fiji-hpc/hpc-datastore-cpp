@@ -1,0 +1,193 @@
+\hypertarget{hpc__ds__structs_8hpp_source}{}\doxysection{hpc\+\_\+ds\+\_\+structs.\+hpp}
+\label{hpc__ds__structs_8hpp_source}\index{/home/somik/CBIA/hpc-\/datastore-\/cpp/src/hpc\_ds\_structs.hpp@{/home/somik/CBIA/hpc-\/datastore-\/cpp/src/hpc\_ds\_structs.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#include <array>}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <cassert>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <fmt/core.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <i3d/image3d.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <i3d/vector3d.h>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <optional>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <ostream>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <sstream>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{keyword}{namespace }datastore \{}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{comment}{/* dataset 'voxel\_type' to 'byte\_size' map*/}}
+\DoxyCodeLine{17 \textcolor{keyword}{const} \textcolor{keyword}{inline} std::map<std::string, int> type\_byte\_size\{}
+\DoxyCodeLine{18     \{\textcolor{stringliteral}{"{}uint8"{}}, 1\}, \{\textcolor{stringliteral}{"{}uint16"{}}, 2\}, \{\textcolor{stringliteral}{"{}uint32"{}}, 4\}, \{\textcolor{stringliteral}{"{}uint64"{}}, 8\},  \{\textcolor{stringliteral}{"{}int8"{}}, 1\},}
+\DoxyCodeLine{19     \{\textcolor{stringliteral}{"{}int16"{}}, 2\}, \{\textcolor{stringliteral}{"{}int32"{}}, 4\},  \{\textcolor{stringliteral}{"{}int64"{}}, 8\},  \{\textcolor{stringliteral}{"{}float32"{}}, 4\}, \{\textcolor{stringliteral}{"{}float64"{}}, 8\}\};}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{comment}{/* Maximal legal URL length */}}
+\DoxyCodeLine{22 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} std::size\_t MAX\_URL\_LENGTH = 2048;}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{28 \textcolor{keyword}{class }\mbox{\hyperlink{classdatastore_1_1_resolution_unit}{ResolutionUnit}} \{}
+\DoxyCodeLine{29   \textcolor{keyword}{public}:}
+\DoxyCodeLine{30     \textcolor{keywordtype}{double} value = 0.0;}
+\DoxyCodeLine{31     std::string unit = \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     \textcolor{keyword}{friend} std::ostream\& operator<<(std::ostream\& stream,}
+\DoxyCodeLine{34                                     \textcolor{keyword}{const} \mbox{\hyperlink{classdatastore_1_1_resolution_unit}{ResolutionUnit}}\& res) \{}
+\DoxyCodeLine{35         stream << fmt::format(\textcolor{stringliteral}{"{}\{\} \{\}"{}}, res.value, res.unit);}
+\DoxyCodeLine{36         \textcolor{keywordflow}{return} stream;}
+\DoxyCodeLine{37     \}}
+\DoxyCodeLine{38 \};}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{comment}{/* Concepts definitions to make templates more readable */}}
+\DoxyCodeLine{41 \textcolor{keyword}{namespace }cnpts \{}
+\DoxyCodeLine{42 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{43 \textcolor{keyword}{concept }Scalar = \textcolor{keyword}{requires}(T) \{}
+\DoxyCodeLine{44     \textcolor{keyword}{requires} std::is\_scalar\_v<T>;}
+\DoxyCodeLine{45 \};}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{48 \textcolor{keyword}{concept }Basic = \textcolor{keyword}{requires}(T) \{}
+\DoxyCodeLine{49     \textcolor{keyword}{requires} Scalar<T> || std::is\_same\_v<T, std::string>;}
+\DoxyCodeLine{50 \};}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{53 \textcolor{keyword}{concept }Vector = \textcolor{keyword}{requires}(T) \{}
+\DoxyCodeLine{54     \textcolor{keyword}{requires} std::is\_same\_v<std::vector<typename T::value\_type>, T>;}
+\DoxyCodeLine{55 \};}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{58 \textcolor{keyword}{concept }Optional = \textcolor{keyword}{requires}(T) \{}
+\DoxyCodeLine{59     \textcolor{keyword}{requires} std::is\_same\_v<std::optional<typename T::value\_type>, T>;}
+\DoxyCodeLine{60 \};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{63 \textcolor{keyword}{concept }Vector3d = \textcolor{keyword}{requires}(T a) \{}
+\DoxyCodeLine{64     \textcolor{keyword}{requires} std::is\_same\_v<i3d::Vector3d<\textcolor{keyword}{decltype}(a.x)>, T>;}
+\DoxyCodeLine{65     \textcolor{keyword}{requires} Basic<\textcolor{keyword}{decltype}(a.x)>;}
+\DoxyCodeLine{66 \};}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{69 \textcolor{keyword}{concept }Streamable = \textcolor{keyword}{requires}(T a) \{}
+\DoxyCodeLine{70     \{std::cout << a\};}
+\DoxyCodeLine{71 \};}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{74 \textcolor{keyword}{concept }Map = \textcolor{keyword}{requires}(T) \{}
+\DoxyCodeLine{75     \textcolor{keyword}{requires} std::is\_same\_v<}
+\DoxyCodeLine{76         std::map<typename T::key\_type, typename T::mapped\_type>, T>;}
+\DoxyCodeLine{77 \};}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{80 \textcolor{keyword}{concept }ResolutionUnit = \textcolor{keyword}{requires}(T) \{}
+\DoxyCodeLine{81     \textcolor{keyword}{requires} std::is\_same\_v<T, datastore::ResolutionUnit>;}
+\DoxyCodeLine{82 \};}
+\DoxyCodeLine{83 \} \textcolor{comment}{// namespace cnpts}}
+\DoxyCodeLine{84 }
+\DoxyCodeLine{85 \textcolor{keyword}{namespace }details \{}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{89 \textcolor{keyword}{template} <cnpts::Streamable T>}
+\DoxyCodeLine{90 std::string to\_string(\textcolor{keyword}{const} T\&);}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92 \textcolor{keyword}{template} <cnpts::Vector T>}
+\DoxyCodeLine{93 std::string to\_string(\textcolor{keyword}{const} T\&);}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95 \textcolor{keyword}{template} <cnpts::Map T>}
+\DoxyCodeLine{96 std::string to\_string(\textcolor{keyword}{const} T\&);}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98 \textcolor{keyword}{template} <cnpts::Optional T>}
+\DoxyCodeLine{99 std::string to\_string(\textcolor{keyword}{const} T\&);}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{102 \textcolor{keyword}{template} <cnpts::Streamable T>}
+\DoxyCodeLine{103 std::string to\_string(\textcolor{keyword}{const} T\& val) \{}
+\DoxyCodeLine{104     std::stringstream ss;}
+\DoxyCodeLine{105     ss << val;}
+\DoxyCodeLine{106     \textcolor{keywordflow}{return} ss.str();}
+\DoxyCodeLine{107 \}}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109 \textcolor{keyword}{template} <cnpts::Vector T>}
+\DoxyCodeLine{110 std::string to\_string(\textcolor{keyword}{const} T\& vec) \{}
+\DoxyCodeLine{111     std::stringstream ss;}
+\DoxyCodeLine{112     ss << \textcolor{stringliteral}{"{}("{}};}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{114     \textcolor{keyword}{const} \textcolor{keywordtype}{char}* delim = \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{115     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto}\& v : vec) \{}
+\DoxyCodeLine{116         ss << delim << to\_string(v);}
+\DoxyCodeLine{117         delim = \textcolor{stringliteral}{"{}, "{}};}
+\DoxyCodeLine{118     \}}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120     ss << \textcolor{stringliteral}{"{})"{}};}
+\DoxyCodeLine{121     \textcolor{keywordflow}{return} ss.str();}
+\DoxyCodeLine{122 \}}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124 \textcolor{keyword}{template} <cnpts::Map T>}
+\DoxyCodeLine{125 std::string to\_string(\textcolor{keyword}{const} T\& map) \{}
+\DoxyCodeLine{126     std::stringstream ss;}
+\DoxyCodeLine{127     ss << \textcolor{stringliteral}{"{}\{\(\backslash\)n"{}};}
+\DoxyCodeLine{128 }
+\DoxyCodeLine{129     \textcolor{keywordflow}{for} (\textcolor{keyword}{const} \textcolor{keyword}{auto}\& [k, v] : map) \{}
+\DoxyCodeLine{130         ss << to\_string(k) << \textcolor{stringliteral}{"{}: "{}} << to\_string(v) << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{131     \}}
+\DoxyCodeLine{132     ss << \textcolor{stringliteral}{"{}\}\(\backslash\)n"{}};}
+\DoxyCodeLine{133     \textcolor{keywordflow}{return} ss.str();}
+\DoxyCodeLine{134 \}}
+\DoxyCodeLine{135 }
+\DoxyCodeLine{136 \textcolor{keyword}{template} <cnpts::Optional T>}
+\DoxyCodeLine{137 std::string to\_string(\textcolor{keyword}{const} T\& val) \{}
+\DoxyCodeLine{138     \textcolor{keywordflow}{if} (!val)}
+\DoxyCodeLine{139         \textcolor{keywordflow}{return} \textcolor{stringliteral}{"{}null"{}};}
+\DoxyCodeLine{140     \textcolor{keywordflow}{return} to\_string(val.value());}
+\DoxyCodeLine{141 \}}
+\DoxyCodeLine{142 }
+\DoxyCodeLine{143 \} \textcolor{comment}{// namespace details}}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{149 \textcolor{keyword}{class }\mbox{\hyperlink{classdatastore_1_1_dataset_properties}{DatasetProperties}} \{}
+\DoxyCodeLine{150   \textcolor{keyword}{public}:}
+\DoxyCodeLine{151     std::string uuid;}
+\DoxyCodeLine{152     std::string voxel\_type;}
+\DoxyCodeLine{153     i3d::Vector3d<int> dimensions;}
+\DoxyCodeLine{154     \textcolor{keywordtype}{int} channels;}
+\DoxyCodeLine{155     \textcolor{keywordtype}{int} angles;}
+\DoxyCodeLine{156     std::optional<std::string> transformations;}
+\DoxyCodeLine{157     std::string voxel\_unit;}
+\DoxyCodeLine{158     std::optional<i3d::Vector3d<double>> voxel\_resolution;}
+\DoxyCodeLine{159     std::optional<ResolutionUnit> timepoint\_resolution;}
+\DoxyCodeLine{160     std::optional<ResolutionUnit> channel\_resolution;}
+\DoxyCodeLine{161     std::optional<ResolutionUnit> angle\_resolution;}
+\DoxyCodeLine{162     std::string compression;}
+\DoxyCodeLine{163     std::vector<std::map<std::string, i3d::Vector3d<int>>> resolution\_levels;}
+\DoxyCodeLine{164     std::vector<int> versions;}
+\DoxyCodeLine{165     std::string label;}
+\DoxyCodeLine{166     std::optional<std::string> view\_registrations;}
+\DoxyCodeLine{167     std::vector<int> timepoint\_ids;}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{169     \textcolor{keyword}{friend} std::ostream\& operator<<(std::ostream\& stream,}
+\DoxyCodeLine{170                                     \textcolor{keyword}{const} \mbox{\hyperlink{classdatastore_1_1_dataset_properties}{DatasetProperties}}\& ds) \{}
+\DoxyCodeLine{171         \textcolor{keyword}{using} details::to\_string;}
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173         stream << \textcolor{stringliteral}{"{}UUID: "{}} << ds.uuid << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{174         stream << \textcolor{stringliteral}{"{}voxelType: "{}} << ds.voxel\_type << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{175         stream << \textcolor{stringliteral}{"{}dimensions: "{}} << ds.dimensions << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{176         stream << \textcolor{stringliteral}{"{}channels: "{}} << ds.channels << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{177         stream << \textcolor{stringliteral}{"{}angles: "{}} << ds.angles << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{178         stream << \textcolor{stringliteral}{"{}transformations: "{}} << to\_string(ds.transformations) << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{179         stream << \textcolor{stringliteral}{"{}voxelUnit: "{}} << ds.voxel\_unit << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{180         stream << \textcolor{stringliteral}{"{}voxelResolution: "{}} << to\_string(ds.voxel\_resolution) << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{181         stream << \textcolor{stringliteral}{"{}timepointResolution: "{}} << to\_string(ds.timepoint\_resolution)}
+\DoxyCodeLine{182                << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{183         stream << \textcolor{stringliteral}{"{}channelResolution: "{}} << to\_string(ds.channel\_resolution)}
+\DoxyCodeLine{184                << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{185         stream << \textcolor{stringliteral}{"{}angleResolution: "{}} << to\_string(ds.angle\_resolution) << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{186         stream << \textcolor{stringliteral}{"{}comprestreamion: "{}} << ds.compression << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{187         stream << \textcolor{stringliteral}{"{}resolutionLevels: "{}} << to\_string(ds.resolution\_levels)}
+\DoxyCodeLine{188                << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{189         stream << \textcolor{stringliteral}{"{}versions: "{}} << to\_string(ds.versions) << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{190         stream << \textcolor{stringliteral}{"{}label: "{}} << ds.label << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{191         stream << \textcolor{stringliteral}{"{}viewRegistrations: "{}} << to\_string(ds.view\_registrations)}
+\DoxyCodeLine{192                << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{193         stream << \textcolor{stringliteral}{"{}timepointIds: "{}} << to\_string(ds.timepoint\_ids) << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{194 }
+\DoxyCodeLine{195         \textcolor{keywordflow}{return} stream;}
+\DoxyCodeLine{196     \}}
+\DoxyCodeLine{197 \};}
+\DoxyCodeLine{198 \} \textcolor{comment}{// namespace datastore}}
+
+\end{DoxyCode}

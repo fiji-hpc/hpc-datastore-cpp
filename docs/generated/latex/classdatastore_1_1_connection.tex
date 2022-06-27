@@ -1,0 +1,431 @@
+\hypertarget{classdatastore_1_1_connection}{}\doxysection{datastore\+::Connection Class Reference}
+\label{classdatastore_1_1_connection}\index{datastore::Connection@{datastore::Connection}}
+
+
+Representation of connection to dataset.  
+
+
+
+
+{\ttfamily \#include $<$hpc\+\_\+ds\+\_\+api.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classdatastore_1_1_connection_a765b984fa9b01dd1157698bf2aa913c9}{Connection}} (std\+::string ip, int port, std\+::string uuid)
+\begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{classdatastore_1_1_connection}{Connection}} object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classdatastore_1_1_image_view}{Image\+View}} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{get\+\_\+view}} (int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+\begin{DoxyCompactList}\small\item\em Get \mbox{\hyperlink{classdatastore_1_1_image_view}{Image\+View}} of specified image. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classdatastore_1_1_connection_a0e13e60e924dd1d0596b7f6c68a3644b}{read\+\_\+block}} (i3d\+::\+Vector3d$<$ int $>$ coord, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+\begin{DoxyCompactList}\small\item\em Read one block from server to image. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\bool \mbox{\hyperlink{classdatastore_1_1_connection_a4725dcebff426e4f2e1c5127ce86d50b}{read\+\_\+block}} (i3d\+::\+Vector3d$<$ int $>$ coord, i3d\+::\+Image3d$<$ T $>$ \&dest, i3d\+::\+Vector3d$<$ int $>$ dest\+\_\+offset, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+\begin{DoxyCompactList}\small\item\em Read one block from server to image. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\std\+::vector$<$ i3d\+::\+Image3d$<$ T $>$ $>$ \mbox{\hyperlink{classdatastore_1_1_connection_a1153887794c75d8fd0eab237d6ada649}{read\+\_\+blocks}} (const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+\begin{DoxyCompactList}\small\item\em Read blocks from server and return them. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\bool \mbox{\hyperlink{classdatastore_1_1_connection_a9c64ce0f5444c53d95c5e1632927a74c}{read\+\_\+blocks}} (const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, i3d\+::\+Image3d$<$ T $>$ \&dest, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&dest\+\_\+offsets, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+\begin{DoxyCompactList}\small\item\em Read blocks from server and saves them into prealocated image. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classdatastore_1_1_connection_a7b911a6c8445fcd8026eb694fca132e3}{read\+\_\+image}} (int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+\begin{DoxyCompactList}\small\item\em Read full image. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\bool \mbox{\hyperlink{classdatastore_1_1_connection_abcde47294bc421fe7571abfc2b238c73}{write\+\_\+block}} (const i3d\+::\+Image3d$<$ T $>$ \&src, i3d\+::\+Vector3d$<$ int $>$ coord, i3d\+::\+Vector3d$<$ int $>$ src\+\_\+offset, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+\begin{DoxyCompactList}\small\item\em Write block to server. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\bool \mbox{\hyperlink{classdatastore_1_1_connection_adc5cf7bc0d746951b98a2f627ac9d781}{write\+\_\+blocks}} (const i3d\+::\+Image3d$<$ T $>$ \&src, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&src\+\_\+offsets, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+\begin{DoxyCompactList}\small\item\em Write blocks to server. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\bool \mbox{\hyperlink{classdatastore_1_1_connection_ab11d17adf5cf1fd8ff52ba777da38f93}{write\+\_\+image}} (const i3d\+::\+Image3d$<$ T $>$ \&img, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+\begin{DoxyCompactList}\small\item\em Write image to server. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Representation of connection to dataset. 
+
+Class representing connection to specific dataset on the server. It provides basic methods for read/write operations necessary to tranfser images (in the dataset) from/to server. This class does not cache or precollect any data, so the first HTTP request will be send only when corresponding function is called.
+
+All of the methods accepts arguments that uniquely identifies requested image. At the backend, this class tranfsers commands into \mbox{\hyperlink{classdatastore_1_1_image_view}{Image\+View}} objects. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classdatastore_1_1_connection_a765b984fa9b01dd1157698bf2aa913c9}\label{classdatastore_1_1_connection_a765b984fa9b01dd1157698bf2aa913c9}} 
+\index{datastore::Connection@{datastore::Connection}!Connection@{Connection}}
+\index{Connection@{Connection}!datastore::Connection@{datastore::Connection}}
+\doxysubsubsection{\texorpdfstring{Connection()}{Connection()}}
+{\footnotesize\ttfamily datastore\+::\+Connection\+::\+Connection (\begin{DoxyParamCaption}\item[{std\+::string}]{ip,  }\item[{int}]{port,  }\item[{std\+::string}]{uuid }\end{DoxyParamCaption})}
+
+
+
+Construct a new \mbox{\hyperlink{classdatastore_1_1_connection}{Connection}} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & IP address of server (\href{http://}{\texttt{ http\+://}} at the beginning is not necessary) \\
+\hline
+{\em port} & Port, where the server is listening for requests \\
+\hline
+{\em uuid} & Unique identifier of dataset \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}\label{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}} 
+\index{datastore::Connection@{datastore::Connection}!get\_view@{get\_view}}
+\index{get\_view@{get\_view}!datastore::Connection@{datastore::Connection}}
+\doxysubsubsection{\texorpdfstring{get\_view()}{get\_view()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classdatastore_1_1_image_view}{Image\+View}} datastore\+::\+Connection\+::get\+\_\+view (\begin{DoxyParamCaption}\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+
+
+
+Get \mbox{\hyperlink{classdatastore_1_1_image_view}{Image\+View}} of specified image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel, at which the image is located \\
+\hline
+{\em timepoint} & Timepoint, at which the image is located \\
+\hline
+{\em angle} & Angle, at which the image is located \\
+\hline
+{\em resolution} & Resolution, at which the image is located \\
+\hline
+{\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{classdatastore_1_1_image_view}{Image\+View}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdatastore_1_1_connection_a4725dcebff426e4f2e1c5127ce86d50b}\label{classdatastore_1_1_connection_a4725dcebff426e4f2e1c5127ce86d50b}} 
+\index{datastore::Connection@{datastore::Connection}!read\_block@{read\_block}}
+\index{read\_block@{read\_block}!datastore::Connection@{datastore::Connection}}
+\doxysubsubsection{\texorpdfstring{read\_block()}{read\_block()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+bool datastore\+::\+Connection\+::read\+\_\+block (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{dest\+\_\+offset,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+
+
+
+Read one block from server to image. 
+
+Reads one block of image located at $<$coord$>$ and saves it to $<$dest$>$ with offset $<$dest\+\_\+offset$>$.
+
+If in DEBUG, function will check wheter given coordinate corresponds to valid block as well as wheter the block fits into the image (taking offset into account).
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em coord} & Block coordinate \\
+\hline
+{\em dest} & Image to write data to \\
+\hline
+{\em dest\+\_\+offset} & Offset by which the corresponding write should be moved \\
+\hline
+{\em channel} & Channel, at which the image is located \\
+\hline
+{\em timepoint} & Timepoint, at which the image is located \\
+\hline
+{\em angle} & Angle, at which the image is located \\
+\hline
+{\em resolution} & Resolution, at which the image is located \\
+\hline
+{\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true At read success 
+
+false At read failiure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdatastore_1_1_connection_a0e13e60e924dd1d0596b7f6c68a3644b}\label{classdatastore_1_1_connection_a0e13e60e924dd1d0596b7f6c68a3644b}} 
+\index{datastore::Connection@{datastore::Connection}!read\_block@{read\_block}}
+\index{read\_block@{read\_block}!datastore::Connection@{datastore::Connection}}
+\doxysubsubsection{\texorpdfstring{read\_block()}{read\_block()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+i3d\+::\+Image3d$<$ T $>$ datastore\+::\+Connection\+::read\+\_\+block (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+
+
+
+Read one block from server to image. 
+
+Reads one block of image located at $<$coord$>$ and saves it to $<$dest$>$ with offset $<$dest\+\_\+offset$>$.
+
+If in DEBUG, function will check wheter given coordinate corresponds to valid block as well as wheter the block fits into the image (taking offset into account).
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em coord} & Block coordinate \\
+\hline
+{\em channel} & Channel, at which the image is located \\
+\hline
+{\em timepoint} & Timepoint, at which the image is located \\
+\hline
+{\em angle} & Angle, at which the image is located \\
+\hline
+{\em resolution} & Resolution, at which the image is located \\
+\hline
+{\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Image containing selected block 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdatastore_1_1_connection_a9c64ce0f5444c53d95c5e1632927a74c}\label{classdatastore_1_1_connection_a9c64ce0f5444c53d95c5e1632927a74c}} 
+\index{datastore::Connection@{datastore::Connection}!read\_blocks@{read\_blocks}}
+\index{read\_blocks@{read\_blocks}!datastore::Connection@{datastore::Connection}}
+\doxysubsubsection{\texorpdfstring{read\_blocks()}{read\_blocks()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+bool datastore\+::\+Connection\+::read\+\_\+blocks (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{dest\+\_\+offsets,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+
+
+
+Read blocks from server and saves them into prealocated image. 
+
+Read blocks specified in $<$coords$>$ and saves them into locations given in $<$offsets$>$.
+
+If in DEBUG, the function checks if coordinates given in $<$coords$>$ points to a valid blocks, as well as wheter the offsets specified for each block are within image boundaries.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em coords} & Block coordinates \\
+\hline
+{\em dest} & Prealocated destination image \\
+\hline
+{\em dest\+\_\+offsets} & Offsets at wich the corresponding blocks should be saved \\
+\hline
+{\em channel} & Channel, at which the image is located \\
+\hline
+{\em timepoint} & Timepoint, at which the image is located \\
+\hline
+{\em angle} & Angle, at which the image is located \\
+\hline
+{\em resolution} & Resolution, at which the image is located \\
+\hline
+{\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true At read success 
+
+false At read failure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdatastore_1_1_connection_a1153887794c75d8fd0eab237d6ada649}\label{classdatastore_1_1_connection_a1153887794c75d8fd0eab237d6ada649}} 
+\index{datastore::Connection@{datastore::Connection}!read\_blocks@{read\_blocks}}
+\index{read\_blocks@{read\_blocks}!datastore::Connection@{datastore::Connection}}
+\doxysubsubsection{\texorpdfstring{read\_blocks()}{read\_blocks()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+std\+::vector$<$ i3d\+::\+Image3d$<$ T $>$ $>$ datastore\+::\+Connection\+::read\+\_\+blocks (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+
+
+
+Read blocks from server and return them. 
+
+Reads blocks specified in $<$coords$>$ and returns them. Corresponding sizes are collected from server and calculated specificaly for each block.
+
+This function is not optimized, meaning that for each coord in $<$coord$>$, one HTTP request will be sent out to the server. This can heavily slow down speed of the application as communication via network is not cheap. If you do not have specific needs,most of the time it will be faster to collect blocks into prealocated image (second overload of read\+\_\+blocks), however it will eat more RAM.
+
+If in DEBUG, the fucntion checks if coordinates given in $<$coords$>$ points to a valid blocks.
+
+As there is no (meaningfull) way for C++ to choose correct underlying type in runtime, make sure to specify correct template type.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em coords} & Block coordinates \\
+\hline
+{\em channel} & Channel, at which the image is located \\
+\hline
+{\em timepoint} & Timepoint, at which the image is located \\
+\hline
+{\em angle} & Angle, at which the image is located \\
+\hline
+{\em resolution} & Resolution, at which the image is located \\
+\hline
+{\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Vector of fetched blocks (the order is the same as given in $<$coords$>$) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdatastore_1_1_connection_a7b911a6c8445fcd8026eb694fca132e3}\label{classdatastore_1_1_connection_a7b911a6c8445fcd8026eb694fca132e3}} 
+\index{datastore::Connection@{datastore::Connection}!read\_image@{read\_image}}
+\index{read\_image@{read\_image}!datastore::Connection@{datastore::Connection}}
+\doxysubsubsection{\texorpdfstring{read\_image()}{read\_image()}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+i3d\+::\+Image3d$<$ T $>$ datastore\+::\+Connection\+::read\+\_\+image (\begin{DoxyParamCaption}\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+
+
+
+Read full image. 
+
+Read full image from the server and return it. The information about dimensions are fetched from the server.
+
+As there is no (meaningfull) way for C++ to choose correct underlying type in runtime, make sure to specify correct template type.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel, at which the image is located \\
+\hline
+{\em timepoint} & Timepoint, at which the image is located \\
+\hline
+{\em angle} & Angle, at which the image is located \\
+\hline
+{\em resolution} & Resolution, at which the image is located \\
+\hline
+{\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+i3d\+::\+Image3d$<$\+T$>$ etched image 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdatastore_1_1_connection_abcde47294bc421fe7571abfc2b238c73}\label{classdatastore_1_1_connection_abcde47294bc421fe7571abfc2b238c73}} 
+\index{datastore::Connection@{datastore::Connection}!write\_block@{write\_block}}
+\index{write\_block@{write\_block}!datastore::Connection@{datastore::Connection}}
+\doxysubsubsection{\texorpdfstring{write\_block()}{write\_block()}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+bool datastore\+::\+Connection\+::write\+\_\+block (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{src,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{src\+\_\+offset,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+
+
+
+Write block to server. 
+
+Write block from source image to server. The information about dimensions are fetched from the server.
+
+If in DEBUG, the function checks if coordinate given in $<$coord$>$ points to a valid block, as well as wheter the offset specified for block is within image boundaries.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em src} & Source image to collect block from \\
+\hline
+{\em coord} & Block coordinates \\
+\hline
+{\em src\+\_\+offset} & Offset of given block in source image \\
+\hline
+{\em channel} & Channel, at which the image is located \\
+\hline
+{\em timepoint} & Timepoint, at which the image is located \\
+\hline
+{\em angle} & Angle, at which the image is located \\
+\hline
+{\em resolution} & Resolution, at which the image is located \\
+\hline
+{\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true At write success 
+
+false At write failiure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdatastore_1_1_connection_adc5cf7bc0d746951b98a2f627ac9d781}\label{classdatastore_1_1_connection_adc5cf7bc0d746951b98a2f627ac9d781}} 
+\index{datastore::Connection@{datastore::Connection}!write\_blocks@{write\_blocks}}
+\index{write\_blocks@{write\_blocks}!datastore::Connection@{datastore::Connection}}
+\doxysubsubsection{\texorpdfstring{write\_blocks()}{write\_blocks()}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+bool datastore\+::\+Connection\+::write\+\_\+blocks (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{src,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{src\+\_\+offsets,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+
+
+
+Write blocks to server. 
+
+Write blocks from source image to server. The information about dimensions are fetched from the server.
+
+If in DEBUG, the function checks if coordinates given in $<$coords$>$ points to a valid block, as well as wheter the offsets specified for each block is within image boundaries.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em src} & Source image to collect blocks from \\
+\hline
+{\em coords} & Vector of block coordinates \\
+\hline
+{\em src\+\_\+offsets} & Offsets of corresponding blocks in source image \\
+\hline
+{\em channel} & Channel, at which the image is located \\
+\hline
+{\em timepoint} & Timepoint, at which the image is located \\
+\hline
+{\em angle} & Angle, at which the image is located \\
+\hline
+{\em resolution} & Resolution, at which the image is located \\
+\hline
+{\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true At write success 
+
+false At write failiure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdatastore_1_1_connection_ab11d17adf5cf1fd8ff52ba777da38f93}\label{classdatastore_1_1_connection_ab11d17adf5cf1fd8ff52ba777da38f93}} 
+\index{datastore::Connection@{datastore::Connection}!write\_image@{write\_image}}
+\index{write\_image@{write\_image}!datastore::Connection@{datastore::Connection}}
+\doxysubsubsection{\texorpdfstring{write\_image()}{write\_image()}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+bool datastore\+::\+Connection\+::write\+\_\+image (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{img,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+
+
+
+Write image to server. 
+
+Write full image to server.
+
+It is recommended to make sure that the dimension of the source image is the same as the dimension of image at server side.
+
+Mostly, given smaller source image will emit error and fail to upload. Given larger source image will result in cropping.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em img} & Source image \\
+\hline
+{\em channel} & Channel, at which the image is located \\
+\hline
+{\em timepoint} & Timepoint, at which the image is located \\
+\hline
+{\em angle} & Angle, at which the image is located \\
+\hline
+{\em resolution} & Resolution, at which the image is located \\
+\hline
+{\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true true At write success 
+
+false At write failiure 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/somik/\+CBIA/hpc-\/datastore-\/cpp/src/hpc\+\_\+ds\+\_\+api.\+hpp\end{DoxyCompactItemize}

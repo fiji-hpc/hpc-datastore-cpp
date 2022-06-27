@@ -1,0 +1,565 @@
+\hypertarget{hpc__ds__api_8hpp_source}{}\doxysection{hpc\+\_\+ds\+\_\+api.\+hpp}
+\label{hpc__ds__api_8hpp_source}\index{/home/somik/CBIA/hpc-\/datastore-\/cpp/src/hpc\_ds\_api.hpp@{/home/somik/CBIA/hpc-\/datastore-\/cpp/src/hpc\_ds\_api.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#include "{}hpc\_ds\_details.hpp"{}}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}hpc\_ds\_structs.hpp"{}}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <fmt/core.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <i3d/image3d.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <type\_traits>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keyword}{namespace }datastore \{}
+\DoxyCodeLine{23 \textcolor{keyword}{inline} DatasetProperties get\_dataset\_properties(\textcolor{keyword}{const} std::string\& ip,}
+\DoxyCodeLine{24                                                 \textcolor{keywordtype}{int} port,}
+\DoxyCodeLine{25                                                 \textcolor{keyword}{const} std::string\& uuid);}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{48 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{49 i3d::Image3d<T> read\_image(\textcolor{keyword}{const} std::string\& ip,}
+\DoxyCodeLine{50                            \textcolor{keywordtype}{int} port,}
+\DoxyCodeLine{51                            \textcolor{keyword}{const} std::string\& uuid,}
+\DoxyCodeLine{52                            \textcolor{keywordtype}{int} channel = 0,}
+\DoxyCodeLine{53                            \textcolor{keywordtype}{int} timepoint = 0,}
+\DoxyCodeLine{54                            \textcolor{keywordtype}{int} angle = 0,}
+\DoxyCodeLine{55                            i3d::Vector3d<int> resolution = \{1, 1, 1\},}
+\DoxyCodeLine{56                            \textcolor{keyword}{const} std::string\& version = \textcolor{stringliteral}{"{}latest"{}});}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{87 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{88 \textcolor{keywordtype}{bool} write\_image(\textcolor{keyword}{const} i3d::Image3d<T>\& img,}
+\DoxyCodeLine{89                  \textcolor{keyword}{const} std::string\& ip,}
+\DoxyCodeLine{90                  \textcolor{keywordtype}{int} port,}
+\DoxyCodeLine{91                  \textcolor{keyword}{const} std::string\& uuid,}
+\DoxyCodeLine{92                  \textcolor{keywordtype}{int} channel = 0,}
+\DoxyCodeLine{93                  \textcolor{keywordtype}{int} timepoint = 0,}
+\DoxyCodeLine{94                  \textcolor{keywordtype}{int} angle = 0,}
+\DoxyCodeLine{95                  i3d::Vector3d<int> resolution = \{1, 1, 1\},}
+\DoxyCodeLine{96                  \textcolor{keyword}{const} std::string version = \textcolor{stringliteral}{"{}latest"{}});}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{107 \textcolor{keyword}{class }\mbox{\hyperlink{classdatastore_1_1_image_view}{ImageView}} \{}
+\DoxyCodeLine{108   \textcolor{keyword}{public}:}
+\DoxyCodeLine{123     \mbox{\hyperlink{classdatastore_1_1_image_view_ae458bbd5e4bc6c88dd70d0e48001b577}{ImageView}}(std::string ip,}
+\DoxyCodeLine{124               \textcolor{keywordtype}{int} port,}
+\DoxyCodeLine{125               std::string uuid,}
+\DoxyCodeLine{126               \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{127               \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{128               \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{129               i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{130               std::string version);}
+\DoxyCodeLine{131 }
+\DoxyCodeLine{148     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{149     i3d::Image3d<T> \mbox{\hyperlink{classdatastore_1_1_image_view_a9e8fb0456fe3b7aaa9d7fab2854cf16b}{read\_block}}(i3d::Vector3d<int> coord) \textcolor{keyword}{const};}
+\DoxyCodeLine{150 }
+\DoxyCodeLine{169     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{170     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_image_view_a9e8fb0456fe3b7aaa9d7fab2854cf16b}{read\_block}}(i3d::Vector3d<int> coord,}
+\DoxyCodeLine{171                     i3d::Image3d<T>\& dest,}
+\DoxyCodeLine{172                     i3d::Vector3d<int> dest\_offset = \{0, 0, 0\}) \textcolor{keyword}{const};}
+\DoxyCodeLine{173 }
+\DoxyCodeLine{199     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{200     std::vector<i3d::Image3d<T>>}
+\DoxyCodeLine{201     \mbox{\hyperlink{classdatastore_1_1_image_view_aea0838296b3f6736bb86b2ecf5ab6044}{read\_blocks}}(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords) \textcolor{keyword}{const};}
+\DoxyCodeLine{202 }
+\DoxyCodeLine{220     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{221     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_image_view_aea0838296b3f6736bb86b2ecf5ab6044}{read\_blocks}}(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{222                      i3d::Image3d<T>\& dest,}
+\DoxyCodeLine{223                      \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& offsets) \textcolor{keyword}{const};}
+\DoxyCodeLine{224 }
+\DoxyCodeLine{237     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{238     i3d::Image3d<T> \mbox{\hyperlink{classdatastore_1_1_image_view_ad2c28760365af157503182849eff9790}{read\_image}}() \textcolor{keyword}{const};}
+\DoxyCodeLine{239 }
+\DoxyCodeLine{257     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{258     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_image_view_a853e695891bbc927cb686eaecd4d8aa5}{write\_block}}(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{259                      i3d::Vector3d<int> coord,}
+\DoxyCodeLine{260                      i3d::Vector3d<int> src\_offset = \{0, 0, 0\}) \textcolor{keyword}{const};}
+\DoxyCodeLine{278     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{279     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_image_view_a92c86a41962ed30e622d69c76c20c5fd}{write\_blocks}}(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{280                       \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{281                       \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& src\_offsets) \textcolor{keyword}{const};}
+\DoxyCodeLine{298     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{299     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_image_view_a183f5168e14339830f2bc1d7ec743d05}{write\_image}}(\textcolor{keyword}{const} i3d::Image3d<T>\& img) \textcolor{keyword}{const};}
+\DoxyCodeLine{300 }
+\DoxyCodeLine{301   \textcolor{keyword}{private}:}
+\DoxyCodeLine{302     std::string \_ip;}
+\DoxyCodeLine{303     \textcolor{keywordtype}{int} \_port;}
+\DoxyCodeLine{304     std::string \_uuid;}
+\DoxyCodeLine{305     \textcolor{keywordtype}{int} \_channel;}
+\DoxyCodeLine{306     \textcolor{keywordtype}{int} \_timepoint;}
+\DoxyCodeLine{307     \textcolor{keywordtype}{int} \_angle;}
+\DoxyCodeLine{308     i3d::Vector3d<int> \_resolution;}
+\DoxyCodeLine{309     std::string \_version;}
+\DoxyCodeLine{310 \};}
+\DoxyCodeLine{311 }
+\DoxyCodeLine{324 \textcolor{keyword}{class }\mbox{\hyperlink{classdatastore_1_1_connection}{Connection}} \{}
+\DoxyCodeLine{325   \textcolor{keyword}{public}:}
+\DoxyCodeLine{334     \mbox{\hyperlink{classdatastore_1_1_connection_a765b984fa9b01dd1157698bf2aa913c9}{Connection}}(std::string ip, \textcolor{keywordtype}{int} port, std::string uuid);}
+\DoxyCodeLine{335 }
+\DoxyCodeLine{347     \mbox{\hyperlink{classdatastore_1_1_image_view}{ImageView}} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{get\_view}}(\textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{348                        \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{349                        \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{350                        i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{351                        \textcolor{keyword}{const} std::string\& version) \textcolor{keyword}{const};}
+\DoxyCodeLine{352 }
+\DoxyCodeLine{373     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{374     i3d::Image3d<T> \mbox{\hyperlink{classdatastore_1_1_connection_a0e13e60e924dd1d0596b7f6c68a3644b}{read\_block}}(i3d::Vector3d<int> coord,}
+\DoxyCodeLine{375                                \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{376                                \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{377                                \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{378                                i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{379                                \textcolor{keyword}{const} std::string\& version) \textcolor{keyword}{const};}
+\DoxyCodeLine{404     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{405     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_connection_a0e13e60e924dd1d0596b7f6c68a3644b}{read\_block}}(i3d::Vector3d<int> coord,}
+\DoxyCodeLine{406                     i3d::Image3d<T>\& dest,}
+\DoxyCodeLine{407                     i3d::Vector3d<int> dest\_offset,}
+\DoxyCodeLine{408                     \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{409                     \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{410                     \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{411                     i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{412                     \textcolor{keyword}{const} std::string\& version) \textcolor{keyword}{const};}
+\DoxyCodeLine{413 }
+\DoxyCodeLine{445     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{446     std::vector<i3d::Image3d<T>>}
+\DoxyCodeLine{447     \mbox{\hyperlink{classdatastore_1_1_connection_a1153887794c75d8fd0eab237d6ada649}{read\_blocks}}(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{448                 \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{449                 \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{450                 \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{451                 i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{452                 \textcolor{keyword}{const} std::string\& version) \textcolor{keyword}{const};}
+\DoxyCodeLine{453 }
+\DoxyCodeLine{478     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{479     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_connection_a1153887794c75d8fd0eab237d6ada649}{read\_blocks}}(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{480                      i3d::Image3d<T>\& dest,}
+\DoxyCodeLine{481                      \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& dest\_offsets,}
+\DoxyCodeLine{482                      \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{483                      \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{484                      \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{485                      i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{486                      \textcolor{keyword}{const} std::string\& version) \textcolor{keyword}{const};}
+\DoxyCodeLine{505     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{506     i3d::Image3d<T> \mbox{\hyperlink{classdatastore_1_1_connection_a7b911a6c8445fcd8026eb694fca132e3}{read\_image}}(\textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{507                                \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{508                                \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{509                                i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{510                                \textcolor{keyword}{const} std::string\& version) \textcolor{keyword}{const};}
+\DoxyCodeLine{511 }
+\DoxyCodeLine{535     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{536     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_connection_abcde47294bc421fe7571abfc2b238c73}{write\_block}}(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{537                      i3d::Vector3d<int> coord,}
+\DoxyCodeLine{538                      i3d::Vector3d<int> src\_offset,}
+\DoxyCodeLine{539                      \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{540                      \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{541                      \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{542                      i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{543                      \textcolor{keyword}{const} std::string\& version) \textcolor{keyword}{const};}
+\DoxyCodeLine{544 }
+\DoxyCodeLine{568     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{569     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_connection_adc5cf7bc0d746951b98a2f627ac9d781}{write\_blocks}}(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{570                       \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{571                       \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& src\_offsets,}
+\DoxyCodeLine{572                       \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{573                       \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{574                       \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{575                       i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{576                       \textcolor{keyword}{const} std::string\& version) \textcolor{keyword}{const};}
+\DoxyCodeLine{577 }
+\DoxyCodeLine{600     \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{601     \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_connection_ab11d17adf5cf1fd8ff52ba777da38f93}{write\_image}}(\textcolor{keyword}{const} i3d::Image3d<T>\& img,}
+\DoxyCodeLine{602                      \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{603                      \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{604                      \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{605                      i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{606                      \textcolor{keyword}{const} std::string\& version) \textcolor{keyword}{const};}
+\DoxyCodeLine{607 }
+\DoxyCodeLine{608   \textcolor{keyword}{private}:}
+\DoxyCodeLine{609     std::string \_ip;}
+\DoxyCodeLine{610     \textcolor{keywordtype}{int} \_port;}
+\DoxyCodeLine{611     std::string \_uuid;}
+\DoxyCodeLine{612 \};}
+\DoxyCodeLine{613 }
+\DoxyCodeLine{614 \} \textcolor{comment}{// namespace datastore}}
+\DoxyCodeLine{615 }
+\DoxyCodeLine{616 \textcolor{comment}{/* ================= IMPLEMENTATION FOLLOWS ======================== */}}
+\DoxyCodeLine{617 }
+\DoxyCodeLine{618 \textcolor{keyword}{namespace }datastore \{}
+\DoxyCodeLine{619 \textcolor{comment}{/* ===================================== Global space */}}
+\DoxyCodeLine{620 \textcolor{comment}{/* inline */} DatasetProperties get\_dataset\_properties(\textcolor{keyword}{const} std::string\& ip,}
+\DoxyCodeLine{621                                                       \textcolor{keywordtype}{int} port,}
+\DoxyCodeLine{622                                                       \textcolor{keyword}{const} std::string\& uuid) \{}
+\DoxyCodeLine{623     std::string dataset\_url = details::get\_dataset\_url(ip, port, uuid);}
+\DoxyCodeLine{624     \textcolor{keywordflow}{return} details::get\_dataset\_properties(dataset\_url);}
+\DoxyCodeLine{625 \}}
+\DoxyCodeLine{626 }
+\DoxyCodeLine{627 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{628 i3d::Image3d<T> read\_image(\textcolor{keyword}{const} std::string\& ip,}
+\DoxyCodeLine{629                            \textcolor{keywordtype}{int} port,}
+\DoxyCodeLine{630                            \textcolor{keyword}{const} std::string\& uuid,}
+\DoxyCodeLine{631                            \textcolor{keywordtype}{int} channel \textcolor{comment}{/* = 0 */},}
+\DoxyCodeLine{632                            \textcolor{keywordtype}{int} timepoint \textcolor{comment}{/*  = 0 */},}
+\DoxyCodeLine{633                            \textcolor{keywordtype}{int} angle \textcolor{comment}{/* = 0 */},}
+\DoxyCodeLine{634                            i3d::Vector3d<int> resolution \textcolor{comment}{/* = \{1, 1, 1\} */},}
+\DoxyCodeLine{635                            \textcolor{keyword}{const} std::string\& version \textcolor{comment}{/* = "{}latest"{} */}) \{}
+\DoxyCodeLine{636     \textcolor{keywordflow}{return} ImageView(ip, port, uuid, channel, timepoint, angle, resolution,}
+\DoxyCodeLine{637                      version)}
+\DoxyCodeLine{638         .read\_image<T>();}
+\DoxyCodeLine{639 \}}
+\DoxyCodeLine{640 }
+\DoxyCodeLine{641 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{642 \textcolor{keywordtype}{bool} write\_image(\textcolor{keyword}{const} i3d::Image3d<T>\& img,}
+\DoxyCodeLine{643                  \textcolor{keyword}{const} std::string\& ip,}
+\DoxyCodeLine{644                  \textcolor{keywordtype}{int} port,}
+\DoxyCodeLine{645                  \textcolor{keyword}{const} std::string\& uuid,}
+\DoxyCodeLine{646                  \textcolor{keywordtype}{int} channel \textcolor{comment}{/* = 0 */},}
+\DoxyCodeLine{647                  \textcolor{keywordtype}{int} timepoint \textcolor{comment}{/* = 0 */},}
+\DoxyCodeLine{648                  \textcolor{keywordtype}{int} angle \textcolor{comment}{/* = 0 */},}
+\DoxyCodeLine{649                  i3d::Vector3d<int> resolution \textcolor{comment}{/*  = \{1, 1, 1\} */},}
+\DoxyCodeLine{650                  \textcolor{keyword}{const} std::string version \textcolor{comment}{/* = "{}latest"{} */}) \{}
+\DoxyCodeLine{651     \textcolor{keywordflow}{return} ImageView(ip, port, uuid, channel, timepoint, angle, resolution,}
+\DoxyCodeLine{652                      version)}
+\DoxyCodeLine{653         .write\_image(img);}
+\DoxyCodeLine{654 \}}
+\DoxyCodeLine{655 }
+\DoxyCodeLine{656 \textcolor{comment}{/* ===================================== ImageView */}}
+\DoxyCodeLine{657 }
+\DoxyCodeLine{658 \mbox{\hyperlink{classdatastore_1_1_image_view_ae458bbd5e4bc6c88dd70d0e48001b577}{ImageView::ImageView}}(std::string ip,}
+\DoxyCodeLine{659                      \textcolor{keywordtype}{int} port,}
+\DoxyCodeLine{660                      std::string uuid,}
+\DoxyCodeLine{661                      \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{662                      \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{663                      \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{664                      i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{665                      std::string version)}
+\DoxyCodeLine{666     : \_ip(std::move(ip)), \_port(port), \_uuid(std::move(uuid)),}
+\DoxyCodeLine{667       \_channel(channel), \_timepoint(timepoint), \_angle(angle),}
+\DoxyCodeLine{668       \_resolution(resolution), \_version(std::move(version)) \{\}}
+\DoxyCodeLine{669 }
+\DoxyCodeLine{670 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{671 i3d::Image3d<T> \mbox{\hyperlink{classdatastore_1_1_image_view_a9e8fb0456fe3b7aaa9d7fab2854cf16b}{ImageView::read\_block}}(i3d::Vector3d<int> coord)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{672     \textcolor{comment}{/* Fetch properties from server */}}
+\DoxyCodeLine{673     \mbox{\hyperlink{classdatastore_1_1_dataset_properties}{DatasetProperties}} props = get\_dataset\_properties(\_ip, \_port, \_uuid);}
+\DoxyCodeLine{674     i3d::Vector3d<int> block\_dim =}
+\DoxyCodeLine{675         details::get\_block\_dimensions(props, \_resolution);}
+\DoxyCodeLine{676 }
+\DoxyCodeLine{677     \textcolor{comment}{/* Prepare output image */}}
+\DoxyCodeLine{678     i3d::Image3d<T> img;}
+\DoxyCodeLine{679     i3d::Vector3d<int> block\_size = details::data\_manip::get\_block\_size(}
+\DoxyCodeLine{680         coord, block\_dim, props.dimensions / \_resolution);}
+\DoxyCodeLine{681     img.MakeRoom(block\_size);}
+\DoxyCodeLine{682 }
+\DoxyCodeLine{683     \textcolor{comment}{/* Fetch and return */}}
+\DoxyCodeLine{684     \mbox{\hyperlink{classdatastore_1_1_image_view_a9e8fb0456fe3b7aaa9d7fab2854cf16b}{read\_block}}(coord, img);}
+\DoxyCodeLine{685     \textcolor{keywordflow}{return} img;}
+\DoxyCodeLine{686 \}}
+\DoxyCodeLine{687 }
+\DoxyCodeLine{688 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{689 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_image_view_a9e8fb0456fe3b7aaa9d7fab2854cf16b}{ImageView::read\_block}}(}
+\DoxyCodeLine{690     i3d::Vector3d<int> coord,}
+\DoxyCodeLine{691     i3d::Image3d<T>\& dest,}
+\DoxyCodeLine{692     i3d::Vector3d<int> dest\_offset \textcolor{comment}{/*  = \{0, 0, 0\} */})\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{693     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_image_view_aea0838296b3f6736bb86b2ecf5ab6044}{read\_blocks}}(\{coord\}, dest, \{dest\_offset\});}
+\DoxyCodeLine{694 \}}
+\DoxyCodeLine{695 }
+\DoxyCodeLine{696 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{697 std::vector<i3d::Image3d<T>>}
+\DoxyCodeLine{698 \mbox{\hyperlink{classdatastore_1_1_image_view_aea0838296b3f6736bb86b2ecf5ab6044}{ImageView::read\_blocks}}(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{699     \textcolor{comment}{/* Process blocks one by one */}}
+\DoxyCodeLine{700     std::vector<i3d::Image3d<T>> out;}
+\DoxyCodeLine{701     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} coord : coords)}
+\DoxyCodeLine{702         out.push\_back(read\_block<T>(coord));}
+\DoxyCodeLine{703 }
+\DoxyCodeLine{704     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{705 \}}
+\DoxyCodeLine{706 }
+\DoxyCodeLine{707 \textcolor{comment}{// TODO optimise}}
+\DoxyCodeLine{708 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{709 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_image_view_aea0838296b3f6736bb86b2ecf5ab6044}{ImageView::read\_blocks}}(}
+\DoxyCodeLine{710     \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{711     i3d::Image3d<T>\& dest,}
+\DoxyCodeLine{712     \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& offsets)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{713 }
+\DoxyCodeLine{714     \textcolor{comment}{/* Fetched properties from server */}}
+\DoxyCodeLine{715     std::string dataset\_url = details::get\_dataset\_url(\_ip, \_port, \_uuid);}
+\DoxyCodeLine{716     \mbox{\hyperlink{classdatastore_1_1_dataset_properties}{DatasetProperties}} props = details::get\_dataset\_properties(dataset\_url);}
+\DoxyCodeLine{717     i3d::Vector3d<int> block\_dim =}
+\DoxyCodeLine{718         details::get\_block\_dimensions(props, \_resolution);}
+\DoxyCodeLine{719 }
+\DoxyCodeLine{720     i3d::Vector3d<int> img\_dim = props.dimensions / \_resolution;}
+\DoxyCodeLine{721 }
+\DoxyCodeLine{722     \textcolor{comment}{/* Error checking (when not in debug, all checks automatically return true)*/}}
+\DoxyCodeLine{723     \textcolor{keywordflow}{if} (coords.size() != offsets.size()) \{}
+\DoxyCodeLine{724         details::log::error(\textcolor{stringliteral}{"{}Count of coordinates != count of offsets"{}});}
+\DoxyCodeLine{725         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{726     \}}
+\DoxyCodeLine{727 }
+\DoxyCodeLine{728     \textcolor{keywordflow}{if} (!details::check\_block\_coords(coords, img\_dim, block\_dim))}
+\DoxyCodeLine{729         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{730 }
+\DoxyCodeLine{731     \textcolor{keywordflow}{if} (!details::check\_offset\_coords(offsets, coords, dest, block\_dim,}
+\DoxyCodeLine{732                                       img\_dim))}
+\DoxyCodeLine{733         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{734 }
+\DoxyCodeLine{735     \textcolor{comment}{/* prepare request url */}}
+\DoxyCodeLine{736     std::string session\_url = details::requests::session\_url\_request(}
+\DoxyCodeLine{737         dataset\_url, \_resolution, \_version);}
+\DoxyCodeLine{738 }
+\DoxyCodeLine{739     \textcolor{keywordflow}{if} (session\_url.ends\_with(\textcolor{charliteral}{'/'}))}
+\DoxyCodeLine{740         session\_url.pop\_back();}
+\DoxyCodeLine{741 }
+\DoxyCodeLine{742     \textcolor{comment}{/* Fetch blocks one by one */}}
+\DoxyCodeLine{743     \textcolor{keywordflow}{for} (std::size\_t i = 0; i < coords.size(); ++i) \{}
+\DoxyCodeLine{744         \textcolor{keyword}{auto}\& coord = coords[i];}
+\DoxyCodeLine{745         \textcolor{keyword}{auto}\& offset = offsets[i];}
+\DoxyCodeLine{746 }
+\DoxyCodeLine{747         std::string url =}
+\DoxyCodeLine{748             fmt::format(\textcolor{stringliteral}{"{}\{\}/\{\}/\{\}/\{\}/\{\}/\{\}/\{\}"{}}, session\_url, coord.x, coord.y,}
+\DoxyCodeLine{749                         coord.z, \_timepoint, \_channel, \_angle);}
+\DoxyCodeLine{750         \textcolor{keyword}{auto} [data, response] = details::requests::make\_request(url);}
+\DoxyCodeLine{751 }
+\DoxyCodeLine{752         details::data\_manip::read\_data(data, props.voxel\_type, dest, offset);}
+\DoxyCodeLine{753     \}}
+\DoxyCodeLine{754     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{755 \}}
+\DoxyCodeLine{756 }
+\DoxyCodeLine{757 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{758 i3d::Image3d<T> \mbox{\hyperlink{classdatastore_1_1_image_view_ad2c28760365af157503182849eff9790}{ImageView::read\_image}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{759     \textcolor{comment}{/* Fetch properties from server */}}
+\DoxyCodeLine{760     \mbox{\hyperlink{classdatastore_1_1_dataset_properties}{DatasetProperties}} props = get\_dataset\_properties(\_ip, \_port, \_uuid);}
+\DoxyCodeLine{761     i3d::Vector3d<int> block\_dim =}
+\DoxyCodeLine{762         details::get\_block\_dimensions(props, \_resolution);}
+\DoxyCodeLine{763     i3d::Vector3d<int> img\_dim = props.dimensions / \_resolution;}
+\DoxyCodeLine{764 }
+\DoxyCodeLine{765     i3d::Vector3d<int> block\_count =}
+\DoxyCodeLine{766         (img\_dim + block\_dim -\/ 1) / block\_dim; \textcolor{comment}{// Ceiling}}
+\DoxyCodeLine{767 }
+\DoxyCodeLine{768     \textcolor{comment}{/* Prepare output image */}}
+\DoxyCodeLine{769     i3d::Image3d<T> out;}
+\DoxyCodeLine{770     out.MakeRoom(img\_dim);}
+\DoxyCodeLine{771 }
+\DoxyCodeLine{772     \textcolor{comment}{/* Prepare coordinates of blocks and offsets to fetch whole image */}}
+\DoxyCodeLine{773     std::vector<i3d::Vector3d<int>> blocks;}
+\DoxyCodeLine{774     std::vector<i3d::Vector3d<int>> offsets;}
+\DoxyCodeLine{775 }
+\DoxyCodeLine{776     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} x = 0; x < block\_count.x; ++x)}
+\DoxyCodeLine{777         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} y = 0; y < block\_count.y; ++y)}
+\DoxyCodeLine{778             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_count.z; ++z) \{}
+\DoxyCodeLine{779                 blocks.emplace\_back(x, y, z);}
+\DoxyCodeLine{780                 offsets.emplace\_back(x * block\_dim.x, y * block\_dim.y,}
+\DoxyCodeLine{781                                      z * block\_dim.z);}
+\DoxyCodeLine{782             \}}
+\DoxyCodeLine{783 }
+\DoxyCodeLine{784     \textcolor{comment}{/* Fetch whole image and return */}}
+\DoxyCodeLine{785     \mbox{\hyperlink{classdatastore_1_1_image_view_aea0838296b3f6736bb86b2ecf5ab6044}{read\_blocks}}(blocks, out, offsets);}
+\DoxyCodeLine{786     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{787 \}}
+\DoxyCodeLine{788 }
+\DoxyCodeLine{789 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{790 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_image_view_a853e695891bbc927cb686eaecd4d8aa5}{ImageView::write\_block}}(}
+\DoxyCodeLine{791     \textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{792     i3d::Vector3d<int> coord,}
+\DoxyCodeLine{793     i3d::Vector3d<int> src\_offset \textcolor{comment}{/*  = \{0, 0, 0\} */})\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{794     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_image_view_a92c86a41962ed30e622d69c76c20c5fd}{write\_blocks}}(src, \{coord\}, \{src\_offset\});}
+\DoxyCodeLine{795 \}}
+\DoxyCodeLine{796 }
+\DoxyCodeLine{797 \textcolor{comment}{// TODO optimise}}
+\DoxyCodeLine{798 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{799 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_image_view_a92c86a41962ed30e622d69c76c20c5fd}{ImageView::write\_blocks}}(}
+\DoxyCodeLine{800     \textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{801     \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{802     \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& src\_offsets)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{803 }
+\DoxyCodeLine{804     \textcolor{comment}{/* Fetch server properties */}}
+\DoxyCodeLine{805     std::string dataset\_url = details::get\_dataset\_url(\_ip, \_port, \_uuid);}
+\DoxyCodeLine{806     \mbox{\hyperlink{classdatastore_1_1_dataset_properties}{DatasetProperties}} props = details::get\_dataset\_properties(dataset\_url);}
+\DoxyCodeLine{807     i3d::Vector3d<int> block\_dim =}
+\DoxyCodeLine{808         details::get\_block\_dimensions(props, \_resolution);}
+\DoxyCodeLine{809     i3d::Vector3d<int> img\_dim = props.dimensions / \_resolution;}
+\DoxyCodeLine{810 }
+\DoxyCodeLine{811     \textcolor{comment}{/* Error checking (when not in debug, all checks automatically return true)*/}}
+\DoxyCodeLine{812     \textcolor{keywordflow}{if} (coords.size() != src\_offsets.size()) \{}
+\DoxyCodeLine{813         details::log::error(\textcolor{stringliteral}{"{}Count of coordinates != count of offsets"{}});}
+\DoxyCodeLine{814         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{815     \}}
+\DoxyCodeLine{816 }
+\DoxyCodeLine{817     \textcolor{keywordflow}{if} (!details::check\_block\_coords(coords, img\_dim, block\_dim))}
+\DoxyCodeLine{818         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{819 }
+\DoxyCodeLine{820     \textcolor{keywordflow}{if} (!details::check\_offset\_coords(src\_offsets, coords, src, block\_dim,}
+\DoxyCodeLine{821                                       img\_dim))}
+\DoxyCodeLine{822         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{823 }
+\DoxyCodeLine{824     \textcolor{comment}{/* prepare request url */}}
+\DoxyCodeLine{825     std::string session\_url = details::requests::session\_url\_request(}
+\DoxyCodeLine{826         dataset\_url, \_resolution, \_version);}
+\DoxyCodeLine{827 }
+\DoxyCodeLine{828     \textcolor{keywordflow}{if} (session\_url.ends\_with(\textcolor{charliteral}{'/'}))}
+\DoxyCodeLine{829         session\_url.pop\_back();}
+\DoxyCodeLine{830 }
+\DoxyCodeLine{831     \textcolor{comment}{/* Write blocks to server one by one */}}
+\DoxyCodeLine{832     \textcolor{keywordflow}{for} (std::size\_t i = 0; i < coords.size(); ++i) \{}
+\DoxyCodeLine{833         \textcolor{keyword}{auto}\& coord = coords[i];}
+\DoxyCodeLine{834         \textcolor{keyword}{auto}\& offset = src\_offsets[i];}
+\DoxyCodeLine{835 }
+\DoxyCodeLine{836         i3d::Vector3d<int> block\_size =}
+\DoxyCodeLine{837             details::data\_manip::get\_block\_size(coord, block\_dim, img\_dim);}
+\DoxyCodeLine{838 }
+\DoxyCodeLine{839         \textcolor{comment}{/* Prepare vector representing octet-\/data (will be send to server) */}}
+\DoxyCodeLine{840         std::vector<char> data(details::data\_manip::get\_block\_data\_size(}
+\DoxyCodeLine{841             block\_size, props.voxel\_type));}
+\DoxyCodeLine{842 }
+\DoxyCodeLine{843         \textcolor{comment}{/* Transform image to octet-\/data */}}
+\DoxyCodeLine{844         details::data\_manip::write\_data(src, offset, data, props.voxel\_type,}
+\DoxyCodeLine{845                                         block\_size);}
+\DoxyCodeLine{846 }
+\DoxyCodeLine{847         std::string url =}
+\DoxyCodeLine{848             fmt::format(\textcolor{stringliteral}{"{}\{\}/\{\}/\{\}/\{\}/\{\}/\{\}/\{\}"{}}, session\_url, coord.x, coord.y,}
+\DoxyCodeLine{849                         coord.z, \_timepoint, \_channel, \_angle);}
+\DoxyCodeLine{850 }
+\DoxyCodeLine{851         \textcolor{keyword}{auto} [\_, response] = details::requests::make\_request(}
+\DoxyCodeLine{852             url, Poco::Net::HTTPRequest::HTTP\_POST, data,}
+\DoxyCodeLine{853             \{\{\textcolor{stringliteral}{"{}Content-\/Type"{}}, \textcolor{stringliteral}{"{}application/octet-\/stream"{}}\}\});}
+\DoxyCodeLine{854     \}}
+\DoxyCodeLine{855 }
+\DoxyCodeLine{856     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{857 \}}
+\DoxyCodeLine{858 }
+\DoxyCodeLine{859 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{860 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_image_view_a183f5168e14339830f2bc1d7ec743d05}{ImageView::write\_image}}(\textcolor{keyword}{const} i3d::Image3d<T>\& img)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{861 }
+\DoxyCodeLine{862     \textcolor{comment}{/* Fetch image properties from server */}}
+\DoxyCodeLine{863     \mbox{\hyperlink{classdatastore_1_1_dataset_properties}{DatasetProperties}} props = get\_dataset\_properties(\_ip, \_port, \_uuid);}
+\DoxyCodeLine{864     i3d::Vector3d<int> block\_dim =}
+\DoxyCodeLine{865         details::get\_block\_dimensions(props, \_resolution);}
+\DoxyCodeLine{866     i3d::Vector3d<int> img\_dim = props.dimensions / \_resolution;}
+\DoxyCodeLine{867     i3d::Vector3d<int> block\_count =}
+\DoxyCodeLine{868         (img\_dim + block\_dim -\/ 1) / block\_dim; \textcolor{comment}{// Ceiling}}
+\DoxyCodeLine{869 }
+\DoxyCodeLine{870     \textcolor{comment}{/* Prepare coordinates of blocks and offsets to write whole image */}}
+\DoxyCodeLine{871     std::vector<i3d::Vector3d<int>> blocks;}
+\DoxyCodeLine{872     std::vector<i3d::Vector3d<int>> offsets;}
+\DoxyCodeLine{873 }
+\DoxyCodeLine{874     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} x = 0; x < block\_count.x; ++x)}
+\DoxyCodeLine{875         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} y = 0; y < block\_count.y; ++y)}
+\DoxyCodeLine{876             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_count.z; ++z) \{}
+\DoxyCodeLine{877                 blocks.emplace\_back(x, y, z);}
+\DoxyCodeLine{878                 offsets.emplace\_back(x * block\_dim.x, y * block\_dim.y,}
+\DoxyCodeLine{879                                      z * block\_dim.z);}
+\DoxyCodeLine{880             \}}
+\DoxyCodeLine{881 }
+\DoxyCodeLine{882     \textcolor{comment}{/* write whole image */}}
+\DoxyCodeLine{883     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_image_view_a92c86a41962ed30e622d69c76c20c5fd}{write\_blocks}}(img, blocks, offsets);}
+\DoxyCodeLine{884 \}}
+\DoxyCodeLine{885 }
+\DoxyCodeLine{886 \textcolor{comment}{/* ===================================== Connection */}}
+\DoxyCodeLine{887 }
+\DoxyCodeLine{888 \mbox{\hyperlink{classdatastore_1_1_connection_a765b984fa9b01dd1157698bf2aa913c9}{Connection::Connection}}(std::string ip, \textcolor{keywordtype}{int} port, std::string uuid)}
+\DoxyCodeLine{889     : \_ip(std::move(ip)), \_port(port), \_uuid(std::move(uuid)) \{\}}
+\DoxyCodeLine{890 }
+\DoxyCodeLine{891 \mbox{\hyperlink{classdatastore_1_1_image_view}{ImageView}} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{Connection::get\_view}}(\textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{892                                \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{893                                \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{894                                i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{895                                \textcolor{keyword}{const} std::string\& version)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{896     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_image_view}{ImageView}}(\_ip, \_port, \_uuid, channel, timepoint, angle, resolution,}
+\DoxyCodeLine{897                      version);}
+\DoxyCodeLine{898 \}}
+\DoxyCodeLine{899 }
+\DoxyCodeLine{900 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{901 i3d::Image3d<T> \mbox{\hyperlink{classdatastore_1_1_connection_a0e13e60e924dd1d0596b7f6c68a3644b}{Connection::read\_block}}(i3d::Vector3d<int> coord,}
+\DoxyCodeLine{902                                        \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{903                                        \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{904                                        \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{905                                        i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{906                                        \textcolor{keyword}{const} std::string\& version)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{907     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{get\_view}}(channel, timepoint, angle, resolution, version)}
+\DoxyCodeLine{908         .\mbox{\hyperlink{classdatastore_1_1_image_view_a9e8fb0456fe3b7aaa9d7fab2854cf16b}{read\_block}}<T>(coord);}
+\DoxyCodeLine{909 \}}
+\DoxyCodeLine{910 }
+\DoxyCodeLine{911 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{912 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_connection_a0e13e60e924dd1d0596b7f6c68a3644b}{Connection::read\_block}}(i3d::Vector3d<int> coord,}
+\DoxyCodeLine{913                             i3d::Image3d<T>\& dest,}
+\DoxyCodeLine{914                             i3d::Vector3d<int> dest\_offset,}
+\DoxyCodeLine{915                             \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{916                             \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{917                             \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{918                             i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{919                             \textcolor{keyword}{const} std::string\& version)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{920     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{get\_view}}(channel, timepoint, angle, resolution, version)}
+\DoxyCodeLine{921         .\mbox{\hyperlink{classdatastore_1_1_image_view_a9e8fb0456fe3b7aaa9d7fab2854cf16b}{read\_block}}(coord, dest, dest\_offset);}
+\DoxyCodeLine{922 \}}
+\DoxyCodeLine{923 }
+\DoxyCodeLine{924 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{925 std::vector<i3d::Image3d<T>>}
+\DoxyCodeLine{926 \mbox{\hyperlink{classdatastore_1_1_connection_a1153887794c75d8fd0eab237d6ada649}{Connection::read\_blocks}}(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{927                         \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{928                         \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{929                         \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{930                         i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{931                         \textcolor{keyword}{const} std::string\& version)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{932     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{get\_view}}(channel, timepoint, angle, resolution, version)}
+\DoxyCodeLine{933         .\mbox{\hyperlink{classdatastore_1_1_image_view_aea0838296b3f6736bb86b2ecf5ab6044}{read\_blocks}}<T>(coords);}
+\DoxyCodeLine{934 \}}
+\DoxyCodeLine{935 }
+\DoxyCodeLine{936 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{937 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_connection_a1153887794c75d8fd0eab237d6ada649}{Connection::read\_blocks}}(}
+\DoxyCodeLine{938     \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{939     i3d::Image3d<T>\& dest,}
+\DoxyCodeLine{940     \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& dest\_offsets,}
+\DoxyCodeLine{941     \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{942     \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{943     \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{944     i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{945     \textcolor{keyword}{const} std::string\& version)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{946     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{get\_view}}(channel, timepoint, angle, resolution, version)}
+\DoxyCodeLine{947         .\mbox{\hyperlink{classdatastore_1_1_image_view_aea0838296b3f6736bb86b2ecf5ab6044}{read\_blocks}}(coords, dest, dest\_offsets);}
+\DoxyCodeLine{948 \}}
+\DoxyCodeLine{949 }
+\DoxyCodeLine{950 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{951 i3d::Image3d<T> \mbox{\hyperlink{classdatastore_1_1_connection_a7b911a6c8445fcd8026eb694fca132e3}{Connection::read\_image}}(\textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{952                                        \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{953                                        \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{954                                        i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{955                                        \textcolor{keyword}{const} std::string\& version)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{956     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{get\_view}}(channel, timepoint, angle, resolution, version)}
+\DoxyCodeLine{957         .\mbox{\hyperlink{classdatastore_1_1_image_view_ad2c28760365af157503182849eff9790}{read\_image}}<T>();}
+\DoxyCodeLine{958 \}}
+\DoxyCodeLine{959 }
+\DoxyCodeLine{960 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{961 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_connection_abcde47294bc421fe7571abfc2b238c73}{Connection::write\_block}}(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{962                              i3d::Vector3d<int> coord,}
+\DoxyCodeLine{963                              i3d::Vector3d<int> src\_offset,}
+\DoxyCodeLine{964                              \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{965                              \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{966                              \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{967                              i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{968                              \textcolor{keyword}{const} std::string\& version)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{969     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{get\_view}}(channel, timepoint, angle, resolution, version)}
+\DoxyCodeLine{970         .\mbox{\hyperlink{classdatastore_1_1_image_view_a853e695891bbc927cb686eaecd4d8aa5}{write\_block}}(src, coord, src\_offset);}
+\DoxyCodeLine{971 \}}
+\DoxyCodeLine{972 }
+\DoxyCodeLine{973 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{974 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_connection_adc5cf7bc0d746951b98a2f627ac9d781}{Connection::write\_blocks}}(}
+\DoxyCodeLine{975     \textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{976     \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{977     \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& src\_offsets,}
+\DoxyCodeLine{978     \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{979     \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{980     \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{981     i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{982     \textcolor{keyword}{const} std::string\& version)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{983     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{get\_view}}(channel, timepoint, angle, resolution, version)}
+\DoxyCodeLine{984         .\mbox{\hyperlink{classdatastore_1_1_image_view_a92c86a41962ed30e622d69c76c20c5fd}{write\_blocks}}(src, coords, src\_offsets);}
+\DoxyCodeLine{985 \}}
+\DoxyCodeLine{986 }
+\DoxyCodeLine{987 \textcolor{keyword}{template} <cnpts::Scalar T>}
+\DoxyCodeLine{988 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classdatastore_1_1_connection_ab11d17adf5cf1fd8ff52ba777da38f93}{Connection::write\_image}}(\textcolor{keyword}{const} i3d::Image3d<T>\& img,}
+\DoxyCodeLine{989                              \textcolor{keywordtype}{int} channel,}
+\DoxyCodeLine{990                              \textcolor{keywordtype}{int} timepoint,}
+\DoxyCodeLine{991                              \textcolor{keywordtype}{int} angle,}
+\DoxyCodeLine{992                              i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{993                              \textcolor{keyword}{const} std::string\& version)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{994     \textcolor{keywordflow}{return} \mbox{\hyperlink{classdatastore_1_1_connection_a8de526df0d0278f44891a31c2f3ea5c3}{get\_view}}(channel, timepoint, angle, resolution, version)}
+\DoxyCodeLine{995         .\mbox{\hyperlink{classdatastore_1_1_image_view_a183f5168e14339830f2bc1d7ec743d05}{write\_image}}(img);}
+\DoxyCodeLine{996 \}}
+\DoxyCodeLine{997 }
+\DoxyCodeLine{998 \} \textcolor{comment}{// namespace datastore}}
+
+\end{DoxyCode}

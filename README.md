@@ -23,10 +23,22 @@ I recommend using [vcpkg](https://github.com/microsoft/vcpkg) to fetch necessary
 However, as the **i3dlib** is not available from **vcpkg** repositories, you will have to download, build and install library from [official website](https://cbia.fi.muni.cz/software/i3d-library.html). For this particular project, *i3dcore* part of the library is sufficient, though you may want to customize used image compression libraries to enable/disable certain image formats. 
 (If you do not want mess with anything, simple *make build* and *sudo make install* should be enough, assuming all neccessary dependencies are installed on your system).
 
-#### FMT, POCO
+#### VCPKG
+Please follow instructions on installation at the [official website](https://github.com/microsoft/vcpkg).
 
+#### FMT
+**FMT** is available from **vcpkg** repositories and does not have much customizations. Therefore, if you will not use **vcpkg**, just make sure that `fmt::format(...)` is available from `<fmt/core.h>` header.
+
+#### Poco
+**Poco** is quite huge and provides lot of different functionality. As well as **fmt**, **Poco** is obtainable from **vcpkg** repositories. If you will not use **vcpkg**, make sure that parts `Poco::Net` and `Poco::JSON` are available. 
+
+### Inclusion to your project
+As this library is header-only, the only thing you need is to copy content of `src` directory inside your project and `#include` it.
 
 ## Documentation
+
+The documentation can be viewed directly in the source code, most importantly in [`hpc_ds_api.hpp`](hpc-datastore-cpp/src/hpc_ds_api.hpp).
+There is also doxygen-generated documentation available in [html]().
 
 ## Usage
 

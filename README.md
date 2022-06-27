@@ -38,7 +38,7 @@ As this library is header-only, the only thing you need is to copy content of `s
 ## Documentation
 
 The documentation can be viewed directly in the source code, most importantly in [`hpc_ds_api.hpp`](src/hpc_ds_api.hpp).
-There is also doxygen-generated documentation available in [html]().
+There is also doxygen-generated documentation available in [html](docs/generated/html/index.html) and [pdf](docs/generated/latex/refman.pdf).
 
 ## Usage
 

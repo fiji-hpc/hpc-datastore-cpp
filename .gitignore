@@ -1,5 +1,6 @@
 build*
 .vscode
+.clangd
 
 samples/build*
 samples/*/build*

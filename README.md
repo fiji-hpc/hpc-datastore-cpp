@@ -64,7 +64,7 @@ Of course, you can disable some unwanted features using compile macros.
 
 Available macros:
 
-* **DATASTORE_NDEBUG** (also enabled by NDEBUG)
+* **DATASTORE_NDEBUG** (also enabled by **NDEBUG**)
 
 Disables boundary and consistency checks and disables messages.
 * **DATASTORE_NLOG**

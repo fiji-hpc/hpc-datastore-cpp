@@ -31,7 +31,7 @@ const std::string IMG_VERSION = "latest";
  */
 template <typename T>
 void fill_random(i3d::Image3d<T>& img) {
-	std::mt19937 gen{std::random_device()};
+	std::mt19937_64 gen{std::random_device()()};
 	std::uniform_int_distribution<long long> dist;
 
 	for (auto& voxel : img)

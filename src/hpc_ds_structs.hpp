@@ -23,7 +23,7 @@ constexpr inline std::size_t MAX_URL_LENGTH = 2048;
 
 /**
  * @brief Class representing resolution unit (in DatasetProperties)
- * 
+ *
  */
 class ResolutionUnit {
   public:
@@ -144,7 +144,7 @@ std::string to_string(const T& val) {
 
 /**
  * @brief Class representing dataset properties
- * 
+ *
  */
 class DatasetProperties {
   public:

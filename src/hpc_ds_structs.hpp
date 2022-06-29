@@ -129,7 +129,7 @@ std::string to_string(const T& map) {
 	for (const auto& [k, v] : map) {
 		ss << to_string(k) << ": " << to_string(v) << '\n';
 	}
-	ss << "}\n";
+	ss << "}";
 	return ss.str();
 }
 

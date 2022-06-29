@@ -18,14 +18,40 @@
 
 namespace datastore {
 namespace details {
+/* Definition of compile settings */
+
 #ifdef DATASTORE_NDEBUG
-constexpr inline bool debug = false;
+constexpr inline bool _DEBUG_ = false;
 #else
 #ifdef NDEBUG
-constexpr inline bool debug = false;
+constexpr inline bool _DEBUG_ = false;
 #else
-constexpr inline bool debug = true;
+constexpr inline bool _DEBUG_ = true;
 #endif
+#endif
+
+#ifdef DATASTORE_NLOG
+constexpr inline bool _LOG_ = false;
+#else
+constexpr inline bool _LOG_ = _DEBUG_;
+#endif
+
+#ifdef DATASTORE_NINFO
+constexpr inline bool _INFO_ = false;
+#else
+constexpr inline bool _INFO_ = _LOG_;
+#endif
+
+#ifdef DATASTORE_NWARNING
+constexpr inline bool _WARNING_ = false;
+#else
+constexpr inline bool _WARNING_ = _LOG_;
+#endif
+
+#ifdef DATASTORE_NERROR
+constexpr inline bool _ERROR_ = false;
+#else
+constexpr inline bool _ERROR_ = _LOG_;
 #endif
 
 /**
@@ -49,10 +75,11 @@ inline DatasetProperties get_dataset_properties(const std::string& dataset_url);
 
 /**
  * @brief Get the block dimensions
- * 
+ *
  * @param props dataset properties
  * @param resolution requested resolution
- * @return i3d::Vector3d<int> vector representing dimensions, {-1, -1, -1} where not found
+ * @return i3d::Vector3d<int> vector representing dimensions, {-1, -1, -1} where
+ * not found
  */
 inline i3d::Vector3d<int> get_block_dimensions(const DatasetProperties& props,
                                                i3d::Vector3d<int> resolution);
@@ -162,13 +189,20 @@ void write_data(const i3d::Image3d<T>& src,
 } // namespace data_manip
 
 namespace log {
+
 /**
- * @brief Print message to output
+ * @brief Prints message
+ *
+ * If type of message contains substring 'ERROR', buffer is automatically
+ * flushed.
  *
  * @param msg Message
- * @param location Message source properties
+ * @param type Type of message
+ * @param location Location info about message source
  */
-inline void _log(const std::string& msg, const std::source_location& location);
+inline void _log(const std::string& msg,
+                 const std::string& type,
+                 const std::source_location& location);
 
 /**
  * @brief Print info message
@@ -321,7 +355,7 @@ check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
                    i3d::Vector3d<int> img_dim,
                    i3d::Vector3d<int> block_dim) {
 	/* Act as NOOP if not in debug */
-	if constexpr (!debug)
+	if constexpr (!_DEBUG_)
 		return true;
 
 	log::info("Checking validity of given block coordinates");
@@ -344,8 +378,8 @@ bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& offsets,
                          const i3d::Image3d<T>& img,
                          i3d::Vector3d<int> block_dim,
                          i3d::Vector3d<int> img_dim) {
-	/* Act as NOOP if not in debug */						
-	if constexpr (!debug)
+	/* Act as NOOP if not in debug */
+	if constexpr (!_DEBUG_)
 		return true;
 
 	if (offsets.size() != coords.size())
@@ -498,7 +532,7 @@ namespace log {
 /* inline */ void _log(const std::string& msg,
                        const std::string& type,
                        const std::source_location& location) {
-	if constexpr (!debug)
+	if constexpr (!_LOG_)
 		return;
 
 	std::cout << fmt::format("[{}] {} at row {}:\n{} \n\n", type,
@@ -510,6 +544,8 @@ namespace log {
 /* inline */ void info(const std::string& msg,
                        const std::source_location&
                            location /* = std::source_location::current() */) {
+	if constexpr (!_INFO_)
+		return;
 	_log(msg, "INFO", location);
 }
 
@@ -517,12 +553,16 @@ namespace log {
 warning(const std::string& msg,
         const std::source_location&
             location /* = std::source_location::current() */) {
+	if constexpr (!_WARNING_)
+		return;
 	_log(msg, "WARNING", location);
 }
 
 /* inline */ void error(const std::string& msg,
                         const std::source_location&
                             location /* = std::source_location::current() */) {
+	if constexpr (!_ERROR_)
+		return;
 	_log(msg, "ERROR", location);
 }
 } // namespace log

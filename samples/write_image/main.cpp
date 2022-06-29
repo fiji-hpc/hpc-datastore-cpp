@@ -6,7 +6,7 @@ namespace ds = datastore;
 
 template <typename T>
 void store_image() {
-	// Fetching image
+	// Fetching image properties
 	std::cout
 	    << "Fetching properties from the server to obtain basic dimensions ... "
 	    << std::flush;

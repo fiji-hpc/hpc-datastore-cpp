@@ -13,6 +13,7 @@ Table of Contents
      * [2.1.3 FMT](#213-fmt)
      * [2.1.4 Poco](#214-poco)
   * [2.2 Inclusion to your project](#22-inclusion-to-your-project)
+  * [2.3 Compile settings](#23-compile-settings)
 * [3 Documentation](#3-documentation)
 * [4 Usage](#4-usage)
   * [4.1 Global (datastore::) scope](#41-global-datastore-scope)
@@ -57,6 +58,24 @@ Please follow instructions on installation at the [official website](https://git
 
 ### 2.2 Inclusion to your project
 As this library is header-only, the only thing you need is to copy content of `src` directory inside your project and `#include` it.
+
+### 2.3 Compile settings
+Of course, you can disable some unwanted features using compile macros.
+
+Available macros:
+
+* DATASTORE\_NDEBUG (also enabled by NDEBUG)
+Disables boundary and consistency checks and disables messages.
+* DATASTORE\_NLOG
+Disables all messages
+* DATASTORE\_NINFO
+Disables info messages
+* DATASTORE\_NWARNING
+Disables warning messages
+* DATASTORE\_ERROR
+Disables error messages
+
+See samples for an example.
 
 ## 3 Documentation
 

@@ -9,7 +9,7 @@ void get_block() {
 	ds::Connection conn(SERVER_IP, SERVER_PORT, DS_UUID);
 
 	// Fetch new block
-	std::cout << "Fetching new block {0, 0, 0} using Connection ... ";
+	std::cout << "Fetching new block {0, 0, 0} using Connection ... " << std::flush;
 	i3d::Image3d<T> connection_block =
 	    conn.read_block<T>({0, 0, 0}, IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE,
 	                       IMG_RESOLUTION, IMG_VERSION);
@@ -21,7 +21,7 @@ void get_block() {
 
 	// Fetch block to already existing image
 	std::cout << "Fetching block {0, 0, 0} in to existing image using "
-	             "Connection ... ";
+	             "Connection ... " << std::flush;
 	i3d::Image3d<T> connection_block_inplace;
 
 	/* Allocate space */
@@ -43,7 +43,7 @@ void get_block() {
 	                       IMG_VERSION);
 
 	// Fetch new block
-	std::cout << "Fetching new block {0, 0, 0} using ImageView ... ";
+	std::cout << "Fetching new block {0, 0, 0} using ImageView ... " << std::flush;
 	i3d::Image3d<T> view_block = img_view.read_block<T>({0, 0, 0});
 	std::cout << "[OK]" << std::endl;
 
@@ -53,7 +53,7 @@ void get_block() {
 
 	// Fetch block to already existing image
 	std::cout
-	    << "Fetching block {0, 0, 0} in to existing image using ImageView ... ";
+	    << "Fetching block {0, 0, 0} in to existing image using ImageView ... " << std::flush;
 	i3d::Image3d<T> view_block_inplace;
 
 	/* Allocate space */
@@ -65,7 +65,7 @@ void get_block() {
 	} else
 		std::cout << "[OK]" << std::endl;
 
-	std::cout << "Checking if all recovered images are the same ... ";
+	std::cout << "Checking if all recovered images are the same ... " << std::flush;
 	std::cout << std::boolalpha
 	          << (connection_block == connection_block_inplace &&
 	              connection_block == view_block &&

@@ -22,601 +22,636 @@
 \DoxyCodeLine{18 }
 \DoxyCodeLine{19 \textcolor{keyword}{namespace }datastore \{}
 \DoxyCodeLine{20 \textcolor{keyword}{namespace }details \{}
-\DoxyCodeLine{21 \textcolor{preprocessor}{\#ifdef DATASTORE\_NDEBUG}}
-\DoxyCodeLine{22 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} debug = \textcolor{keyword}{false};}
-\DoxyCodeLine{23 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{24 \textcolor{preprocessor}{\#ifdef NDEBUG}}
-\DoxyCodeLine{25 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} debug = \textcolor{keyword}{false};}
-\DoxyCodeLine{26 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{27 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} debug = \textcolor{keyword}{true};}
-\DoxyCodeLine{28 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{29 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{30 }
-\DoxyCodeLine{39 \textcolor{keyword}{inline} std::string}
-\DoxyCodeLine{40 get\_dataset\_url(\textcolor{keyword}{const} std::string\& ip, \textcolor{keywordtype}{int} port, \textcolor{keyword}{const} std::string\& uuid);}
-\DoxyCodeLine{41 }
-\DoxyCodeLine{48 \textcolor{keyword}{inline} DatasetProperties get\_dataset\_properties(\textcolor{keyword}{const} std::string\& dataset\_url);}
-\DoxyCodeLine{49 }
-\DoxyCodeLine{57 \textcolor{keyword}{inline} i3d::Vector3d<int> get\_block\_dimensions(\textcolor{keyword}{const} DatasetProperties\& props,}
-\DoxyCodeLine{58                                                i3d::Vector3d<int> resolution);}
-\DoxyCodeLine{59 }
-\DoxyCodeLine{71 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} check\_block\_coords(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
-\DoxyCodeLine{72                                i3d::Vector3d<int> img\_dim,}
-\DoxyCodeLine{73                                i3d::Vector3d<int> block\_dim);}
-\DoxyCodeLine{74 }
-\DoxyCodeLine{89 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{90 \textcolor{keywordtype}{bool} check\_offset\_coords(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& offsets,}
-\DoxyCodeLine{91                          \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
-\DoxyCodeLine{92                          \textcolor{keyword}{const} i3d::Image3d<T>\& img,}
-\DoxyCodeLine{93                          i3d::Vector3d<int> block\_dim,}
-\DoxyCodeLine{94                          i3d::Vector3d<int> img\_dim);}
-\DoxyCodeLine{95 \textcolor{keyword}{namespace }data\_manip \{}
-\DoxyCodeLine{96 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} get\_block\_data\_size(i3d::Vector3d<int> block\_size,}
-\DoxyCodeLine{97                                \textcolor{keyword}{const} std::string\& voxel\_type);}
-\DoxyCodeLine{98 }
-\DoxyCodeLine{99 \textcolor{keyword}{inline} i3d::Vector3d<int> get\_block\_size(i3d::Vector3d<int> coord,}
-\DoxyCodeLine{100                                          i3d::Vector3d<int> block\_dim,}
-\DoxyCodeLine{101                                          i3d::Vector3d<int> img\_dim);}
-\DoxyCodeLine{102 }
-\DoxyCodeLine{103 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} get\_linear\_index(i3d::Vector3d<int> coord,}
-\DoxyCodeLine{104                             i3d::Vector3d<int> block\_dim,}
-\DoxyCodeLine{105                             \textcolor{keyword}{const} std::string\& voxel\_type);}
-\DoxyCodeLine{106 }
-\DoxyCodeLine{107 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{108 T get\_elem\_at(std::span<const char> data,}
-\DoxyCodeLine{109               \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{110               \textcolor{keywordtype}{int} index);}
-\DoxyCodeLine{111 }
-\DoxyCodeLine{112 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{113 T get\_elem\_at(std::span<const char> data,}
-\DoxyCodeLine{114               \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{115               i3d::Vector3d<int> coord,}
-\DoxyCodeLine{116               i3d::Vector3d<int> block\_dim);}
-\DoxyCodeLine{117 }
-\DoxyCodeLine{118 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{119 \textcolor{keywordtype}{void} set\_elem\_at(std::span<char> data,}
-\DoxyCodeLine{120                  \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{121                  \textcolor{keywordtype}{int} index,}
-\DoxyCodeLine{122                  T elem);}
-\DoxyCodeLine{123 }
-\DoxyCodeLine{124 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{125 \textcolor{keywordtype}{void} set\_elem\_at(std::span<char> data,}
-\DoxyCodeLine{126                  \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{127                  i3d::Vector3d<int> coord,}
-\DoxyCodeLine{128                  i3d::Vector3d<int> block\_dim,}
-\DoxyCodeLine{129                  T elem);}
-\DoxyCodeLine{130 }
-\DoxyCodeLine{140 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{141 \textcolor{keywordtype}{void} read\_data(std::span<const char> data,}
-\DoxyCodeLine{142                \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{143                i3d::Image3d<T>\& dest,}
-\DoxyCodeLine{144                i3d::Vector3d<int> offset);}
-\DoxyCodeLine{145 }
-\DoxyCodeLine{156 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{157 \textcolor{keywordtype}{void} write\_data(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
-\DoxyCodeLine{158                 i3d::Vector3d<int> offset,}
-\DoxyCodeLine{159                 std::span<char> data,}
-\DoxyCodeLine{160                 \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{161                 i3d::Vector3d<int> block\_size);}
-\DoxyCodeLine{162 \} \textcolor{comment}{// namespace data\_manip}}
-\DoxyCodeLine{163 }
-\DoxyCodeLine{164 \textcolor{keyword}{namespace }log \{}
-\DoxyCodeLine{171 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \_log(\textcolor{keyword}{const} std::string\& msg, \textcolor{keyword}{const} std::source\_location\& location);}
+\DoxyCodeLine{21 \textcolor{comment}{/* Definition of compile settings */}}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#ifdef DATASTORE\_NDEBUG}}
+\DoxyCodeLine{24 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_DEBUG\_ = \textcolor{keyword}{false};}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#ifdef NDEBUG}}
+\DoxyCodeLine{27 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_DEBUG\_ = \textcolor{keyword}{false};}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{29 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_DEBUG\_ = \textcolor{keyword}{true};}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{31 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#ifdef DATASTORE\_NLOG}}
+\DoxyCodeLine{34 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_LOG\_ = \textcolor{keyword}{false};}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{36 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_LOG\_ = \_DEBUG\_;}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#ifdef DATASTORE\_NINFO}}
+\DoxyCodeLine{40 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_INFO\_ = \textcolor{keyword}{false};}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{42 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_INFO\_ = \_LOG\_;}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#ifdef DATASTORE\_NWARNING}}
+\DoxyCodeLine{46 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_WARNING\_ = \textcolor{keyword}{false};}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{48 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_WARNING\_ = \_LOG\_;}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#ifdef DATASTORE\_NERROR}}
+\DoxyCodeLine{52 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_ERROR\_ = \textcolor{keyword}{false};}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{54 \textcolor{keyword}{constexpr} \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \_ERROR\_ = \_LOG\_;}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{65 \textcolor{keyword}{inline} std::string}
+\DoxyCodeLine{66 get\_dataset\_url(\textcolor{keyword}{const} std::string\& ip, \textcolor{keywordtype}{int} port, \textcolor{keyword}{const} std::string\& uuid);}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{74 \textcolor{keyword}{inline} DatasetProperties get\_dataset\_properties(\textcolor{keyword}{const} std::string\& dataset\_url);}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{84 \textcolor{keyword}{inline} i3d::Vector3d<int> get\_block\_dimensions(\textcolor{keyword}{const} DatasetProperties\& props,}
+\DoxyCodeLine{85                                                i3d::Vector3d<int> resolution);}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{98 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} check\_block\_coords(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{99                                i3d::Vector3d<int> img\_dim,}
+\DoxyCodeLine{100                                i3d::Vector3d<int> block\_dim);}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{116 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{117 \textcolor{keywordtype}{bool} check\_offset\_coords(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& offsets,}
+\DoxyCodeLine{118                          \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{119                          \textcolor{keyword}{const} i3d::Image3d<T>\& img,}
+\DoxyCodeLine{120                          i3d::Vector3d<int> block\_dim,}
+\DoxyCodeLine{121                          i3d::Vector3d<int> img\_dim);}
+\DoxyCodeLine{122 \textcolor{keyword}{namespace }data\_manip \{}
+\DoxyCodeLine{123 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} get\_block\_data\_size(i3d::Vector3d<int> block\_size,}
+\DoxyCodeLine{124                                \textcolor{keyword}{const} std::string\& voxel\_type);}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126 \textcolor{keyword}{inline} i3d::Vector3d<int> get\_block\_size(i3d::Vector3d<int> coord,}
+\DoxyCodeLine{127                                          i3d::Vector3d<int> block\_dim,}
+\DoxyCodeLine{128                                          i3d::Vector3d<int> img\_dim);}
+\DoxyCodeLine{129 }
+\DoxyCodeLine{130 \textcolor{keyword}{inline} \textcolor{keywordtype}{int} get\_linear\_index(i3d::Vector3d<int> coord,}
+\DoxyCodeLine{131                             i3d::Vector3d<int> block\_dim,}
+\DoxyCodeLine{132                             \textcolor{keyword}{const} std::string\& voxel\_type);}
+\DoxyCodeLine{133 }
+\DoxyCodeLine{134 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{135 T get\_elem\_at(std::span<const char> data,}
+\DoxyCodeLine{136               \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{137               \textcolor{keywordtype}{int} index);}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{139 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{140 T get\_elem\_at(std::span<const char> data,}
+\DoxyCodeLine{141               \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{142               i3d::Vector3d<int> coord,}
+\DoxyCodeLine{143               i3d::Vector3d<int> block\_dim);}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{145 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{146 \textcolor{keywordtype}{void} set\_elem\_at(std::span<char> data,}
+\DoxyCodeLine{147                  \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{148                  \textcolor{keywordtype}{int} index,}
+\DoxyCodeLine{149                  T elem);}
+\DoxyCodeLine{150 }
+\DoxyCodeLine{151 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{152 \textcolor{keywordtype}{void} set\_elem\_at(std::span<char> data,}
+\DoxyCodeLine{153                  \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{154                  i3d::Vector3d<int> coord,}
+\DoxyCodeLine{155                  i3d::Vector3d<int> block\_dim,}
+\DoxyCodeLine{156                  T elem);}
+\DoxyCodeLine{157 }
+\DoxyCodeLine{167 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{168 \textcolor{keywordtype}{void} read\_data(std::span<const char> data,}
+\DoxyCodeLine{169                \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{170                i3d::Image3d<T>\& dest,}
+\DoxyCodeLine{171                i3d::Vector3d<int> offset);}
 \DoxyCodeLine{172 }
-\DoxyCodeLine{179 \textcolor{keyword}{inline} \textcolor{keywordtype}{void}}
-\DoxyCodeLine{180 info(\textcolor{keyword}{const} std::string\& msg,}
-\DoxyCodeLine{181      \textcolor{keyword}{const} std::source\_location\& location = std::source\_location::current());}
-\DoxyCodeLine{182 }
-\DoxyCodeLine{189 \textcolor{keyword}{inline} \textcolor{keywordtype}{void}}
-\DoxyCodeLine{190 warning(\textcolor{keyword}{const} std::string\& msg,}
-\DoxyCodeLine{191         \textcolor{keyword}{const} std::source\_location\& location = std::source\_location::current());}
+\DoxyCodeLine{183 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{184 \textcolor{keywordtype}{void} write\_data(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{185                 i3d::Vector3d<int> offset,}
+\DoxyCodeLine{186                 std::span<char> data,}
+\DoxyCodeLine{187                 \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{188                 i3d::Vector3d<int> block\_size);}
+\DoxyCodeLine{189 \} \textcolor{comment}{// namespace data\_manip}}
+\DoxyCodeLine{190 }
+\DoxyCodeLine{191 \textcolor{keyword}{namespace }log \{}
 \DoxyCodeLine{192 }
-\DoxyCodeLine{199 \textcolor{keyword}{inline} \textcolor{keywordtype}{void}}
-\DoxyCodeLine{200 error(\textcolor{keyword}{const} std::string\& msg,}
-\DoxyCodeLine{201       \textcolor{keyword}{const} std::source\_location\& location = std::source\_location::current());}
-\DoxyCodeLine{202 \} \textcolor{comment}{// namespace log}}
-\DoxyCodeLine{203 }
-\DoxyCodeLine{204 \textcolor{comment}{/* Helpers to parse Dataset Properties from JSON */}}
-\DoxyCodeLine{205 \textcolor{keyword}{namespace }props\_parser \{}
-\DoxyCodeLine{206 \textcolor{keyword}{using namespace }Poco::JSON;}
-\DoxyCodeLine{207 }
-\DoxyCodeLine{208 \textcolor{keyword}{template} <cnpts::Basic T>}
-\DoxyCodeLine{209 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name);}
-\DoxyCodeLine{210 }
-\DoxyCodeLine{211 \textcolor{keyword}{template} <cnpts::Vector3d T>}
-\DoxyCodeLine{212 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name);}
-\DoxyCodeLine{213 }
-\DoxyCodeLine{214 \textcolor{keyword}{template} <cnpts::Vector T>}
-\DoxyCodeLine{215 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name);}
+\DoxyCodeLine{203 \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \_log(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{204                  \textcolor{keyword}{const} std::string\& type,}
+\DoxyCodeLine{205                  \textcolor{keyword}{const} std::source\_location\& location);}
+\DoxyCodeLine{206 }
+\DoxyCodeLine{213 \textcolor{keyword}{inline} \textcolor{keywordtype}{void}}
+\DoxyCodeLine{214 info(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{215      \textcolor{keyword}{const} std::source\_location\& location = std::source\_location::current());}
 \DoxyCodeLine{216 }
-\DoxyCodeLine{217 \textcolor{keyword}{template} <cnpts::ResolutionUnit T>}
-\DoxyCodeLine{218 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name);}
-\DoxyCodeLine{219 }
-\DoxyCodeLine{220 \textcolor{keyword}{template} <cnpts::Optional T>}
-\DoxyCodeLine{221 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name);}
-\DoxyCodeLine{222 }
-\DoxyCodeLine{223 \textcolor{keyword}{inline} std::vector<std::map<std::string, i3d::Vector3d<int>>>}
-\DoxyCodeLine{224 get\_resolution\_levels(Object::Ptr root);}
-\DoxyCodeLine{225 }
-\DoxyCodeLine{226 \} \textcolor{comment}{// namespace props\_parser}}
-\DoxyCodeLine{227 }
-\DoxyCodeLine{228 \textcolor{comment}{/* Helpers providing requests functionality */}}
-\DoxyCodeLine{229 \textcolor{keyword}{namespace }requests \{}
-\DoxyCodeLine{230 \textcolor{keyword}{inline} std::string session\_url\_request(\textcolor{keyword}{const} std::string\& ds\_url,}
-\DoxyCodeLine{231                                        i3d::Vector3d<int> resolution,}
-\DoxyCodeLine{232                                        \textcolor{keyword}{const} std::string\& version);}
-\DoxyCodeLine{233 }
-\DoxyCodeLine{234 \textcolor{keyword}{inline} std::pair<std::vector<char>, Poco::Net::HTTPResponse>}
-\DoxyCodeLine{235 make\_request(\textcolor{keyword}{const} std::string\& url,}
-\DoxyCodeLine{236              \textcolor{keyword}{const} std::string\& type = Poco::Net::HTTPRequest::HTTP\_GET,}
-\DoxyCodeLine{237              \textcolor{keyword}{const} std::vector<char>\& data = \{\},}
-\DoxyCodeLine{238              \textcolor{keyword}{const} std::map<std::string, std::string>\& headers = \{\});}
-\DoxyCodeLine{239 \} \textcolor{comment}{// namespace requests}}
-\DoxyCodeLine{240 \} \textcolor{comment}{// namespace details}}
-\DoxyCodeLine{241 \} \textcolor{comment}{// namespace datastore}}
-\DoxyCodeLine{242 }
-\DoxyCodeLine{243 \textcolor{comment}{/* ================= IMPLEMENTATION FOLLOWS ======================== */}}
-\DoxyCodeLine{244 \textcolor{keyword}{namespace }datastore \{}
-\DoxyCodeLine{245 \textcolor{keyword}{namespace }details \{}
-\DoxyCodeLine{246 }
-\DoxyCodeLine{247 \textcolor{comment}{/* inline */} std::string}
-\DoxyCodeLine{248 get\_dataset\_url(\textcolor{keyword}{const} std::string\& ip, \textcolor{keywordtype}{int} port, \textcolor{keyword}{const} std::string\& uuid) \{}
-\DoxyCodeLine{249     std::string out;}
-\DoxyCodeLine{250     \textcolor{keywordflow}{if} (!ip.starts\_with(\textcolor{stringliteral}{"{}http://"{}}))}
-\DoxyCodeLine{251         out = \textcolor{stringliteral}{"{}https://"{}};}
-\DoxyCodeLine{252     \textcolor{keywordflow}{return} out + fmt::format(\textcolor{stringliteral}{"{}\{\}:\{\}/datasets/\{\}"{}}, ip, port, uuid);}
-\DoxyCodeLine{253 \}}
-\DoxyCodeLine{254 }
-\DoxyCodeLine{255 \textcolor{keyword}{inline} DatasetProperties}
-\DoxyCodeLine{256 get\_dataset\_properties(\textcolor{keyword}{const} std::string\& dataset\_url) \{}
-\DoxyCodeLine{257     \textcolor{keyword}{using namespace }Poco::JSON;}
-\DoxyCodeLine{258 }
-\DoxyCodeLine{259     \textcolor{comment}{/* Fetch JSON from server */}}
-\DoxyCodeLine{260     \textcolor{keyword}{auto} [data, response] = requests::make\_request(dataset\_url);}
-\DoxyCodeLine{261     std::string json\_str(data.begin(), data.end());}
-\DoxyCodeLine{262 }
-\DoxyCodeLine{263     \textcolor{keywordtype}{int} res\_code = response.getStatus();}
-\DoxyCodeLine{264     \textcolor{keywordflow}{if} (res\_code != 200)}
-\DoxyCodeLine{265         log::warning(fmt::format(}
-\DoxyCodeLine{266             \textcolor{stringliteral}{"{}Request ended with code: \{\}. json may not be valid"{}}, res\_code));}
+\DoxyCodeLine{223 \textcolor{keyword}{inline} \textcolor{keywordtype}{void}}
+\DoxyCodeLine{224 warning(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{225         \textcolor{keyword}{const} std::source\_location\& location = std::source\_location::current());}
+\DoxyCodeLine{226 }
+\DoxyCodeLine{233 \textcolor{keyword}{inline} \textcolor{keywordtype}{void}}
+\DoxyCodeLine{234 error(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{235       \textcolor{keyword}{const} std::source\_location\& location = std::source\_location::current());}
+\DoxyCodeLine{236 \} \textcolor{comment}{// namespace log}}
+\DoxyCodeLine{237 }
+\DoxyCodeLine{238 \textcolor{comment}{/* Helpers to parse Dataset Properties from JSON */}}
+\DoxyCodeLine{239 \textcolor{keyword}{namespace }props\_parser \{}
+\DoxyCodeLine{240 \textcolor{keyword}{using namespace }Poco::JSON;}
+\DoxyCodeLine{241 }
+\DoxyCodeLine{242 \textcolor{keyword}{template} <cnpts::Basic T>}
+\DoxyCodeLine{243 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name);}
+\DoxyCodeLine{244 }
+\DoxyCodeLine{245 \textcolor{keyword}{template} <cnpts::Vector3d T>}
+\DoxyCodeLine{246 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name);}
+\DoxyCodeLine{247 }
+\DoxyCodeLine{248 \textcolor{keyword}{template} <cnpts::Vector T>}
+\DoxyCodeLine{249 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name);}
+\DoxyCodeLine{250 }
+\DoxyCodeLine{251 \textcolor{keyword}{template} <cnpts::ResolutionUnit T>}
+\DoxyCodeLine{252 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name);}
+\DoxyCodeLine{253 }
+\DoxyCodeLine{254 \textcolor{keyword}{template} <cnpts::Optional T>}
+\DoxyCodeLine{255 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name);}
+\DoxyCodeLine{256 }
+\DoxyCodeLine{257 \textcolor{keyword}{inline} std::vector<std::map<std::string, i3d::Vector3d<int>>>}
+\DoxyCodeLine{258 get\_resolution\_levels(Object::Ptr root);}
+\DoxyCodeLine{259 }
+\DoxyCodeLine{260 \} \textcolor{comment}{// namespace props\_parser}}
+\DoxyCodeLine{261 }
+\DoxyCodeLine{262 \textcolor{comment}{/* Helpers providing requests functionality */}}
+\DoxyCodeLine{263 \textcolor{keyword}{namespace }requests \{}
+\DoxyCodeLine{264 \textcolor{keyword}{inline} std::string session\_url\_request(\textcolor{keyword}{const} std::string\& ds\_url,}
+\DoxyCodeLine{265                                        i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{266                                        \textcolor{keyword}{const} std::string\& version);}
 \DoxyCodeLine{267 }
-\DoxyCodeLine{268     log::info(\textcolor{stringliteral}{"{}Parsing dataset properties from JSON string"{}});}
-\DoxyCodeLine{269     Parser parser;}
-\DoxyCodeLine{270     Poco::Dynamic::Var result = parser.parse(json\_str);}
-\DoxyCodeLine{271 }
-\DoxyCodeLine{272     DatasetProperties props;}
-\DoxyCodeLine{273     \textcolor{keyword}{auto} root = result.extract<Object::Ptr>();}
-\DoxyCodeLine{274 }
-\DoxyCodeLine{275     \textcolor{keyword}{using namespace }props\_parser;}
+\DoxyCodeLine{268 \textcolor{keyword}{inline} std::pair<std::vector<char>, Poco::Net::HTTPResponse>}
+\DoxyCodeLine{269 make\_request(\textcolor{keyword}{const} std::string\& url,}
+\DoxyCodeLine{270              \textcolor{keyword}{const} std::string\& type = Poco::Net::HTTPRequest::HTTP\_GET,}
+\DoxyCodeLine{271              \textcolor{keyword}{const} std::vector<char>\& data = \{\},}
+\DoxyCodeLine{272              \textcolor{keyword}{const} std::map<std::string, std::string>\& headers = \{\});}
+\DoxyCodeLine{273 \} \textcolor{comment}{// namespace requests}}
+\DoxyCodeLine{274 \} \textcolor{comment}{// namespace details}}
+\DoxyCodeLine{275 \} \textcolor{comment}{// namespace datastore}}
 \DoxyCodeLine{276 }
-\DoxyCodeLine{277     \textcolor{comment}{/* Parse elements from JSON */}}
-\DoxyCodeLine{278 }
-\DoxyCodeLine{279     props.uuid = get\_elem<std::string>(root, \textcolor{stringliteral}{"{}uuid"{}});}
-\DoxyCodeLine{280     props.voxel\_type = get\_elem<std::string>(root, \textcolor{stringliteral}{"{}voxelType"{}});}
-\DoxyCodeLine{281     props.dimensions = get\_elem<i3d::Vector3d<int>>(root, \textcolor{stringliteral}{"{}dimensions"{}});}
-\DoxyCodeLine{282     props.channels = get\_elem<int>(root, \textcolor{stringliteral}{"{}channels"{}});}
-\DoxyCodeLine{283     props.angles = get\_elem<int>(root, \textcolor{stringliteral}{"{}angles"{}});}
-\DoxyCodeLine{284     props.transformations =}
-\DoxyCodeLine{285         get\_elem<std::optional<std::string>>(root, \textcolor{stringliteral}{"{}transformations"{}});}
-\DoxyCodeLine{286     props.voxel\_unit = get\_elem<std::string>(root, \textcolor{stringliteral}{"{}voxelUnit"{}});}
-\DoxyCodeLine{287     props.voxel\_resolution =}
-\DoxyCodeLine{288         get\_elem<std::optional<i3d::Vector3d<double>>>(root, \textcolor{stringliteral}{"{}voxelResolution"{}});}
-\DoxyCodeLine{289     props.timepoint\_resolution =}
-\DoxyCodeLine{290         get\_elem<std::optional<ResolutionUnit>>(root, \textcolor{stringliteral}{"{}timepointResolution"{}});}
-\DoxyCodeLine{291     props.channel\_resolution =}
-\DoxyCodeLine{292         get\_elem<std::optional<ResolutionUnit>>(root, \textcolor{stringliteral}{"{}channelResolution"{}});}
-\DoxyCodeLine{293     props.angle\_resolution =}
-\DoxyCodeLine{294         get\_elem<std::optional<ResolutionUnit>>(root, \textcolor{stringliteral}{"{}angleResolution"{}});}
-\DoxyCodeLine{295     props.compression = get\_elem<std::string>(root, \textcolor{stringliteral}{"{}compression"{}});}
-\DoxyCodeLine{296     props.resolution\_levels = get\_resolution\_levels(root);}
-\DoxyCodeLine{297     props.versions = get\_elem<std::vector<int>>(root, \textcolor{stringliteral}{"{}versions"{}});}
-\DoxyCodeLine{298     props.label = get\_elem<std::string>(root, \textcolor{stringliteral}{"{}label"{}});}
-\DoxyCodeLine{299     props.view\_registrations =}
-\DoxyCodeLine{300         get\_elem<std::optional<std::string>>(root, \textcolor{stringliteral}{"{}viewRegistrations"{}});}
-\DoxyCodeLine{301     props.timepoint\_ids = get\_elem<std::vector<int>>(root, \textcolor{stringliteral}{"{}timepointIds"{}});}
-\DoxyCodeLine{302 }
-\DoxyCodeLine{303     log::info(\textcolor{stringliteral}{"{}Parsing has finished"{}});}
-\DoxyCodeLine{304     \textcolor{keywordflow}{return} props;}
-\DoxyCodeLine{305 \}}
-\DoxyCodeLine{306 }
-\DoxyCodeLine{307 \textcolor{comment}{/* inline */} i3d::Vector3d<int>}
-\DoxyCodeLine{308 get\_block\_dimensions(\textcolor{keyword}{const} DatasetProperties\& props,}
-\DoxyCodeLine{309                      i3d::Vector3d<int> resolution) \{}
-\DoxyCodeLine{310     \textcolor{keywordflow}{for} (\textcolor{keyword}{const} \textcolor{keyword}{auto}\& res\_level : props.resolution\_levels)}
-\DoxyCodeLine{311         \textcolor{keywordflow}{if} (res\_level.at(\textcolor{stringliteral}{"{}resolutions"{}}) == resolution)}
-\DoxyCodeLine{312             \textcolor{keywordflow}{return} res\_level.at(\textcolor{stringliteral}{"{}blockDimensions"{}});}
-\DoxyCodeLine{313 }
-\DoxyCodeLine{314     log::error(fmt::format(\textcolor{stringliteral}{"{}Dimensions for resolution \{\} not found"{}},}
-\DoxyCodeLine{315                            to\_string(resolution)));}
-\DoxyCodeLine{316     \textcolor{keywordflow}{return} \{-\/1, -\/1, -\/1\};}
-\DoxyCodeLine{317 \}}
-\DoxyCodeLine{318 }
-\DoxyCodeLine{319 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{bool}}
-\DoxyCodeLine{320 check\_block\_coords(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
-\DoxyCodeLine{321                    i3d::Vector3d<int> img\_dim,}
-\DoxyCodeLine{322                    i3d::Vector3d<int> block\_dim) \{}
-\DoxyCodeLine{323     \textcolor{comment}{/* Act as NOOP if not in debug */}}
-\DoxyCodeLine{324     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!debug)}
-\DoxyCodeLine{325         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
-\DoxyCodeLine{326 }
-\DoxyCodeLine{327     log::info(\textcolor{stringliteral}{"{}Checking validity of given block coordinates"{}});}
-\DoxyCodeLine{328 }
-\DoxyCodeLine{329     \textcolor{keywordflow}{for} (i3d::Vector3d<int> coord : coords)}
-\DoxyCodeLine{330         \textcolor{keywordflow}{if} (data\_manip::get\_block\_size(coord, block\_dim, img\_dim) ==}
-\DoxyCodeLine{331             i3d::Vector3d(0, 0, 0)) \{}
-\DoxyCodeLine{332             log::error(fmt::format(\textcolor{stringliteral}{"{}Block coordinate \{\} is out of valid range"{}},}
-\DoxyCodeLine{333                                    to\_string(coord)));}
-\DoxyCodeLine{334 }
-\DoxyCodeLine{335             \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
-\DoxyCodeLine{336         \}}
-\DoxyCodeLine{337     log::info(\textcolor{stringliteral}{"{}Check successfullly finished"{}});}
-\DoxyCodeLine{338     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{277 \textcolor{comment}{/* ================= IMPLEMENTATION FOLLOWS ======================== */}}
+\DoxyCodeLine{278 \textcolor{keyword}{namespace }datastore \{}
+\DoxyCodeLine{279 \textcolor{keyword}{namespace }details \{}
+\DoxyCodeLine{280 }
+\DoxyCodeLine{281 \textcolor{comment}{/* inline */} std::string}
+\DoxyCodeLine{282 get\_dataset\_url(\textcolor{keyword}{const} std::string\& ip, \textcolor{keywordtype}{int} port, \textcolor{keyword}{const} std::string\& uuid) \{}
+\DoxyCodeLine{283     std::string out;}
+\DoxyCodeLine{284     \textcolor{keywordflow}{if} (!ip.starts\_with(\textcolor{stringliteral}{"{}http://"{}}))}
+\DoxyCodeLine{285         out = \textcolor{stringliteral}{"{}https://"{}};}
+\DoxyCodeLine{286     \textcolor{keywordflow}{return} out + fmt::format(\textcolor{stringliteral}{"{}\{\}:\{\}/datasets/\{\}"{}}, ip, port, uuid);}
+\DoxyCodeLine{287 \}}
+\DoxyCodeLine{288 }
+\DoxyCodeLine{289 \textcolor{keyword}{inline} DatasetProperties}
+\DoxyCodeLine{290 get\_dataset\_properties(\textcolor{keyword}{const} std::string\& dataset\_url) \{}
+\DoxyCodeLine{291     \textcolor{keyword}{using namespace }Poco::JSON;}
+\DoxyCodeLine{292 }
+\DoxyCodeLine{293     \textcolor{comment}{/* Fetch JSON from server */}}
+\DoxyCodeLine{294     \textcolor{keyword}{auto} [data, response] = requests::make\_request(dataset\_url);}
+\DoxyCodeLine{295     std::string json\_str(data.begin(), data.end());}
+\DoxyCodeLine{296 }
+\DoxyCodeLine{297     \textcolor{keywordtype}{int} res\_code = response.getStatus();}
+\DoxyCodeLine{298     \textcolor{keywordflow}{if} (res\_code != 200)}
+\DoxyCodeLine{299         log::warning(fmt::format(}
+\DoxyCodeLine{300             \textcolor{stringliteral}{"{}Request ended with code: \{\}. json may not be valid"{}}, res\_code));}
+\DoxyCodeLine{301 }
+\DoxyCodeLine{302     log::info(\textcolor{stringliteral}{"{}Parsing dataset properties from JSON string"{}});}
+\DoxyCodeLine{303     Parser parser;}
+\DoxyCodeLine{304     Poco::Dynamic::Var result = parser.parse(json\_str);}
+\DoxyCodeLine{305 }
+\DoxyCodeLine{306     DatasetProperties props;}
+\DoxyCodeLine{307     \textcolor{keyword}{auto} root = result.extract<Object::Ptr>();}
+\DoxyCodeLine{308 }
+\DoxyCodeLine{309     \textcolor{keyword}{using namespace }props\_parser;}
+\DoxyCodeLine{310 }
+\DoxyCodeLine{311     \textcolor{comment}{/* Parse elements from JSON */}}
+\DoxyCodeLine{312 }
+\DoxyCodeLine{313     props.uuid = get\_elem<std::string>(root, \textcolor{stringliteral}{"{}uuid"{}});}
+\DoxyCodeLine{314     props.voxel\_type = get\_elem<std::string>(root, \textcolor{stringliteral}{"{}voxelType"{}});}
+\DoxyCodeLine{315     props.dimensions = get\_elem<i3d::Vector3d<int>>(root, \textcolor{stringliteral}{"{}dimensions"{}});}
+\DoxyCodeLine{316     props.channels = get\_elem<int>(root, \textcolor{stringliteral}{"{}channels"{}});}
+\DoxyCodeLine{317     props.angles = get\_elem<int>(root, \textcolor{stringliteral}{"{}angles"{}});}
+\DoxyCodeLine{318     props.transformations =}
+\DoxyCodeLine{319         get\_elem<std::optional<std::string>>(root, \textcolor{stringliteral}{"{}transformations"{}});}
+\DoxyCodeLine{320     props.voxel\_unit = get\_elem<std::string>(root, \textcolor{stringliteral}{"{}voxelUnit"{}});}
+\DoxyCodeLine{321     props.voxel\_resolution =}
+\DoxyCodeLine{322         get\_elem<std::optional<i3d::Vector3d<double>>>(root, \textcolor{stringliteral}{"{}voxelResolution"{}});}
+\DoxyCodeLine{323     props.timepoint\_resolution =}
+\DoxyCodeLine{324         get\_elem<std::optional<ResolutionUnit>>(root, \textcolor{stringliteral}{"{}timepointResolution"{}});}
+\DoxyCodeLine{325     props.channel\_resolution =}
+\DoxyCodeLine{326         get\_elem<std::optional<ResolutionUnit>>(root, \textcolor{stringliteral}{"{}channelResolution"{}});}
+\DoxyCodeLine{327     props.angle\_resolution =}
+\DoxyCodeLine{328         get\_elem<std::optional<ResolutionUnit>>(root, \textcolor{stringliteral}{"{}angleResolution"{}});}
+\DoxyCodeLine{329     props.compression = get\_elem<std::string>(root, \textcolor{stringliteral}{"{}compression"{}});}
+\DoxyCodeLine{330     props.resolution\_levels = get\_resolution\_levels(root);}
+\DoxyCodeLine{331     props.versions = get\_elem<std::vector<int>>(root, \textcolor{stringliteral}{"{}versions"{}});}
+\DoxyCodeLine{332     props.label = get\_elem<std::string>(root, \textcolor{stringliteral}{"{}label"{}});}
+\DoxyCodeLine{333     props.view\_registrations =}
+\DoxyCodeLine{334         get\_elem<std::optional<std::string>>(root, \textcolor{stringliteral}{"{}viewRegistrations"{}});}
+\DoxyCodeLine{335     props.timepoint\_ids = get\_elem<std::vector<int>>(root, \textcolor{stringliteral}{"{}timepointIds"{}});}
+\DoxyCodeLine{336 }
+\DoxyCodeLine{337     log::info(\textcolor{stringliteral}{"{}Parsing has finished"{}});}
+\DoxyCodeLine{338     \textcolor{keywordflow}{return} props;}
 \DoxyCodeLine{339 \}}
 \DoxyCodeLine{340 }
-\DoxyCodeLine{341 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{342 \textcolor{keywordtype}{bool} check\_offset\_coords(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& offsets,}
-\DoxyCodeLine{343                          \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
-\DoxyCodeLine{344                          \textcolor{keyword}{const} i3d::Image3d<T>\& img,}
-\DoxyCodeLine{345                          i3d::Vector3d<int> block\_dim,}
-\DoxyCodeLine{346                          i3d::Vector3d<int> img\_dim) \{}
-\DoxyCodeLine{347     \textcolor{comment}{/* Act as NOOP if not in debug */}                       }
-\DoxyCodeLine{348     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!debug)}
-\DoxyCodeLine{349         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
-\DoxyCodeLine{350 }
-\DoxyCodeLine{351     \textcolor{keywordflow}{if} (offsets.size() != coords.size())}
-\DoxyCodeLine{352         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
-\DoxyCodeLine{353 }
-\DoxyCodeLine{354     log::info(\textcolor{stringliteral}{"{}Checking validity of given offset coordinates"{}});}
-\DoxyCodeLine{355 }
-\DoxyCodeLine{356     \textcolor{keywordflow}{for} (std::size\_t i = 0; i < coords.size(); ++i) \{}
-\DoxyCodeLine{357         \textcolor{keyword}{auto}\& coord = coords[i];}
-\DoxyCodeLine{358         \textcolor{keyword}{auto}\& offset = offsets[i];}
-\DoxyCodeLine{359 }
-\DoxyCodeLine{360         i3d::Vector3d<int> block\_size =}
-\DoxyCodeLine{361             data\_manip::get\_block\_size(coord, block\_dim, img\_dim);}
-\DoxyCodeLine{362         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 3; ++i)}
-\DoxyCodeLine{363             \textcolor{keywordflow}{if} (!(0 <= coord[i] \&\&}
-\DoxyCodeLine{364                   std::size\_t(offset[i] + block\_size[i]) <= img.GetSize()[i])) \{}
-\DoxyCodeLine{365                 log::error(}
-\DoxyCodeLine{366                     fmt::format(\textcolor{stringliteral}{"{}Offset coordinate \{\} is out of valid range"{}},}
-\DoxyCodeLine{367                                 to\_string(coord)));}
+\DoxyCodeLine{341 \textcolor{comment}{/* inline */} i3d::Vector3d<int>}
+\DoxyCodeLine{342 get\_block\_dimensions(\textcolor{keyword}{const} DatasetProperties\& props,}
+\DoxyCodeLine{343                      i3d::Vector3d<int> resolution) \{}
+\DoxyCodeLine{344     \textcolor{keywordflow}{for} (\textcolor{keyword}{const} \textcolor{keyword}{auto}\& res\_level : props.resolution\_levels)}
+\DoxyCodeLine{345         \textcolor{keywordflow}{if} (res\_level.at(\textcolor{stringliteral}{"{}resolutions"{}}) == resolution)}
+\DoxyCodeLine{346             \textcolor{keywordflow}{return} res\_level.at(\textcolor{stringliteral}{"{}blockDimensions"{}});}
+\DoxyCodeLine{347 }
+\DoxyCodeLine{348     log::error(fmt::format(\textcolor{stringliteral}{"{}Dimensions for resolution \{\} not found"{}},}
+\DoxyCodeLine{349                            to\_string(resolution)));}
+\DoxyCodeLine{350     \textcolor{keywordflow}{return} \{-\/1, -\/1, -\/1\};}
+\DoxyCodeLine{351 \}}
+\DoxyCodeLine{352 }
+\DoxyCodeLine{353 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{bool}}
+\DoxyCodeLine{354 check\_block\_coords(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{355                    i3d::Vector3d<int> img\_dim,}
+\DoxyCodeLine{356                    i3d::Vector3d<int> block\_dim) \{}
+\DoxyCodeLine{357     \textcolor{comment}{/* Act as NOOP if not in debug */}}
+\DoxyCodeLine{358     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_DEBUG\_)}
+\DoxyCodeLine{359         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{360 }
+\DoxyCodeLine{361     log::info(\textcolor{stringliteral}{"{}Checking validity of given block coordinates"{}});}
+\DoxyCodeLine{362 }
+\DoxyCodeLine{363     \textcolor{keywordflow}{for} (i3d::Vector3d<int> coord : coords)}
+\DoxyCodeLine{364         \textcolor{keywordflow}{if} (data\_manip::get\_block\_size(coord, block\_dim, img\_dim) ==}
+\DoxyCodeLine{365             i3d::Vector3d(0, 0, 0)) \{}
+\DoxyCodeLine{366             log::error(fmt::format(\textcolor{stringliteral}{"{}Block coordinate \{\} is out of valid range"{}},}
+\DoxyCodeLine{367                                    to\_string(coord)));}
 \DoxyCodeLine{368 }
-\DoxyCodeLine{369                 \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
-\DoxyCodeLine{370             \}}
-\DoxyCodeLine{371     \}}
-\DoxyCodeLine{372     log::info(\textcolor{stringliteral}{"{}Check successfullly finished"{}});}
-\DoxyCodeLine{373     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
-\DoxyCodeLine{374 \}}
-\DoxyCodeLine{375 }
-\DoxyCodeLine{376 \textcolor{keyword}{namespace }data\_manip \{}
-\DoxyCodeLine{377 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{int} get\_block\_data\_size(i3d::Vector3d<int> block\_size,}
-\DoxyCodeLine{378                                      \textcolor{keyword}{const} std::string\& voxel\_type) \{}
-\DoxyCodeLine{379 }
-\DoxyCodeLine{380     \textcolor{keywordtype}{int} elem\_size = type\_byte\_size.at(voxel\_type);}
-\DoxyCodeLine{381     \textcolor{keywordflow}{return} block\_size.x * block\_size.y * block\_size.z * elem\_size + 12;}
-\DoxyCodeLine{382 \}}
-\DoxyCodeLine{383 }
-\DoxyCodeLine{384 \textcolor{comment}{/* inline */} i3d::Vector3d<int> get\_block\_size(i3d::Vector3d<int> coord,}
-\DoxyCodeLine{385                                                i3d::Vector3d<int> block\_dim,}
-\DoxyCodeLine{386                                                i3d::Vector3d<int> img\_dim) \{}
-\DoxyCodeLine{387     i3d::Vector3d<int> start = (coord * block\_dim);}
-\DoxyCodeLine{388     i3d::Vector3d<int> end = (coord + 1) * block\_dim;}
+\DoxyCodeLine{369             \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{370         \}}
+\DoxyCodeLine{371     log::info(\textcolor{stringliteral}{"{}Check successfullly finished"{}});}
+\DoxyCodeLine{372     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{373 \}}
+\DoxyCodeLine{374 }
+\DoxyCodeLine{375 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{376 \textcolor{keywordtype}{bool} check\_offset\_coords(\textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& offsets,}
+\DoxyCodeLine{377                          \textcolor{keyword}{const} std::vector<i3d::Vector3d<int>>\& coords,}
+\DoxyCodeLine{378                          \textcolor{keyword}{const} i3d::Image3d<T>\& img,}
+\DoxyCodeLine{379                          i3d::Vector3d<int> block\_dim,}
+\DoxyCodeLine{380                          i3d::Vector3d<int> img\_dim) \{}
+\DoxyCodeLine{381     \textcolor{comment}{/* Act as NOOP if not in debug */}}
+\DoxyCodeLine{382     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_DEBUG\_)}
+\DoxyCodeLine{383         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{384 }
+\DoxyCodeLine{385     \textcolor{keywordflow}{if} (offsets.size() != coords.size())}
+\DoxyCodeLine{386         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{387 }
+\DoxyCodeLine{388     log::info(\textcolor{stringliteral}{"{}Checking validity of given offset coordinates"{}});}
 \DoxyCodeLine{389 }
-\DoxyCodeLine{390     i3d::Vector3d<int> out;}
-\DoxyCodeLine{391     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 3; ++i) \{}
-\DoxyCodeLine{392         out[i] =}
-\DoxyCodeLine{393             std::max(0, std::min(img\_dim[i], end[i]) -\/ std::max(start[i], 0));}
-\DoxyCodeLine{394     \}}
-\DoxyCodeLine{395     \textcolor{keywordflow}{return} out;}
-\DoxyCodeLine{396 \}}
-\DoxyCodeLine{397 }
-\DoxyCodeLine{398 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{int} get\_linear\_index(i3d::Vector3d<int> coord,}
-\DoxyCodeLine{399                                   i3d::Vector3d<int> block\_dim,}
-\DoxyCodeLine{400                                   \textcolor{keyword}{const} std::string\& voxel\_type) \{}
-\DoxyCodeLine{401     \textcolor{keywordtype}{int} elem\_size = type\_byte\_size.at(voxel\_type);}
+\DoxyCodeLine{390     \textcolor{keywordflow}{for} (std::size\_t i = 0; i < coords.size(); ++i) \{}
+\DoxyCodeLine{391         \textcolor{keyword}{auto}\& coord = coords[i];}
+\DoxyCodeLine{392         \textcolor{keyword}{auto}\& offset = offsets[i];}
+\DoxyCodeLine{393 }
+\DoxyCodeLine{394         i3d::Vector3d<int> block\_size =}
+\DoxyCodeLine{395             data\_manip::get\_block\_size(coord, block\_dim, img\_dim);}
+\DoxyCodeLine{396         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 3; ++i)}
+\DoxyCodeLine{397             \textcolor{keywordflow}{if} (!(0 <= coord[i] \&\&}
+\DoxyCodeLine{398                   std::size\_t(offset[i] + block\_size[i]) <= img.GetSize()[i])) \{}
+\DoxyCodeLine{399                 log::error(}
+\DoxyCodeLine{400                     fmt::format(\textcolor{stringliteral}{"{}Offset coordinate \{\} is out of valid range"{}},}
+\DoxyCodeLine{401                                 to\_string(coord)));}
 \DoxyCodeLine{402 }
-\DoxyCodeLine{403     \textcolor{keywordflow}{return} 12 +                                   \textcolor{comment}{// header\_offset}}
-\DoxyCodeLine{404            (coord.z * block\_dim.x * block\_dim.y + \textcolor{comment}{// Main axis}}
-\DoxyCodeLine{405             coord.y * block\_dim.x +               \textcolor{comment}{// secondary axis}}
-\DoxyCodeLine{406             coord.x) *                            \textcolor{comment}{// last axis}}
-\DoxyCodeLine{407                elem\_size;                         \textcolor{comment}{// byte size}}
+\DoxyCodeLine{403                 \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{404             \}}
+\DoxyCodeLine{405     \}}
+\DoxyCodeLine{406     log::info(\textcolor{stringliteral}{"{}Check successfullly finished"{}});}
+\DoxyCodeLine{407     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
 \DoxyCodeLine{408 \}}
 \DoxyCodeLine{409 }
-\DoxyCodeLine{410 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{411 T get\_elem\_at(std::span<const char> data,}
-\DoxyCodeLine{412               \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{413               \textcolor{keywordtype}{int} index) \{}
+\DoxyCodeLine{410 \textcolor{keyword}{namespace }data\_manip \{}
+\DoxyCodeLine{411 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{int} get\_block\_data\_size(i3d::Vector3d<int> block\_size,}
+\DoxyCodeLine{412                                      \textcolor{keyword}{const} std::string\& voxel\_type) \{}
+\DoxyCodeLine{413 }
 \DoxyCodeLine{414     \textcolor{keywordtype}{int} elem\_size = type\_byte\_size.at(voxel\_type);}
-\DoxyCodeLine{415 }
-\DoxyCodeLine{416     std::array<char, \textcolor{keyword}{sizeof}(T)> buffer\{\};}
-\DoxyCodeLine{417     std::copy\_n(data.begin() + index,      \textcolor{comment}{// source start}}
-\DoxyCodeLine{418                 elem\_size,                 \textcolor{comment}{// count}}
-\DoxyCodeLine{419                 buffer.end() -\/ elem\_size); \textcolor{comment}{// dest start}}
-\DoxyCodeLine{420 }
-\DoxyCodeLine{421     std::ranges::reverse(buffer);}
-\DoxyCodeLine{422 }
-\DoxyCodeLine{423     \textcolor{keywordflow}{return} *\textcolor{keyword}{reinterpret\_cast<}T*\textcolor{keyword}{>}(\&buffer[0]);}
-\DoxyCodeLine{424 \}}
-\DoxyCodeLine{425 }
-\DoxyCodeLine{426 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{427 T get\_elem\_at(std::span<const char> data,}
-\DoxyCodeLine{428               \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{429               i3d::Vector3d<int> coord,}
-\DoxyCodeLine{430               i3d::Vector3d<int> block\_dim) \{}
+\DoxyCodeLine{415     \textcolor{keywordflow}{return} block\_size.x * block\_size.y * block\_size.z * elem\_size + 12;}
+\DoxyCodeLine{416 \}}
+\DoxyCodeLine{417 }
+\DoxyCodeLine{418 \textcolor{comment}{/* inline */} i3d::Vector3d<int> get\_block\_size(i3d::Vector3d<int> coord,}
+\DoxyCodeLine{419                                                i3d::Vector3d<int> block\_dim,}
+\DoxyCodeLine{420                                                i3d::Vector3d<int> img\_dim) \{}
+\DoxyCodeLine{421     i3d::Vector3d<int> start = (coord * block\_dim);}
+\DoxyCodeLine{422     i3d::Vector3d<int> end = (coord + 1) * block\_dim;}
+\DoxyCodeLine{423 }
+\DoxyCodeLine{424     i3d::Vector3d<int> out;}
+\DoxyCodeLine{425     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 3; ++i) \{}
+\DoxyCodeLine{426         out[i] =}
+\DoxyCodeLine{427             std::max(0, std::min(img\_dim[i], end[i]) -\/ std::max(start[i], 0));}
+\DoxyCodeLine{428     \}}
+\DoxyCodeLine{429     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{430 \}}
 \DoxyCodeLine{431 }
-\DoxyCodeLine{432     \textcolor{keywordtype}{int} index = get\_linear\_index(coord, block\_dim, voxel\_type);}
-\DoxyCodeLine{433     \textcolor{keywordflow}{return} get\_elem\_at<T>(data, voxel\_type, index);}
-\DoxyCodeLine{434 \}}
-\DoxyCodeLine{435 }
-\DoxyCodeLine{436 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{437 \textcolor{keywordtype}{void} set\_elem\_at(std::span<char> data,}
-\DoxyCodeLine{438                  \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{439                  \textcolor{keywordtype}{int} index,}
-\DoxyCodeLine{440                  T elem) \{}
-\DoxyCodeLine{441     \textcolor{keywordtype}{int} elem\_size = type\_byte\_size.at(voxel\_type);}
-\DoxyCodeLine{442 }
-\DoxyCodeLine{443     \textcolor{keyword}{auto} buffer = *\textcolor{keyword}{reinterpret\_cast<}std::array<\textcolor{keywordtype}{char}, sizeof(T)\textcolor{keyword}{>}*>(\&elem);}
-\DoxyCodeLine{444     std::ranges::reverse(buffer);}
-\DoxyCodeLine{445 }
-\DoxyCodeLine{446     std::copy\_n(buffer.end() -\/ elem\_size, \textcolor{comment}{// source start}}
-\DoxyCodeLine{447                 elem\_size,                \textcolor{comment}{// count}}
-\DoxyCodeLine{448                 data.begin() + index);    \textcolor{comment}{// dest start}}
-\DoxyCodeLine{449 \}}
-\DoxyCodeLine{450 }
-\DoxyCodeLine{451 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{452 \textcolor{keywordtype}{void} set\_elem\_at(std::span<char> data,}
-\DoxyCodeLine{453                  \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{454                  i3d::Vector3d<int> coord,}
-\DoxyCodeLine{455                  i3d::Vector3d<int> block\_dim,}
-\DoxyCodeLine{456                  T elem) \{}
-\DoxyCodeLine{457     \textcolor{keywordtype}{int} index = get\_linear\_index(coord, block\_dim, voxel\_type);}
-\DoxyCodeLine{458     set\_elem\_at(data, voxel\_type, index, elem);}
-\DoxyCodeLine{459 \}}
-\DoxyCodeLine{460 }
-\DoxyCodeLine{461 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{462 \textcolor{keywordtype}{void} read\_data(std::span<const char> data,}
-\DoxyCodeLine{463                \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{464                i3d::Image3d<T>\& dest,}
-\DoxyCodeLine{465                i3d::Vector3d<int> offset) \{}
-\DoxyCodeLine{466     i3d::Vector3d<int> block\_dim;}
-\DoxyCodeLine{467     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 3; ++i)}
-\DoxyCodeLine{468         block\_dim[i] = get\_elem\_at<int>(data, \textcolor{stringliteral}{"{}uint32"{}}, i * 4);}
+\DoxyCodeLine{432 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{int} get\_linear\_index(i3d::Vector3d<int> coord,}
+\DoxyCodeLine{433                                   i3d::Vector3d<int> block\_dim,}
+\DoxyCodeLine{434                                   \textcolor{keyword}{const} std::string\& voxel\_type) \{}
+\DoxyCodeLine{435     \textcolor{keywordtype}{int} elem\_size = type\_byte\_size.at(voxel\_type);}
+\DoxyCodeLine{436 }
+\DoxyCodeLine{437     \textcolor{keywordflow}{return} 12 +                                   \textcolor{comment}{// header\_offset}}
+\DoxyCodeLine{438            (coord.z * block\_dim.x * block\_dim.y + \textcolor{comment}{// Main axis}}
+\DoxyCodeLine{439             coord.y * block\_dim.x +               \textcolor{comment}{// secondary axis}}
+\DoxyCodeLine{440             coord.x) *                            \textcolor{comment}{// last axis}}
+\DoxyCodeLine{441                elem\_size;                         \textcolor{comment}{// byte size}}
+\DoxyCodeLine{442 \}}
+\DoxyCodeLine{443 }
+\DoxyCodeLine{444 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{445 T get\_elem\_at(std::span<const char> data,}
+\DoxyCodeLine{446               \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{447               \textcolor{keywordtype}{int} index) \{}
+\DoxyCodeLine{448     \textcolor{keywordtype}{int} elem\_size = type\_byte\_size.at(voxel\_type);}
+\DoxyCodeLine{449 }
+\DoxyCodeLine{450     std::array<char, \textcolor{keyword}{sizeof}(T)> buffer\{\};}
+\DoxyCodeLine{451     std::copy\_n(data.begin() + index,      \textcolor{comment}{// source start}}
+\DoxyCodeLine{452                 elem\_size,                 \textcolor{comment}{// count}}
+\DoxyCodeLine{453                 buffer.end() -\/ elem\_size); \textcolor{comment}{// dest start}}
+\DoxyCodeLine{454 }
+\DoxyCodeLine{455     std::ranges::reverse(buffer);}
+\DoxyCodeLine{456 }
+\DoxyCodeLine{457     \textcolor{keywordflow}{return} *\textcolor{keyword}{reinterpret\_cast<}T*\textcolor{keyword}{>}(\&buffer[0]);}
+\DoxyCodeLine{458 \}}
+\DoxyCodeLine{459 }
+\DoxyCodeLine{460 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{461 T get\_elem\_at(std::span<const char> data,}
+\DoxyCodeLine{462               \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{463               i3d::Vector3d<int> coord,}
+\DoxyCodeLine{464               i3d::Vector3d<int> block\_dim) \{}
+\DoxyCodeLine{465 }
+\DoxyCodeLine{466     \textcolor{keywordtype}{int} index = get\_linear\_index(coord, block\_dim, voxel\_type);}
+\DoxyCodeLine{467     \textcolor{keywordflow}{return} get\_elem\_at<T>(data, voxel\_type, index);}
+\DoxyCodeLine{468 \}}
 \DoxyCodeLine{469 }
-\DoxyCodeLine{470     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} x = 0; x < block\_dim.x; ++x)}
-\DoxyCodeLine{471         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} y = 0; y < block\_dim.y; ++y)}
-\DoxyCodeLine{472             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_dim.z; ++z)}
-\DoxyCodeLine{473                 dest.SetVoxel(}
-\DoxyCodeLine{474                     x + offset.x, y + offset.y, z + offset.z,}
-\DoxyCodeLine{475                     get\_elem\_at<T>(data, voxel\_type, \{x, y, z\}, block\_dim));}
-\DoxyCodeLine{476 \}}
-\DoxyCodeLine{477 }
-\DoxyCodeLine{478 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{479 \textcolor{keywordtype}{void} write\_data(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
-\DoxyCodeLine{480                 i3d::Vector3d<int> offset,}
-\DoxyCodeLine{481                 std::span<char> data,}
-\DoxyCodeLine{482                 \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{483                 i3d::Vector3d<int> block\_size) \{}
-\DoxyCodeLine{484     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 0, block\_size.x);}
-\DoxyCodeLine{485     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 4, block\_size.y);}
-\DoxyCodeLine{486     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 8, block\_size.z);}
-\DoxyCodeLine{487 }
-\DoxyCodeLine{488     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} x = 0; x < block\_size.x; ++x)}
-\DoxyCodeLine{489         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} y = 0; y < block\_size.y; ++y)}
-\DoxyCodeLine{490             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_size.z; ++z)}
-\DoxyCodeLine{491                 set\_elem\_at(}
-\DoxyCodeLine{492                     data, voxel\_type, \{x, y, z\}, block\_size,}
-\DoxyCodeLine{493                     src.GetVoxel(x + offset.x, y + offset.y, z + offset.z));}
-\DoxyCodeLine{494 \}}
-\DoxyCodeLine{495 \} \textcolor{comment}{// namespace data\_manip}}
-\DoxyCodeLine{496 }
-\DoxyCodeLine{497 \textcolor{keyword}{namespace }log \{}
-\DoxyCodeLine{498 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void} \_log(\textcolor{keyword}{const} std::string\& msg,}
-\DoxyCodeLine{499                        \textcolor{keyword}{const} std::string\& type,}
-\DoxyCodeLine{500                        \textcolor{keyword}{const} std::source\_location\& location) \{}
-\DoxyCodeLine{501     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!debug)}
-\DoxyCodeLine{502         \textcolor{keywordflow}{return};}
+\DoxyCodeLine{470 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{471 \textcolor{keywordtype}{void} set\_elem\_at(std::span<char> data,}
+\DoxyCodeLine{472                  \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{473                  \textcolor{keywordtype}{int} index,}
+\DoxyCodeLine{474                  T elem) \{}
+\DoxyCodeLine{475     \textcolor{keywordtype}{int} elem\_size = type\_byte\_size.at(voxel\_type);}
+\DoxyCodeLine{476 }
+\DoxyCodeLine{477     \textcolor{keyword}{auto} buffer = *\textcolor{keyword}{reinterpret\_cast<}std::array<\textcolor{keywordtype}{char}, sizeof(T)\textcolor{keyword}{>}*>(\&elem);}
+\DoxyCodeLine{478     std::ranges::reverse(buffer);}
+\DoxyCodeLine{479 }
+\DoxyCodeLine{480     std::copy\_n(buffer.end() -\/ elem\_size, \textcolor{comment}{// source start}}
+\DoxyCodeLine{481                 elem\_size,                \textcolor{comment}{// count}}
+\DoxyCodeLine{482                 data.begin() + index);    \textcolor{comment}{// dest start}}
+\DoxyCodeLine{483 \}}
+\DoxyCodeLine{484 }
+\DoxyCodeLine{485 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{486 \textcolor{keywordtype}{void} set\_elem\_at(std::span<char> data,}
+\DoxyCodeLine{487                  \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{488                  i3d::Vector3d<int> coord,}
+\DoxyCodeLine{489                  i3d::Vector3d<int> block\_dim,}
+\DoxyCodeLine{490                  T elem) \{}
+\DoxyCodeLine{491     \textcolor{keywordtype}{int} index = get\_linear\_index(coord, block\_dim, voxel\_type);}
+\DoxyCodeLine{492     set\_elem\_at(data, voxel\_type, index, elem);}
+\DoxyCodeLine{493 \}}
+\DoxyCodeLine{494 }
+\DoxyCodeLine{495 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{496 \textcolor{keywordtype}{void} read\_data(std::span<const char> data,}
+\DoxyCodeLine{497                \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{498                i3d::Image3d<T>\& dest,}
+\DoxyCodeLine{499                i3d::Vector3d<int> offset) \{}
+\DoxyCodeLine{500     i3d::Vector3d<int> block\_dim;}
+\DoxyCodeLine{501     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 3; ++i)}
+\DoxyCodeLine{502         block\_dim[i] = get\_elem\_at<int>(data, \textcolor{stringliteral}{"{}uint32"{}}, i * 4);}
 \DoxyCodeLine{503 }
-\DoxyCodeLine{504     std::cout << fmt::format(\textcolor{stringliteral}{"{}[\{\}] \{\} at row \{\}:\(\backslash\)n\{\} \(\backslash\)n\(\backslash\)n"{}}, type,}
-\DoxyCodeLine{505                              location.function\_name(), location.line(), msg);}
-\DoxyCodeLine{506     \textcolor{keywordflow}{if} (type.find(\textcolor{stringliteral}{"{}ERROR"{}}) != std::string::npos)}
-\DoxyCodeLine{507         std::cout << std::flush;}
-\DoxyCodeLine{508 \}}
-\DoxyCodeLine{509 }
-\DoxyCodeLine{510 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void} info(\textcolor{keyword}{const} std::string\& msg,}
-\DoxyCodeLine{511                        \textcolor{keyword}{const} std::source\_location\&}
-\DoxyCodeLine{512                            location \textcolor{comment}{/* = std::source\_location::current() */}) \{}
-\DoxyCodeLine{513     \_log(msg, \textcolor{stringliteral}{"{}INFO"{}}, location);}
-\DoxyCodeLine{514 \}}
-\DoxyCodeLine{515 }
-\DoxyCodeLine{516 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void}}
-\DoxyCodeLine{517 warning(\textcolor{keyword}{const} std::string\& msg,}
-\DoxyCodeLine{518         \textcolor{keyword}{const} std::source\_location\&}
-\DoxyCodeLine{519             location \textcolor{comment}{/* = std::source\_location::current() */}) \{}
-\DoxyCodeLine{520     \_log(msg, \textcolor{stringliteral}{"{}WARNING"{}}, location);}
-\DoxyCodeLine{521 \}}
-\DoxyCodeLine{522 }
-\DoxyCodeLine{523 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void} error(\textcolor{keyword}{const} std::string\& msg,}
-\DoxyCodeLine{524                         \textcolor{keyword}{const} std::source\_location\&}
-\DoxyCodeLine{525                             location \textcolor{comment}{/* = std::source\_location::current() */}) \{}
-\DoxyCodeLine{526     \_log(msg, \textcolor{stringliteral}{"{}ERROR"{}}, location);}
-\DoxyCodeLine{527 \}}
-\DoxyCodeLine{528 \} \textcolor{comment}{// namespace log}}
-\DoxyCodeLine{529 }
-\DoxyCodeLine{530 \textcolor{keyword}{namespace }props\_parser \{}
-\DoxyCodeLine{531 }
-\DoxyCodeLine{532 \textcolor{keyword}{template} <cnpts::Basic T>}
-\DoxyCodeLine{533 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
-\DoxyCodeLine{534     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{535         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} was not found"{}}, name));}
-\DoxyCodeLine{536         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{537     \}}
-\DoxyCodeLine{538     \textcolor{keywordflow}{return} root-\/>getValue<T>(name);}
-\DoxyCodeLine{539 \}}
-\DoxyCodeLine{540 }
-\DoxyCodeLine{541 \textcolor{keyword}{template} <cnpts::Vector3d T>}
-\DoxyCodeLine{542 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
-\DoxyCodeLine{543     \textcolor{keyword}{using} V = \textcolor{keyword}{decltype}(T\{\}.x);}
-\DoxyCodeLine{544     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{545         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
-\DoxyCodeLine{546         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{547     \}}
-\DoxyCodeLine{548 }
-\DoxyCodeLine{549     Array::Ptr values = root-\/>getArray(name);}
-\DoxyCodeLine{550     \textcolor{keywordflow}{if} (values-\/>size() != 3) \{}
-\DoxyCodeLine{551         log::warning(\textcolor{stringliteral}{"{}Incorrect number of dimensions"{}});}
-\DoxyCodeLine{552         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{553     \}}
-\DoxyCodeLine{554 }
-\DoxyCodeLine{555     T out;}
-\DoxyCodeLine{556     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < 3; ++i)}
-\DoxyCodeLine{557         out[i] = values-\/>getElement<V>(i);}
-\DoxyCodeLine{558 }
-\DoxyCodeLine{559     \textcolor{keywordflow}{return} out;}
-\DoxyCodeLine{560 \}}
-\DoxyCodeLine{561 }
-\DoxyCodeLine{562 \textcolor{keyword}{template} <cnpts::Vector T>}
-\DoxyCodeLine{563 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
-\DoxyCodeLine{564     \textcolor{keyword}{using} V = \textcolor{keyword}{typename} T::value\_type;}
-\DoxyCodeLine{565     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{566         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
-\DoxyCodeLine{567         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{568     \}}
+\DoxyCodeLine{504     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} x = 0; x < block\_dim.x; ++x)}
+\DoxyCodeLine{505         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} y = 0; y < block\_dim.y; ++y)}
+\DoxyCodeLine{506             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_dim.z; ++z)}
+\DoxyCodeLine{507                 dest.SetVoxel(}
+\DoxyCodeLine{508                     x + offset.x, y + offset.y, z + offset.z,}
+\DoxyCodeLine{509                     get\_elem\_at<T>(data, voxel\_type, \{x, y, z\}, block\_dim));}
+\DoxyCodeLine{510 \}}
+\DoxyCodeLine{511 }
+\DoxyCodeLine{512 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{513 \textcolor{keywordtype}{void} write\_data(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{514                 i3d::Vector3d<int> offset,}
+\DoxyCodeLine{515                 std::span<char> data,}
+\DoxyCodeLine{516                 \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{517                 i3d::Vector3d<int> block\_size) \{}
+\DoxyCodeLine{518     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 0, block\_size.x);}
+\DoxyCodeLine{519     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 4, block\_size.y);}
+\DoxyCodeLine{520     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 8, block\_size.z);}
+\DoxyCodeLine{521 }
+\DoxyCodeLine{522     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} x = 0; x < block\_size.x; ++x)}
+\DoxyCodeLine{523         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} y = 0; y < block\_size.y; ++y)}
+\DoxyCodeLine{524             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_size.z; ++z)}
+\DoxyCodeLine{525                 set\_elem\_at(}
+\DoxyCodeLine{526                     data, voxel\_type, \{x, y, z\}, block\_size,}
+\DoxyCodeLine{527                     src.GetVoxel(x + offset.x, y + offset.y, z + offset.z));}
+\DoxyCodeLine{528 \}}
+\DoxyCodeLine{529 \} \textcolor{comment}{// namespace data\_manip}}
+\DoxyCodeLine{530 }
+\DoxyCodeLine{531 \textcolor{keyword}{namespace }log \{}
+\DoxyCodeLine{532 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void} \_log(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{533                        \textcolor{keyword}{const} std::string\& type,}
+\DoxyCodeLine{534                        \textcolor{keyword}{const} std::source\_location\& location) \{}
+\DoxyCodeLine{535     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_LOG\_)}
+\DoxyCodeLine{536         \textcolor{keywordflow}{return};}
+\DoxyCodeLine{537 }
+\DoxyCodeLine{538     std::cout << fmt::format(\textcolor{stringliteral}{"{}[\{\}] \{\} at row \{\}:\(\backslash\)n\{\} \(\backslash\)n\(\backslash\)n"{}}, type,}
+\DoxyCodeLine{539                              location.function\_name(), location.line(), msg);}
+\DoxyCodeLine{540     \textcolor{keywordflow}{if} (type.find(\textcolor{stringliteral}{"{}ERROR"{}}) != std::string::npos)}
+\DoxyCodeLine{541         std::cout << std::flush;}
+\DoxyCodeLine{542 \}}
+\DoxyCodeLine{543 }
+\DoxyCodeLine{544 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void} info(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{545                        \textcolor{keyword}{const} std::source\_location\&}
+\DoxyCodeLine{546                            location \textcolor{comment}{/* = std::source\_location::current() */}) \{}
+\DoxyCodeLine{547     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_INFO\_)}
+\DoxyCodeLine{548         \textcolor{keywordflow}{return};}
+\DoxyCodeLine{549     \_log(msg, \textcolor{stringliteral}{"{}INFO"{}}, location);}
+\DoxyCodeLine{550 \}}
+\DoxyCodeLine{551 }
+\DoxyCodeLine{552 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void}}
+\DoxyCodeLine{553 warning(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{554         \textcolor{keyword}{const} std::source\_location\&}
+\DoxyCodeLine{555             location \textcolor{comment}{/* = std::source\_location::current() */}) \{}
+\DoxyCodeLine{556     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_WARNING\_)}
+\DoxyCodeLine{557         \textcolor{keywordflow}{return};}
+\DoxyCodeLine{558     \_log(msg, \textcolor{stringliteral}{"{}WARNING"{}}, location);}
+\DoxyCodeLine{559 \}}
+\DoxyCodeLine{560 }
+\DoxyCodeLine{561 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void} error(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{562                         \textcolor{keyword}{const} std::source\_location\&}
+\DoxyCodeLine{563                             location \textcolor{comment}{/* = std::source\_location::current() */}) \{}
+\DoxyCodeLine{564     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_ERROR\_)}
+\DoxyCodeLine{565         \textcolor{keywordflow}{return};}
+\DoxyCodeLine{566     \_log(msg, \textcolor{stringliteral}{"{}ERROR"{}}, location);}
+\DoxyCodeLine{567 \}}
+\DoxyCodeLine{568 \} \textcolor{comment}{// namespace log}}
 \DoxyCodeLine{569 }
-\DoxyCodeLine{570     Array::Ptr values = root-\/>getArray(name);}
-\DoxyCodeLine{571     std::size\_t count = values-\/>size();}
-\DoxyCodeLine{572 }
-\DoxyCodeLine{573     T out(count);}
-\DoxyCodeLine{574     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < count; ++i)}
-\DoxyCodeLine{575         out[i] = values-\/>getElement<V>(i);}
-\DoxyCodeLine{576 }
-\DoxyCodeLine{577     \textcolor{keywordflow}{return} out;}
-\DoxyCodeLine{578 \}}
-\DoxyCodeLine{579 }
-\DoxyCodeLine{580 \textcolor{keyword}{template} <cnpts::ResolutionUnit T>}
-\DoxyCodeLine{581 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
-\DoxyCodeLine{582     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{583         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} was not found"{}}, name));}
-\DoxyCodeLine{584         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{585     \}}
-\DoxyCodeLine{586 }
-\DoxyCodeLine{587     Object::Ptr res\_ptr = root-\/>getObject(name);}
-\DoxyCodeLine{588     ResolutionUnit res;}
-\DoxyCodeLine{589 }
-\DoxyCodeLine{590     \textcolor{keywordflow}{if} (res\_ptr-\/>has(\textcolor{stringliteral}{"{}value"{}})) \{}
-\DoxyCodeLine{591         res.value = res\_ptr-\/>getValue<\textcolor{keywordtype}{double}>(\textcolor{stringliteral}{"{}value"{}});}
-\DoxyCodeLine{592     \}}
-\DoxyCodeLine{593 }
-\DoxyCodeLine{594     \textcolor{keywordflow}{if} (res\_ptr-\/>has(\textcolor{stringliteral}{"{}unit"{}})) \{}
-\DoxyCodeLine{595         res.unit = res\_ptr-\/>getValue<std::string>(\textcolor{stringliteral}{"{}unit"{}});}
-\DoxyCodeLine{596     \}}
-\DoxyCodeLine{597 }
-\DoxyCodeLine{598     \textcolor{keywordflow}{return} res;}
-\DoxyCodeLine{599 \}}
-\DoxyCodeLine{600 }
-\DoxyCodeLine{601 \textcolor{keyword}{template} <cnpts::Optional T>}
-\DoxyCodeLine{602 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
-\DoxyCodeLine{603     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{604         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
-\DoxyCodeLine{605         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{606     \}}
-\DoxyCodeLine{607 }
-\DoxyCodeLine{608     \textcolor{keywordflow}{if} (root-\/>isNull(name))}
-\DoxyCodeLine{609         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{610 }
-\DoxyCodeLine{611     T out;}
-\DoxyCodeLine{612     out = get\_elem<typename T::value\_type>(root, name);}
-\DoxyCodeLine{613     \textcolor{keywordflow}{return} out;}
-\DoxyCodeLine{614 \}}
-\DoxyCodeLine{615 }
-\DoxyCodeLine{616 \textcolor{comment}{/* inline */} std::vector<std::map<std::string, i3d::Vector3d<int>>>}
-\DoxyCodeLine{617 get\_resolution\_levels(Object::Ptr root) \{}
-\DoxyCodeLine{618     std::string name = \textcolor{stringliteral}{"{}resolutionLevels"{}};}
+\DoxyCodeLine{570 \textcolor{keyword}{namespace }props\_parser \{}
+\DoxyCodeLine{571 }
+\DoxyCodeLine{572 \textcolor{keyword}{template} <cnpts::Basic T>}
+\DoxyCodeLine{573 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
+\DoxyCodeLine{574     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{575         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} was not found"{}}, name));}
+\DoxyCodeLine{576         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{577     \}}
+\DoxyCodeLine{578     \textcolor{keywordflow}{return} root-\/>getValue<T>(name);}
+\DoxyCodeLine{579 \}}
+\DoxyCodeLine{580 }
+\DoxyCodeLine{581 \textcolor{keyword}{template} <cnpts::Vector3d T>}
+\DoxyCodeLine{582 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
+\DoxyCodeLine{583     \textcolor{keyword}{using} V = \textcolor{keyword}{decltype}(T\{\}.x);}
+\DoxyCodeLine{584     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{585         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
+\DoxyCodeLine{586         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{587     \}}
+\DoxyCodeLine{588 }
+\DoxyCodeLine{589     Array::Ptr values = root-\/>getArray(name);}
+\DoxyCodeLine{590     \textcolor{keywordflow}{if} (values-\/>size() != 3) \{}
+\DoxyCodeLine{591         log::warning(\textcolor{stringliteral}{"{}Incorrect number of dimensions"{}});}
+\DoxyCodeLine{592         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{593     \}}
+\DoxyCodeLine{594 }
+\DoxyCodeLine{595     T out;}
+\DoxyCodeLine{596     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < 3; ++i)}
+\DoxyCodeLine{597         out[i] = values-\/>getElement<V>(i);}
+\DoxyCodeLine{598 }
+\DoxyCodeLine{599     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{600 \}}
+\DoxyCodeLine{601 }
+\DoxyCodeLine{602 \textcolor{keyword}{template} <cnpts::Vector T>}
+\DoxyCodeLine{603 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
+\DoxyCodeLine{604     \textcolor{keyword}{using} V = \textcolor{keyword}{typename} T::value\_type;}
+\DoxyCodeLine{605     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{606         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
+\DoxyCodeLine{607         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{608     \}}
+\DoxyCodeLine{609 }
+\DoxyCodeLine{610     Array::Ptr values = root-\/>getArray(name);}
+\DoxyCodeLine{611     std::size\_t count = values-\/>size();}
+\DoxyCodeLine{612 }
+\DoxyCodeLine{613     T out(count);}
+\DoxyCodeLine{614     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < count; ++i)}
+\DoxyCodeLine{615         out[i] = values-\/>getElement<V>(i);}
+\DoxyCodeLine{616 }
+\DoxyCodeLine{617     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{618 \}}
 \DoxyCodeLine{619 }
-\DoxyCodeLine{620     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{621         log::warning(\textcolor{stringliteral}{"{}resolutionLevels were not found"{}});}
-\DoxyCodeLine{622         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{623     \}}
-\DoxyCodeLine{624 }
-\DoxyCodeLine{625     std::vector<std::map<std::string, i3d::Vector3d<int>>> out;}
+\DoxyCodeLine{620 \textcolor{keyword}{template} <cnpts::ResolutionUnit T>}
+\DoxyCodeLine{621 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
+\DoxyCodeLine{622     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{623         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} was not found"{}}, name));}
+\DoxyCodeLine{624         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{625     \}}
 \DoxyCodeLine{626 }
-\DoxyCodeLine{627     Array::Ptr array = root-\/>getArray(name);}
-\DoxyCodeLine{628     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < array-\/>size(); ++i) \{}
-\DoxyCodeLine{629         std::map<std::string, i3d::Vector3d<int>> map;}
-\DoxyCodeLine{630         Object::Ptr map\_ptr = array-\/>getObject(i);}
-\DoxyCodeLine{631 }
-\DoxyCodeLine{632         \textcolor{keywordflow}{for} (\textcolor{keyword}{const} \textcolor{keyword}{auto}\& name : map\_ptr-\/>getNames()) \{}
-\DoxyCodeLine{633             map[name] = get\_elem<i3d::Vector3d<int>>(map\_ptr, name);}
-\DoxyCodeLine{634         \}}
-\DoxyCodeLine{635 }
-\DoxyCodeLine{636         out.push\_back(map);}
-\DoxyCodeLine{637     \}}
-\DoxyCodeLine{638 }
-\DoxyCodeLine{639     \textcolor{keywordflow}{return} out;}
-\DoxyCodeLine{640 \}}
-\DoxyCodeLine{641 }
-\DoxyCodeLine{642 \} \textcolor{comment}{// namespace props\_parser}}
-\DoxyCodeLine{643 }
-\DoxyCodeLine{644 \textcolor{keyword}{namespace }requests \{}
-\DoxyCodeLine{645 \textcolor{comment}{/* inline */} std::string session\_url\_request(\textcolor{keyword}{const} std::string\& ds\_url,}
-\DoxyCodeLine{646                                              i3d::Vector3d<int> resolution,}
-\DoxyCodeLine{647                                              \textcolor{keyword}{const} std::string\& version) \{}
-\DoxyCodeLine{648 }
-\DoxyCodeLine{649     log::info(}
-\DoxyCodeLine{650         fmt::format(\textcolor{stringliteral}{"{}Obtaining session url for resolution: \{\}, version: \{\}"{}},}
-\DoxyCodeLine{651                     to\_string(resolution), version));}
-\DoxyCodeLine{652     std::string req\_url =}
-\DoxyCodeLine{653         fmt::format(\textcolor{stringliteral}{"{}\{\}/\{\}/\{\}/\{\}/\{\}/read-\/write"{}}, ds\_url, resolution.x,}
-\DoxyCodeLine{654                     resolution.y, resolution.z, version);}
+\DoxyCodeLine{627     Object::Ptr res\_ptr = root-\/>getObject(name);}
+\DoxyCodeLine{628     ResolutionUnit res;}
+\DoxyCodeLine{629 }
+\DoxyCodeLine{630     \textcolor{keywordflow}{if} (res\_ptr-\/>has(\textcolor{stringliteral}{"{}value"{}})) \{}
+\DoxyCodeLine{631         res.value = res\_ptr-\/>getValue<\textcolor{keywordtype}{double}>(\textcolor{stringliteral}{"{}value"{}});}
+\DoxyCodeLine{632     \}}
+\DoxyCodeLine{633 }
+\DoxyCodeLine{634     \textcolor{keywordflow}{if} (res\_ptr-\/>has(\textcolor{stringliteral}{"{}unit"{}})) \{}
+\DoxyCodeLine{635         res.unit = res\_ptr-\/>getValue<std::string>(\textcolor{stringliteral}{"{}unit"{}});}
+\DoxyCodeLine{636     \}}
+\DoxyCodeLine{637 }
+\DoxyCodeLine{638     \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{639 \}}
+\DoxyCodeLine{640 }
+\DoxyCodeLine{641 \textcolor{keyword}{template} <cnpts::Optional T>}
+\DoxyCodeLine{642 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
+\DoxyCodeLine{643     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{644         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
+\DoxyCodeLine{645         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{646     \}}
+\DoxyCodeLine{647 }
+\DoxyCodeLine{648     \textcolor{keywordflow}{if} (root-\/>isNull(name))}
+\DoxyCodeLine{649         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{650 }
+\DoxyCodeLine{651     T out;}
+\DoxyCodeLine{652     out = get\_elem<typename T::value\_type>(root, name);}
+\DoxyCodeLine{653     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{654 \}}
 \DoxyCodeLine{655 }
-\DoxyCodeLine{656     \textcolor{keyword}{auto} [\_, response] = make\_request(req\_url);}
-\DoxyCodeLine{657 }
-\DoxyCodeLine{658     \textcolor{keywordtype}{int} res\_code = response.getStatus();}
-\DoxyCodeLine{659     \textcolor{keywordflow}{if} (res\_code != 307)}
-\DoxyCodeLine{660         log::warning(fmt::format(}
-\DoxyCodeLine{661             \textcolor{stringliteral}{"{}Request ended with status: \{\}, redirection may be incorrect"{}},}
-\DoxyCodeLine{662             res\_code));}
-\DoxyCodeLine{663 }
-\DoxyCodeLine{664     \textcolor{keywordflow}{return} response.get(\textcolor{stringliteral}{"{}Location"{}});}
-\DoxyCodeLine{665 \}}
+\DoxyCodeLine{656 \textcolor{comment}{/* inline */} std::vector<std::map<std::string, i3d::Vector3d<int>>>}
+\DoxyCodeLine{657 get\_resolution\_levels(Object::Ptr root) \{}
+\DoxyCodeLine{658     std::string name = \textcolor{stringliteral}{"{}resolutionLevels"{}};}
+\DoxyCodeLine{659 }
+\DoxyCodeLine{660     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{661         log::warning(\textcolor{stringliteral}{"{}resolutionLevels were not found"{}});}
+\DoxyCodeLine{662         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{663     \}}
+\DoxyCodeLine{664 }
+\DoxyCodeLine{665     std::vector<std::map<std::string, i3d::Vector3d<int>>> out;}
 \DoxyCodeLine{666 }
-\DoxyCodeLine{667 \textcolor{comment}{/* inline */} std::pair<std::vector<char>, Poco::Net::HTTPResponse>}
-\DoxyCodeLine{668 make\_request(\textcolor{keyword}{const} std::string\& url,}
-\DoxyCodeLine{669              \textcolor{keyword}{const} std::string\& type \textcolor{comment}{/*  = Poco::Net::HTTPRequest::HTTP\_GET */},}
-\DoxyCodeLine{670              \textcolor{keyword}{const} std::vector<char>\& data \textcolor{comment}{/*  = \{\} */},}
-\DoxyCodeLine{671              \textcolor{keyword}{const} std::map<std::string, std::string>\& headers \textcolor{comment}{/* = \{\} */}) \{}
-\DoxyCodeLine{672     Poco::URI uri(url);}
-\DoxyCodeLine{673     std::string path(uri.getPathAndQuery());}
-\DoxyCodeLine{674 }
-\DoxyCodeLine{675     Poco::Net::HTTPClientSession session(uri.getHost(), uri.getPort());}
-\DoxyCodeLine{676 }
-\DoxyCodeLine{677     Poco::Net::HTTPRequest request(type, path,}
-\DoxyCodeLine{678                                    Poco::Net::HTTPMessage::HTTP\_1\_1);}
-\DoxyCodeLine{679 }
-\DoxyCodeLine{680     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto}\& [key, value] : headers)}
-\DoxyCodeLine{681         request.set(key, value);}
-\DoxyCodeLine{682 }
-\DoxyCodeLine{683     request.setContentLength(data.size());}
-\DoxyCodeLine{684 }
-\DoxyCodeLine{685     log::info(fmt::format(\textcolor{stringliteral}{"{}Sending \{\} request to url: \{\}"{}}, type, url));}
-\DoxyCodeLine{686     std::ostream\& os = session.sendRequest(request);}
-\DoxyCodeLine{687     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{char} ch : data)}
-\DoxyCodeLine{688         os << ch;}
-\DoxyCodeLine{689 }
-\DoxyCodeLine{690     Poco::Net::HTTPResponse response;}
-\DoxyCodeLine{691     std::istream\& rs = session.receiveResponse(response);}
-\DoxyCodeLine{692 }
-\DoxyCodeLine{693     std::vector<char> out\{std::istreambuf\_iterator<char>(rs),}
-\DoxyCodeLine{694                           std::istreambuf\_iterator<char>()\};}
+\DoxyCodeLine{667     Array::Ptr array = root-\/>getArray(name);}
+\DoxyCodeLine{668     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < array-\/>size(); ++i) \{}
+\DoxyCodeLine{669         std::map<std::string, i3d::Vector3d<int>> map;}
+\DoxyCodeLine{670         Object::Ptr map\_ptr = array-\/>getObject(i);}
+\DoxyCodeLine{671 }
+\DoxyCodeLine{672         \textcolor{keywordflow}{for} (\textcolor{keyword}{const} \textcolor{keyword}{auto}\& name : map\_ptr-\/>getNames()) \{}
+\DoxyCodeLine{673             map[name] = get\_elem<i3d::Vector3d<int>>(map\_ptr, name);}
+\DoxyCodeLine{674         \}}
+\DoxyCodeLine{675 }
+\DoxyCodeLine{676         out.push\_back(map);}
+\DoxyCodeLine{677     \}}
+\DoxyCodeLine{678 }
+\DoxyCodeLine{679     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{680 \}}
+\DoxyCodeLine{681 }
+\DoxyCodeLine{682 \} \textcolor{comment}{// namespace props\_parser}}
+\DoxyCodeLine{683 }
+\DoxyCodeLine{684 \textcolor{keyword}{namespace }requests \{}
+\DoxyCodeLine{685 \textcolor{comment}{/* inline */} std::string session\_url\_request(\textcolor{keyword}{const} std::string\& ds\_url,}
+\DoxyCodeLine{686                                              i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{687                                              \textcolor{keyword}{const} std::string\& version) \{}
+\DoxyCodeLine{688 }
+\DoxyCodeLine{689     log::info(}
+\DoxyCodeLine{690         fmt::format(\textcolor{stringliteral}{"{}Obtaining session url for resolution: \{\}, version: \{\}"{}},}
+\DoxyCodeLine{691                     to\_string(resolution), version));}
+\DoxyCodeLine{692     std::string req\_url =}
+\DoxyCodeLine{693         fmt::format(\textcolor{stringliteral}{"{}\{\}/\{\}/\{\}/\{\}/\{\}/read-\/write"{}}, ds\_url, resolution.x,}
+\DoxyCodeLine{694                     resolution.y, resolution.z, version);}
 \DoxyCodeLine{695 }
-\DoxyCodeLine{696     log::info(fmt::format(}
-\DoxyCodeLine{697         \textcolor{stringliteral}{"{}Fetched response with status: \{\}, reason: \{\}, content size: \{\}"{}},}
-\DoxyCodeLine{698         response.getStatus(), response.getReason(), out.size()));}
-\DoxyCodeLine{699 }
-\DoxyCodeLine{700     \textcolor{keywordflow}{return} \{out, response\};}
-\DoxyCodeLine{701 \}}
-\DoxyCodeLine{702 }
-\DoxyCodeLine{703 \} \textcolor{comment}{// namespace requests}}
-\DoxyCodeLine{704 \} \textcolor{comment}{// namespace details}}
-\DoxyCodeLine{705 \} \textcolor{comment}{// namespace datastore}}
+\DoxyCodeLine{696     \textcolor{keyword}{auto} [\_, response] = make\_request(req\_url);}
+\DoxyCodeLine{697 }
+\DoxyCodeLine{698     \textcolor{keywordtype}{int} res\_code = response.getStatus();}
+\DoxyCodeLine{699     \textcolor{keywordflow}{if} (res\_code != 307)}
+\DoxyCodeLine{700         log::warning(fmt::format(}
+\DoxyCodeLine{701             \textcolor{stringliteral}{"{}Request ended with status: \{\}, redirection may be incorrect"{}},}
+\DoxyCodeLine{702             res\_code));}
+\DoxyCodeLine{703 }
+\DoxyCodeLine{704     \textcolor{keywordflow}{return} response.get(\textcolor{stringliteral}{"{}Location"{}});}
+\DoxyCodeLine{705 \}}
+\DoxyCodeLine{706 }
+\DoxyCodeLine{707 \textcolor{comment}{/* inline */} std::pair<std::vector<char>, Poco::Net::HTTPResponse>}
+\DoxyCodeLine{708 make\_request(\textcolor{keyword}{const} std::string\& url,}
+\DoxyCodeLine{709              \textcolor{keyword}{const} std::string\& type \textcolor{comment}{/*  = Poco::Net::HTTPRequest::HTTP\_GET */},}
+\DoxyCodeLine{710              \textcolor{keyword}{const} std::vector<char>\& data \textcolor{comment}{/*  = \{\} */},}
+\DoxyCodeLine{711              \textcolor{keyword}{const} std::map<std::string, std::string>\& headers \textcolor{comment}{/* = \{\} */}) \{}
+\DoxyCodeLine{712     Poco::URI uri(url);}
+\DoxyCodeLine{713     std::string path(uri.getPathAndQuery());}
+\DoxyCodeLine{714 }
+\DoxyCodeLine{715     Poco::Net::HTTPClientSession session(uri.getHost(), uri.getPort());}
+\DoxyCodeLine{716 }
+\DoxyCodeLine{717     Poco::Net::HTTPRequest request(type, path,}
+\DoxyCodeLine{718                                    Poco::Net::HTTPMessage::HTTP\_1\_1);}
+\DoxyCodeLine{719 }
+\DoxyCodeLine{720     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto}\& [key, value] : headers)}
+\DoxyCodeLine{721         request.set(key, value);}
+\DoxyCodeLine{722 }
+\DoxyCodeLine{723     request.setContentLength(data.size());}
+\DoxyCodeLine{724 }
+\DoxyCodeLine{725     log::info(fmt::format(\textcolor{stringliteral}{"{}Sending \{\} request to url: \{\}"{}}, type, url));}
+\DoxyCodeLine{726     std::ostream\& os = session.sendRequest(request);}
+\DoxyCodeLine{727     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{char} ch : data)}
+\DoxyCodeLine{728         os << ch;}
+\DoxyCodeLine{729 }
+\DoxyCodeLine{730     Poco::Net::HTTPResponse response;}
+\DoxyCodeLine{731     std::istream\& rs = session.receiveResponse(response);}
+\DoxyCodeLine{732 }
+\DoxyCodeLine{733     std::vector<char> out\{std::istreambuf\_iterator<char>(rs),}
+\DoxyCodeLine{734                           std::istreambuf\_iterator<char>()\};}
+\DoxyCodeLine{735 }
+\DoxyCodeLine{736     log::info(fmt::format(}
+\DoxyCodeLine{737         \textcolor{stringliteral}{"{}Fetched response with status: \{\}, reason: \{\}, content size: \{\}"{}},}
+\DoxyCodeLine{738         response.getStatus(), response.getReason(), out.size()));}
+\DoxyCodeLine{739 }
+\DoxyCodeLine{740     \textcolor{keywordflow}{return} \{out, response\};}
+\DoxyCodeLine{741 \}}
+\DoxyCodeLine{742 }
+\DoxyCodeLine{743 \} \textcolor{comment}{// namespace requests}}
+\DoxyCodeLine{744 \} \textcolor{comment}{// namespace details}}
+\DoxyCodeLine{745 \} \textcolor{comment}{// namespace datastore}}
 
 \end{DoxyCode}

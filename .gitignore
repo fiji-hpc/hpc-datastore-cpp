@@ -5,3 +5,4 @@ build*
 samples/build*
 samples/*/build*
 tests/*/build*
+tmp

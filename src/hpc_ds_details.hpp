@@ -16,7 +16,7 @@
 #include <type_traits>
 /* ==================== DETAILS HEADERS ============================ */
 
-namespace datastore {
+namespace ds {
 namespace details {
 /* Definition of compile settings */
 
@@ -72,17 +72,6 @@ get_dataset_url(const std::string& ip, int port, const std::string& uuid);
  * @return DatasetProperties
  */
 inline DatasetProperties get_dataset_properties(const std::string& dataset_url);
-
-/**
- * @brief Get the block dimensions
- *
- * @param props dataset properties
- * @param resolution requested resolution
- * @return i3d::Vector3d<int> vector representing dimensions, {-1, -1, -1} where
- * not found
- */
-inline i3d::Vector3d<int> get_block_dimensions(const DatasetProperties& props,
-                                               i3d::Vector3d<int> resolution);
 
 /**
  * @brief Check consistency of block coordinates with respect to server
@@ -275,7 +264,7 @@ make_request(const std::string& url,
 } // namespace datastore
 
 /* ================= IMPLEMENTATION FOLLOWS ======================== */
-namespace datastore {
+namespace ds {
 namespace details {
 
 /* inline */ std::string
@@ -336,18 +325,6 @@ get_dataset_properties(const std::string& dataset_url) {
 
 	log::info("Parsing has finished");
 	return props;
-}
-
-/* inline */ i3d::Vector3d<int>
-get_block_dimensions(const DatasetProperties& props,
-                     i3d::Vector3d<int> resolution) {
-	for (const auto& res_level : props.resolution_levels)
-		if (res_level.at("resolutions") == resolution)
-			return res_level.at("blockDimensions");
-
-	log::error(fmt::format("Dimensions for resolution {} not found",
-	                       to_string(resolution)));
-	return {-1, -1, -1};
 }
 
 /* inline */ bool

@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <vector>
 
-namespace datastore {
+namespace ds {
 /**
  * @brief Get the dataset properties object
  *
@@ -511,14 +511,14 @@ class Connection {
 
 	/**
 	 * @brief Write block to server
-	 * 
+	 *
 	 * Write block from source image to server. The information about
 	 * dimensions are fetched from the server.
 	 *
 	 * If in DEBUG, the function checks if coordinate given in <coord> points to
 	 * a valid block, as well as wheter the offset specified for block is within
 	 * image boundaries.
-	 * 
+	 *
 	 * @tparam T Scalar used as underlying type for image representation
 	 * @param src Source image to collect block from
 	 * @param coord Block coordinates
@@ -551,7 +551,7 @@ class Connection {
 	 * If in DEBUG, the function checks if coordinates given in <coords> points
 	 * to a valid block, as well as wheter the offsets specified for each block
 	 * is within image boundaries.
-	 * 
+	 *
 	 * @tparam T Scalar used as underlying type for image representation
 	 * @param src Source image to collect blocks from
 	 * @param coords Vector of block coordinates
@@ -585,7 +585,7 @@ class Connection {
 	 *
 	 * Mostly, given smaller source image will emit error and fail to upload.
 	 * Given larger source image will result in cropping.
-	 * 
+	 *
 	 * @tparam T Scalar used as underlying type for image representation
 	 * @param img Source image
 	 * @param channel Channel, at which the image is located
@@ -615,7 +615,7 @@ class Connection {
 
 /* ================= IMPLEMENTATION FOLLOWS ======================== */
 
-namespace datastore {
+namespace ds {
 /* ===================================== Global space */
 /* inline */ DatasetProperties get_dataset_properties(const std::string& ip,
                                                       int port,
@@ -671,8 +671,7 @@ template <cnpts::Scalar T>
 i3d::Image3d<T> ImageView::read_block(i3d::Vector3d<int> coord) const {
 	/* Fetch properties from server */
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
-	i3d::Vector3d<int> block_dim =
-	    details::get_block_dimensions(props, _resolution);
+	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 
 	/* Prepare output image */
 	i3d::Image3d<T> img;
@@ -714,12 +713,12 @@ bool ImageView::read_blocks(
 	/* Fetched properties from server */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
 	DatasetProperties props = details::get_dataset_properties(dataset_url);
-	i3d::Vector3d<int> block_dim =
-	    details::get_block_dimensions(props, _resolution);
+	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 
-	/* Error checking (when not in debug, all checks automatically return true)*/
+	/* Error checking (when not in debug, all checks automatically return
+	 * true)*/
 	if (coords.size() != offsets.size()) {
 		details::log::error("Count of coordinates != count of offsets");
 		return false;
@@ -758,8 +757,7 @@ template <cnpts::Scalar T>
 i3d::Image3d<T> ImageView::read_image() const {
 	/* Fetch properties from server */
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
-	i3d::Vector3d<int> block_dim =
-	    details::get_block_dimensions(props, _resolution);
+	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 
 	i3d::Vector3d<int> block_count =
@@ -804,11 +802,11 @@ bool ImageView::write_blocks(
 	/* Fetch server properties */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
 	DatasetProperties props = details::get_dataset_properties(dataset_url);
-	i3d::Vector3d<int> block_dim =
-	    details::get_block_dimensions(props, _resolution);
+	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 
-	/* Error checking (when not in debug, all checks automatically return true)*/
+	/* Error checking (when not in debug, all checks automatically return
+	 * true)*/
 	if (coords.size() != src_offsets.size()) {
 		details::log::error("Count of coordinates != count of offsets");
 		return false;
@@ -861,8 +859,7 @@ bool ImageView::write_image(const i3d::Image3d<T>& img) const {
 
 	/* Fetch image properties from server */
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
-	i3d::Vector3d<int> block_dim =
-	    details::get_block_dimensions(props, _resolution);
+	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 	i3d::Vector3d<int> block_count =
 	    (img_dim + block_dim - 1) / block_dim; // Ceiling

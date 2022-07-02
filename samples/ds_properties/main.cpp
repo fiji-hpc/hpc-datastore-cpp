@@ -2,8 +2,6 @@
 #include "../common.hpp"
 #include <iostream>
 
-namespace ds = datastore;
-
 int main() {
 	std::cout << "Fetching properties from the server ... " << std::flush;
 

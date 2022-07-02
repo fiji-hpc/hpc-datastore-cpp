@@ -2,8 +2,6 @@
 #include "../common.hpp"
 #include <iostream>
 
-namespace ds = datastore;
-
 template <typename T>
 void store_image() {
 	// Fetching image properties

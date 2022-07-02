@@ -10,8 +10,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <stdexcept>
 
-namespace datastore {
+namespace ds {
 
 /* dataset 'voxel_type' to 'byte_size' map*/
 const inline std::map<std::string, int> type_byte_size{
@@ -78,7 +79,7 @@ concept Map = requires(T) {
 
 template <typename T>
 concept ResolutionUnit = requires(T) {
-	requires std::is_same_v<T, datastore::ResolutionUnit>;
+	requires std::is_same_v<T, ds::ResolutionUnit>;
 };
 } // namespace cnpts
 
@@ -165,6 +166,16 @@ class DatasetProperties {
 	std::string label;
 	std::optional<std::string> view_registrations;
 	std::vector<int> timepoint_ids;
+
+	i3d::Vector3d<int>	get_block_dimensions(i3d::Vector3d<int> resolution) const 
+	{
+		for (const auto& map : resolution_levels)
+			if (map.at("resolutions") == resolution)
+				return map.at("blockDimensions");
+		
+		std::string msg = fmt::format("Resolution {} not found in properties", details::to_string(resolution));
+		throw std::out_of_range(msg.c_str());
+	}
 
 	friend std::ostream& operator<<(std::ostream& stream,
 	                                const DatasetProperties& ds) {

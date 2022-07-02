@@ -2,8 +2,6 @@
 #include "../common.hpp"
 #include <iostream>
 
-namespace ds = datastore;
-
 template <typename T>
 void get_block() {
 	ds::Connection conn(SERVER_IP, SERVER_PORT, DS_UUID);

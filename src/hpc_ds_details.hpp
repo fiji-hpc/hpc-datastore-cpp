@@ -82,6 +82,11 @@ inline bool check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
                                i3d::Vector3d<int> img_dim,
                                i3d::Vector3d<int> block_dim);
 
+inline std::vector<i3d::Vector3d<int>>
+get_intercepted_blocks(i3d::Vector3d<int> start_point,
+                       i3d::Vector3d<int> end_point,
+                       i3d::Vector3d<int> img_dim,
+                       i3d::Vector3d<int> block_dim);
 
 namespace data_manip {
 inline int get_block_data_size(i3d::Vector3d<int> block_size,
@@ -185,7 +190,7 @@ inline void
 warning(const std::string& msg,
         const std::source_location& location = std::source_location::current());
 
-}
+} // namespace log
 /* Helpers to parse Dataset Properties from JSON */
 namespace props_parser {
 using namespace Poco::JSON;
@@ -223,7 +228,7 @@ make_request(const std::string& url,
              const std::map<std::string, std::string>& headers = {});
 } // namespace requests
 } // namespace details
-} // namespace datastore
+} // namespace ds
 
 /* ================= IMPLEMENTATION FOLLOWS ======================== */
 namespace ds {
@@ -302,13 +307,35 @@ check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
 	for (i3d::Vector3d<int> coord : coords)
 		if (data_manip::get_block_size(coord, block_dim, img_dim) ==
 		    i3d::Vector3d(0, 0, 0)) {
-			log::warning(fmt::format("Block coordinate {} is out of valid range",
-			                       to_string(coord)));
+			log::warning(fmt::format(
+			    "Block coordinate {} is out of valid range", to_string(coord)));
 
 			return false;
 		}
 	log::info("Check successfullly finished");
 	return true;
+}
+
+/* inline */ std::vector<i3d::Vector3d<int>>
+get_intercepted_blocks(i3d::Vector3d<int> start_point,
+                       i3d::Vector3d<int> end_point,
+                       i3d::Vector3d<int> img_dim,
+                       i3d::Vector3d<int> block_dim) {
+	assert(start_point < end_point);
+
+	i3d::Vector3d<int> block_count = (img_dim + block_dim - 1) / block_dim;
+	std::vector<i3d::Vector3d<int>> out;
+
+	for (int x = 0; x < block_count.x; ++x)
+		for (int y = 0; y < block_count.y; ++y)
+			for (int z = 0; z < block_count.z; ++z) {
+				i3d::Vector3d<int> coord = {x, y, z};
+				if ((coord + 1) * block_dim < start_point &&
+				    end_point < coord * block_dim)
+					out.push_back(coord);
+			}
+
+	return out;
 }
 
 namespace data_manip {
@@ -636,4 +663,4 @@ make_request(const std::string& url,
 
 } // namespace requests
 } // namespace details
-} // namespace datastore
+} // namespace ds

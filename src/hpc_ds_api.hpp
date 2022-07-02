@@ -128,6 +128,13 @@ class ImageView {
 	          std::string version);
 
 	/**
+	 * @brief Get dataset properties
+	 *
+	 * @return DatasetProperties
+	 */
+	DatasetProperties get_properties() const;
+
+	/**
 	 * @brief Read one block from server
 	 *
 	 * Reads one block of image located at <coord> and returns it.
@@ -203,8 +210,7 @@ class ImageView {
 	 * <offsets>.
 	 *
 	 * If in DEBUG, the function checks if coordinates given in <coords> points
-	 * to a valid blocks, as well as wheter the offsets specified for each block
-	 * are within image boundaries.
+	 * to a valid blocks.
 	 *
 	 * @tparam T Scalar used as underlying type for image representation
 	 * @param coords Block coordinates
@@ -215,6 +221,18 @@ class ImageView {
 	void read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 i3d::Image3d<T>& dest,
 	                 const std::vector<i3d::Vector3d<int>>& offsets) const;
+
+	// TODO docs
+	template <cnpts::Scalar T>
+	i3d::Image3d<T> read_region(i3d::Vector3d<int> start_point,
+	                            i3d::Vector3d<int> end_point) const;
+
+	// TODO docs
+	template <cnpts::Scalar T>
+	void read_region(i3d::Vector3d<int> start_point,
+	                 i3d::Vector3d<int> end_point,
+	                 i3d::Image3d<T>& dest,
+	                 i3d::Vector3d<int> offset = {0, 0, 0}) const;
 
 	/**
 	 * @brief Read full image
@@ -337,6 +355,13 @@ class Connection {
 	                   int angle,
 	                   i3d::Vector3d<int> resolution,
 	                   const std::string& version) const;
+
+	/**
+	 * @brief Get dataset properties
+	 *
+	 * @return DatasetProperties
+	 */
+	DatasetProperties get_properties() const;
 
 	/**
 	 * @brief Read one block from server to image
@@ -644,10 +669,14 @@ ImageView::ImageView(std::string ip,
       _channel(channel), _timepoint(timepoint), _angle(angle),
       _resolution(resolution), _version(std::move(version)) {}
 
+DatasetProperties ImageView::get_properties() const {
+	return get_dataset_properties(_ip, _port, _uuid);
+}
+
 template <cnpts::Scalar T>
 i3d::Image3d<T> ImageView::read_block(i3d::Vector3d<int> coord) const {
 	/* Fetch properties from server */
-	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+	DatasetProperties props = get_properties();
 	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 
 	/* Prepare output image */
@@ -689,7 +718,7 @@ void ImageView::read_blocks(
 
 	/* Fetched properties from server */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
-	DatasetProperties props = details::get_dataset_properties(dataset_url);
+	DatasetProperties props = details::get_properties();
 	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
@@ -722,9 +751,46 @@ void ImageView::read_blocks(
 }
 
 template <cnpts::Scalar T>
+i3d::Image3d<T> ImageView::read_region(i3d::Vector3d<int> start_point,
+                                       i3d::Vector3d<int> end_point) const {
+	auto props = get_properties();
+	i3d::Vector3d img_dim = props.dimensions / _resolution;
+	i3d::Vector3d block_dim = props.get_block_dimensions(_resolution);
+
+	std::vector<i3d::Vector3d<int>> coords = details::get_intercepted_blocks(
+	    start_point, end_point, img_dim, block_dim);
+
+	std::vector<i3d::Vector3d<int>> offsets;
+	for (auto coord : coords)
+		offsets.emplace_back(coord * block_dim - start_point);
+
+	i3d::Image3d<T> out_img;
+	out_img.MakeRoom(end_point - start_point);
+
+	read_blocks(coords, out_img, offsets);
+	return out_img;
+}
+
+template <cnpts::Scalar T>
+void ImageView::read_region(i3d::Vector3d<int> start_point,
+                            i3d::Vector3d<int> end_point,
+                            i3d::Image3d<T>& dest,
+                            i3d::Vector3d<int> offset = {0, 0, 0}) const {
+
+	auto temp_img = read_region<T>(start_point, end_point);
+
+	// Copy to desired location
+	for (std::size_t x = 0; x < temp_img.GetSizeX(); ++x)
+		for (std::size_t y = 0; y < temp_img.GetSizeY(); ++y)
+			for (std::size_t z = 0; z < temp_img.GetSizeZ(); ++z)
+				dest.SetVoxel(-offset + {x, y, z},
+				              temp_img.GetVoxel({x, y, z}));
+}
+
+template <cnpts::Scalar T>
 i3d::Image3d<T> ImageView::read_image() const {
 	/* Fetch properties from server */
-	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+	DatasetProperties props = get_properties();
 	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 
@@ -769,7 +835,8 @@ void ImageView::write_blocks(
 
 	/* Fetch server properties */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
-	DatasetProperties props = details::get_dataset_properties(dataset_url);
+	DatasetProperties props = get_properties();
+	;
 	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 
@@ -818,7 +885,7 @@ template <cnpts::Scalar T>
 void ImageView::write_image(const i3d::Image3d<T>& img) const {
 
 	/* Fetch image properties from server */
-	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
+	DatasetProperties props = get_properties();
 	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 	i3d::Vector3d<int> block_count =
@@ -852,6 +919,10 @@ ImageView Connection::get_view(int channel,
                                const std::string& version) const {
 	return ImageView(_ip, _port, _uuid, channel, timepoint, angle, resolution,
 	                 version);
+}
+
+DatasetProperties Connection::get_properties() const {
+	return get_dataset_properties(_ip, _port, _uuid);
 }
 
 template <cnpts::Scalar T>

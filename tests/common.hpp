@@ -39,6 +39,14 @@ void fill_random(i3d::Image3d<T>& img) {
 }
 
 template <typename T>
+void shuffle(T& cont)
+{
+	std::mt19937_64 gen{std::random_device()()};
+	
+	std::ranges::shuffle(cont, gen);
+}
+
+template <typename T>
 bool operator==(const i3d::Image3d<T>& rhs, const i3d::Image3d<T>& lhs) {
 	if (rhs.GetSize() != lhs.GetSize())
 		return false;

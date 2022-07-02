@@ -3,13 +3,12 @@
 #include <chrono>
 #include <i3d/image3d.h>
 
-namespace ds = datastore;
-
 template <typename T>
 void meassure() {
 	ds::ImageView img_view(SERVER_IP, SERVER_PORT, DS_UUID, IMG_CHANNEL,
 	                       IMG_TIMEPOINT, IMG_ANGLE, IMG_RESOLUTION,
-	                       IMG_VERSION);
+	                       IMG_VERSION);	
+
 	std::cout << "Starting meassurement\n";
 	auto start = std::chrono::steady_clock::now();
 

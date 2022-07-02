@@ -3,7 +3,6 @@
 #include <chrono>
 #include <i3d/image3d.h>
 
-namespace ds = datastore;
 
 template <typename T>
 void meassure() {

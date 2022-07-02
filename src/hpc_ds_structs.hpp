@@ -8,9 +8,9 @@
 #include <optional>
 #include <ostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
-#include <stdexcept>
 
 namespace ds {
 
@@ -167,14 +167,29 @@ class DatasetProperties {
 	std::optional<std::string> view_registrations;
 	std::vector<int> timepoint_ids;
 
-	i3d::Vector3d<int>	get_block_dimensions(i3d::Vector3d<int> resolution) const 
-	{
+	i3d::Vector3d<int>
+	get_block_dimensions(i3d::Vector3d<int> resolution) const {
 		for (const auto& map : resolution_levels)
 			if (map.at("resolutions") == resolution)
 				return map.at("blockDimensions");
-		
-		std::string msg = fmt::format("Resolution {} not found in properties", details::to_string(resolution));
+
+		std::string msg = fmt::format("Resolution {} not found in properties",
+		                              details::to_string(resolution));
 		throw std::out_of_range(msg.c_str());
+	}
+
+	i3d::Vector3d<int> get_block_size(i3d::Vector3d<int> coord,
+	                                  i3d::Vector3d<int> resolution) const {
+		i3d::Vector3d<int> block_dim = get_block_dimensions(resolution);
+		i3d::Vector3d<int> start = (coord * block_dim);
+		i3d::Vector3d<int> end = (coord + 1) * block_dim;
+
+		i3d::Vector3d<int> out;
+		for (int i = 0; i < 3; ++i) {
+			out[i] = std::max(0, std::min(dimensions[i], end[i]) -
+			                         std::max(start[i], 0));
+		}
+		return out;
 	}
 
 	friend std::ostream& operator<<(std::ostream& stream,
@@ -206,4 +221,4 @@ class DatasetProperties {
 		return stream;
 	}
 };
-} // namespace datastore
+} // namespace ds

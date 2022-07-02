@@ -7,7 +7,8 @@ void get_block() {
 	ds::Connection conn(SERVER_IP, SERVER_PORT, DS_UUID);
 
 	// Fetch new block
-	std::cout << "Fetching new block {0, 0, 0} using Connection ... " << std::flush;
+	std::cout << "Fetching new block {0, 0, 0} using Connection ... "
+	          << std::flush;
 	i3d::Image3d<T> connection_block =
 	    conn.read_block<T>({0, 0, 0}, IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE,
 	                       IMG_RESOLUTION, IMG_VERSION);
@@ -19,19 +20,17 @@ void get_block() {
 
 	// Fetch block to already existing image
 	std::cout << "Fetching block {0, 0, 0} in to existing image using "
-	             "Connection ... " << std::flush;
+	             "Connection ... "
+	          << std::flush;
 	i3d::Image3d<T> connection_block_inplace;
 
 	/* Allocate space */
 	connection_block_inplace.MakeRoom(connection_block.GetSize());
 
-	if (!conn.read_block({0, 0, 0}, connection_block_inplace, {0, 0, 0},
-	                     IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE, IMG_RESOLUTION,
-	                     IMG_VERSION)) {
-		std::cout << "An error occured" << std::endl;
-		return;
-	} else
-		std::cout << "[OK]" << std::endl;
+	conn.read_block({0, 0, 0}, connection_block_inplace, {0, 0, 0}, IMG_CHANNEL,
+	                IMG_TIMEPOINT, IMG_ANGLE, IMG_RESOLUTION, IMG_VERSION);
+
+	std::cout << "[OK]" << std::endl;
 
 	/* Same can be done with multiple blocks using same principle as above (see
 	 * documentation for more info) */
@@ -41,7 +40,8 @@ void get_block() {
 	                       IMG_VERSION);
 
 	// Fetch new block
-	std::cout << "Fetching new block {0, 0, 0} using ImageView ... " << std::flush;
+	std::cout << "Fetching new block {0, 0, 0} using ImageView ... "
+	          << std::flush;
 	i3d::Image3d<T> view_block = img_view.read_block<T>({0, 0, 0});
 	std::cout << "[OK]" << std::endl;
 
@@ -51,19 +51,19 @@ void get_block() {
 
 	// Fetch block to already existing image
 	std::cout
-	    << "Fetching block {0, 0, 0} in to existing image using ImageView ... " << std::flush;
+	    << "Fetching block {0, 0, 0} in to existing image using ImageView ... "
+	    << std::flush;
 	i3d::Image3d<T> view_block_inplace;
 
 	/* Allocate space */
 	view_block_inplace.MakeRoom(view_block.GetSize());
 
-	if (!img_view.read_block({0, 0, 0}, view_block_inplace, {0, 0, 0})) {
-		std::cout << "An error occured" << std::endl;
-		return;
-	} else
-		std::cout << "[OK]" << std::endl;
+	img_view.read_block({0, 0, 0}, view_block_inplace, {0, 0, 0});
+	
+	std::cout << "[OK]" << std::endl;
 
-	std::cout << "Checking if all recovered images are the same ... " << std::flush;
+	std::cout << "Checking if all recovered images are the same ... "
+	          << std::flush;
 	std::cout << std::boolalpha
 	          << (connection_block == connection_block_inplace &&
 	              connection_block == view_block &&

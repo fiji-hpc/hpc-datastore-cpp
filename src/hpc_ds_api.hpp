@@ -81,11 +81,9 @@ i3d::Image3d<T> read_image(const std::string& ip,
  * @param resolution Resolution, at which the image is located
  * @param version Version, at which the image is located (integer identifier or
  * "latest")
- * @return true if sending was successfull
- * @return false if error occured (Description will be emitted if in DEBUG)
  */
 template <cnpts::Scalar T>
-bool write_image(const i3d::Image3d<T>& img,
+void write_image(const i3d::Image3d<T>& img,
                  const std::string& ip,
                  int port,
                  const std::string& uuid,
@@ -163,11 +161,9 @@ class ImageView {
 	 * @param dest Image to write data to
 	 * @param dest_offset Offset by which the corresponding write should be
 	 * moved
-	 * @return true At read success
-	 * @return false At read failiure
 	 */
 	template <cnpts::Scalar T>
-	bool read_block(i3d::Vector3d<int> coord,
+	void read_block(i3d::Vector3d<int> coord,
 	                i3d::Image3d<T>& dest,
 	                i3d::Vector3d<int> dest_offset = {0, 0, 0}) const;
 
@@ -214,11 +210,9 @@ class ImageView {
 	 * @param coords Block coordinates
 	 * @param dest Prealocated destination image
 	 * @param offsets Offsets at wich the corresponding blocks should be saved
-	 * @return true At read success
-	 * @return false At read failure
 	 */
 	template <cnpts::Scalar T>
-	bool read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
+	void read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 i3d::Image3d<T>& dest,
 	                 const std::vector<i3d::Vector3d<int>>& offsets) const;
 
@@ -251,11 +245,9 @@ class ImageView {
 	 * @param src Source image to collect block from
 	 * @param coord Block coordinates
 	 * @param src_offset Offset of given block in source image
-	 * @return true At write success
-	 * @return false At write failiure
 	 */
 	template <cnpts::Scalar T>
-	bool write_block(const i3d::Image3d<T>& src,
+	void write_block(const i3d::Image3d<T>& src,
 	                 i3d::Vector3d<int> coord,
 	                 i3d::Vector3d<int> src_offset = {0, 0, 0}) const;
 	/**
@@ -272,11 +264,9 @@ class ImageView {
 	 * @param src Source image to collect blocks from
 	 * @param coords Vector of block coordinates
 	 * @param src_offsets Offsets of corresponding blocks in source image
-	 * @return true At write success
-	 * @return false At write failiure
 	 */
 	template <cnpts::Scalar T>
-	bool write_blocks(const i3d::Image3d<T>& src,
+	void write_blocks(const i3d::Image3d<T>& src,
 	                  const std::vector<i3d::Vector3d<int>>& coords,
 	                  const std::vector<i3d::Vector3d<int>>& src_offsets) const;
 	/**
@@ -292,11 +282,9 @@ class ImageView {
 	 *
 	 * @tparam T Scalar used as underlying type for image representation
 	 * @param img Source image
-	 * @return true At write success
-	 * @return false At write failiure
 	 */
 	template <cnpts::Scalar T>
-	bool write_image(const i3d::Image3d<T>& img) const;
+	void write_image(const i3d::Image3d<T>& img) const;
 
   private:
 	std::string _ip;
@@ -398,11 +386,9 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
-	 * @return true At read success
-	 * @return false At read failiure
 	 */
 	template <cnpts::Scalar T>
-	bool read_block(i3d::Vector3d<int> coord,
+	void read_block(i3d::Vector3d<int> coord,
 	                i3d::Image3d<T>& dest,
 	                i3d::Vector3d<int> dest_offset,
 	                int channel,
@@ -472,11 +458,9 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
-	 * @return true At read success
-	 * @return false At read failure
 	 */
 	template <cnpts::Scalar T>
-	bool read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
+	void read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 i3d::Image3d<T>& dest,
 	                 const std::vector<i3d::Vector3d<int>>& dest_offsets,
 	                 int channel,
@@ -529,11 +513,9 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
-	 * @return true At write success
-	 * @return false At write failiure
 	 */
 	template <cnpts::Scalar T>
-	bool write_block(const i3d::Image3d<T>& src,
+	void write_block(const i3d::Image3d<T>& src,
 	                 i3d::Vector3d<int> coord,
 	                 i3d::Vector3d<int> src_offset,
 	                 int channel,
@@ -562,11 +544,9 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
-	 * @return true At write success
-	 * @return false At write failiure
 	 */
 	template <cnpts::Scalar T>
-	bool write_blocks(const i3d::Image3d<T>& src,
+	void write_blocks(const i3d::Image3d<T>& src,
 	                  const std::vector<i3d::Vector3d<int>>& coords,
 	                  const std::vector<i3d::Vector3d<int>>& src_offsets,
 	                  int channel,
@@ -594,11 +574,9 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
-	 * @return true true At write success
-	 * @return false At write failiure
 	 */
 	template <cnpts::Scalar T>
-	bool write_image(const i3d::Image3d<T>& img,
+	void write_image(const i3d::Image3d<T>& img,
 	                 int channel,
 	                 int timepoint,
 	                 int angle,
@@ -611,7 +589,7 @@ class Connection {
 	std::string _uuid;
 };
 
-} // namespace datastore
+} // namespace ds
 
 /* ================= IMPLEMENTATION FOLLOWS ======================== */
 
@@ -639,7 +617,7 @@ i3d::Image3d<T> read_image(const std::string& ip,
 }
 
 template <cnpts::Scalar T>
-bool write_image(const i3d::Image3d<T>& img,
+void write_image(const i3d::Image3d<T>& img,
                  const std::string& ip,
                  int port,
                  const std::string& uuid,
@@ -648,8 +626,7 @@ bool write_image(const i3d::Image3d<T>& img,
                  int angle /* = 0 */,
                  i3d::Vector3d<int> resolution /*  = {1, 1, 1} */,
                  const std::string version /* = "latest" */) {
-	return ImageView(ip, port, uuid, channel, timepoint, angle, resolution,
-	                 version)
+	ImageView(ip, port, uuid, channel, timepoint, angle, resolution, version)
 	    .write_image(img);
 }
 
@@ -685,11 +662,11 @@ i3d::Image3d<T> ImageView::read_block(i3d::Vector3d<int> coord) const {
 }
 
 template <cnpts::Scalar T>
-bool ImageView::read_block(
+void ImageView::read_block(
     i3d::Vector3d<int> coord,
     i3d::Image3d<T>& dest,
     i3d::Vector3d<int> dest_offset /*  = {0, 0, 0} */) const {
-	return read_blocks({coord}, dest, {dest_offset});
+	read_blocks({coord}, dest, {dest_offset});
 }
 
 template <cnpts::Scalar T>
@@ -705,7 +682,7 @@ ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords) const {
 
 // TODO optimise
 template <cnpts::Scalar T>
-bool ImageView::read_blocks(
+void ImageView::read_blocks(
     const std::vector<i3d::Vector3d<int>>& coords,
     i3d::Image3d<T>& dest,
     const std::vector<i3d::Vector3d<int>>& offsets) const {
@@ -717,19 +694,11 @@ bool ImageView::read_blocks(
 
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
 
-	/* Error checking (when not in debug, all checks automatically return
-	 * true)*/
-	if (coords.size() != offsets.size()) {
-		details::log::error("Count of coordinates != count of offsets");
-		return false;
-	}
+	if (coords.size() != offsets.size())
+		throw std::logic_error("Count of coordinates != count of offsets");
 
 	if (!details::check_block_coords(coords, img_dim, block_dim))
-		return false;
-
-	if (!details::check_offset_coords(offsets, coords, dest, block_dim,
-	                                  img_dim))
-		return false;
+		throw std::out_of_range("Blocks out of range");
 
 	/* prepare request url */
 	std::string session_url = details::requests::session_url_request(
@@ -750,7 +719,6 @@ bool ImageView::read_blocks(
 
 		details::data_manip::read_data(data, props.voxel_type, dest, offset);
 	}
-	return true;
 }
 
 template <cnpts::Scalar T>
@@ -785,16 +753,16 @@ i3d::Image3d<T> ImageView::read_image() const {
 }
 
 template <cnpts::Scalar T>
-bool ImageView::write_block(
+void ImageView::write_block(
     const i3d::Image3d<T>& src,
     i3d::Vector3d<int> coord,
     i3d::Vector3d<int> src_offset /*  = {0, 0, 0} */) const {
-	return write_blocks(src, {coord}, {src_offset});
+	write_blocks(src, {coord}, {src_offset});
 }
 
 // TODO optimise
 template <cnpts::Scalar T>
-bool ImageView::write_blocks(
+void ImageView::write_blocks(
     const i3d::Image3d<T>& src,
     const std::vector<i3d::Vector3d<int>>& coords,
     const std::vector<i3d::Vector3d<int>>& src_offsets) const {
@@ -807,17 +775,11 @@ bool ImageView::write_blocks(
 
 	/* Error checking (when not in debug, all checks automatically return
 	 * true)*/
-	if (coords.size() != src_offsets.size()) {
-		details::log::error("Count of coordinates != count of offsets");
-		return false;
-	}
+	if (coords.size() != src_offsets.size())
+		throw std::logic_error("Count of coordinates != count of offsets");
 
 	if (!details::check_block_coords(coords, img_dim, block_dim))
-		return false;
-
-	if (!details::check_offset_coords(src_offsets, coords, src, block_dim,
-	                                  img_dim))
-		return false;
+		throw std::out_of_range("Blocks out of range");
 
 	/* prepare request url */
 	std::string session_url = details::requests::session_url_request(
@@ -850,12 +812,10 @@ bool ImageView::write_blocks(
 		    url, Poco::Net::HTTPRequest::HTTP_POST, data,
 		    {{"Content-Type", "application/octet-stream"}});
 	}
-
-	return true;
 }
 
 template <cnpts::Scalar T>
-bool ImageView::write_image(const i3d::Image3d<T>& img) const {
+void ImageView::write_image(const i3d::Image3d<T>& img) const {
 
 	/* Fetch image properties from server */
 	DatasetProperties props = get_dataset_properties(_ip, _port, _uuid);
@@ -877,7 +837,7 @@ bool ImageView::write_image(const i3d::Image3d<T>& img) const {
 			}
 
 	/* write whole image */
-	return write_blocks(img, blocks, offsets);
+	write_blocks(img, blocks, offsets);
 }
 
 /* ===================================== Connection */
@@ -906,7 +866,7 @@ i3d::Image3d<T> Connection::read_block(i3d::Vector3d<int> coord,
 }
 
 template <cnpts::Scalar T>
-bool Connection::read_block(i3d::Vector3d<int> coord,
+void Connection::read_block(i3d::Vector3d<int> coord,
                             i3d::Image3d<T>& dest,
                             i3d::Vector3d<int> dest_offset,
                             int channel,
@@ -926,12 +886,12 @@ Connection::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
                         int angle,
                         i3d::Vector3d<int> resolution,
                         const std::string& version) const {
-	return get_view(channel, timepoint, angle, resolution, version)
+	get_view(channel, timepoint, angle, resolution, version)
 	    .read_blocks<T>(coords);
 }
 
 template <cnpts::Scalar T>
-bool Connection::read_blocks(
+void Connection::read_blocks(
     const std::vector<i3d::Vector3d<int>>& coords,
     i3d::Image3d<T>& dest,
     const std::vector<i3d::Vector3d<int>>& dest_offsets,
@@ -940,7 +900,7 @@ bool Connection::read_blocks(
     int angle,
     i3d::Vector3d<int> resolution,
     const std::string& version) const {
-	return get_view(channel, timepoint, angle, resolution, version)
+	get_view(channel, timepoint, angle, resolution, version)
 	    .read_blocks(coords, dest, dest_offsets);
 }
 
@@ -955,7 +915,7 @@ i3d::Image3d<T> Connection::read_image(int channel,
 }
 
 template <cnpts::Scalar T>
-bool Connection::write_block(const i3d::Image3d<T>& src,
+void Connection::write_block(const i3d::Image3d<T>& src,
                              i3d::Vector3d<int> coord,
                              i3d::Vector3d<int> src_offset,
                              int channel,
@@ -963,12 +923,12 @@ bool Connection::write_block(const i3d::Image3d<T>& src,
                              int angle,
                              i3d::Vector3d<int> resolution,
                              const std::string& version) const {
-	return get_view(channel, timepoint, angle, resolution, version)
+	get_view(channel, timepoint, angle, resolution, version)
 	    .write_block(src, coord, src_offset);
 }
 
 template <cnpts::Scalar T>
-bool Connection::write_blocks(
+void Connection::write_blocks(
     const i3d::Image3d<T>& src,
     const std::vector<i3d::Vector3d<int>>& coords,
     const std::vector<i3d::Vector3d<int>>& src_offsets,
@@ -977,19 +937,18 @@ bool Connection::write_blocks(
     int angle,
     i3d::Vector3d<int> resolution,
     const std::string& version) const {
-	return get_view(channel, timepoint, angle, resolution, version)
+	get_view(channel, timepoint, angle, resolution, version)
 	    .write_blocks(src, coords, src_offsets);
 }
 
 template <cnpts::Scalar T>
-bool Connection::write_image(const i3d::Image3d<T>& img,
+void Connection::write_image(const i3d::Image3d<T>& img,
                              int channel,
                              int timepoint,
                              int angle,
                              i3d::Vector3d<int> resolution,
                              const std::string& version) const {
-	return get_view(channel, timepoint, angle, resolution, version)
-	    .write_image(img);
+	get_view(channel, timepoint, angle, resolution, version).write_image(img);
 }
 
-} // namespace datastore
+} // namespace ds

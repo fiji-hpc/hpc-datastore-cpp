@@ -48,12 +48,6 @@ constexpr inline bool _WARNING_ = false;
 constexpr inline bool _WARNING_ = _LOG_;
 #endif
 
-#ifdef DATASTORE_NERROR
-constexpr inline bool _ERROR_ = false;
-#else
-constexpr inline bool _ERROR_ = _LOG_;
-#endif
-
 /**
  * @brief Get the dataset url objimagect
  *
@@ -76,7 +70,7 @@ inline DatasetProperties get_dataset_properties(const std::string& dataset_url);
 /**
  * @brief Check consistency of block coordinates with respect to server
  *
- * Returns True when not in debug
+ * Returns always 'true'  when not in debug
  *
  * @param coords Coordinates
  * @param img_dim image dimensions for requested resolution
@@ -88,26 +82,7 @@ inline bool check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
                                i3d::Vector3d<int> img_dim,
                                i3d::Vector3d<int> block_dim);
 
-/**
- * @brief Check if blocks are not written out of local image boundaries
- *
- * Returns True when not in debug
- *
- * @tparam T Image backend type
- * @param offsets offsets into <img>
- * @param coords block coordinages
- * @param img local image
- * @param block_dim regular block dimension
- * @param img_dim server image dimensions
- * @return true At no error
- * @return false At error (ERROR is emmitted)
- */
-template <typename T>
-bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& offsets,
-                         const std::vector<i3d::Vector3d<int>>& coords,
-                         const i3d::Image3d<T>& img,
-                         i3d::Vector3d<int> block_dim,
-                         i3d::Vector3d<int> img_dim);
+
 namespace data_manip {
 inline int get_block_data_size(i3d::Vector3d<int> block_size,
                                const std::string& voxel_type);
@@ -182,9 +157,6 @@ namespace log {
 /**
  * @brief Prints message
  *
- * If type of message contains substring 'ERROR', buffer is automatically
- * flushed.
- *
  * @param msg Message
  * @param type Type of message
  * @param location Location info about message source
@@ -213,17 +185,7 @@ inline void
 warning(const std::string& msg,
         const std::source_location& location = std::source_location::current());
 
-/**
- * @brief Print error message
- *
- * @param msg Message
- * @param location Automatically generated location info
- */
-inline void
-error(const std::string& msg,
-      const std::source_location& location = std::source_location::current());
-} // namespace log
-
+}
 /* Helpers to parse Dataset Properties from JSON */
 namespace props_parser {
 using namespace Poco::JSON;
@@ -340,46 +302,11 @@ check_block_coords(const std::vector<i3d::Vector3d<int>>& coords,
 	for (i3d::Vector3d<int> coord : coords)
 		if (data_manip::get_block_size(coord, block_dim, img_dim) ==
 		    i3d::Vector3d(0, 0, 0)) {
-			log::error(fmt::format("Block coordinate {} is out of valid range",
+			log::warning(fmt::format("Block coordinate {} is out of valid range",
 			                       to_string(coord)));
 
 			return false;
 		}
-	log::info("Check successfullly finished");
-	return true;
-}
-
-template <typename T>
-bool check_offset_coords(const std::vector<i3d::Vector3d<int>>& offsets,
-                         const std::vector<i3d::Vector3d<int>>& coords,
-                         const i3d::Image3d<T>& img,
-                         i3d::Vector3d<int> block_dim,
-                         i3d::Vector3d<int> img_dim) {
-	/* Act as NOOP if not in debug */
-	if constexpr (!_DEBUG_)
-		return true;
-
-	if (offsets.size() != coords.size())
-		return false;
-
-	log::info("Checking validity of given offset coordinates");
-
-	for (std::size_t i = 0; i < coords.size(); ++i) {
-		auto& coord = coords[i];
-		auto& offset = offsets[i];
-
-		i3d::Vector3d<int> block_size =
-		    data_manip::get_block_size(coord, block_dim, img_dim);
-		for (int i = 0; i < 3; ++i)
-			if (!(0 <= coord[i] &&
-			      std::size_t(offset[i] + block_size[i]) <= img.GetSize()[i])) {
-				log::error(
-				    fmt::format("Offset coordinate {} is out of valid range",
-				                to_string(coord)));
-
-				return false;
-			}
-	}
 	log::info("Check successfullly finished");
 	return true;
 }
@@ -514,8 +441,6 @@ namespace log {
 
 	std::cout << fmt::format("[{}] {} at row {}:\n{} \n\n", type,
 	                         location.function_name(), location.line(), msg);
-	if (type.find("ERROR") != std::string::npos)
-		std::cout << std::flush;
 }
 
 /* inline */ void info(const std::string& msg,
@@ -533,14 +458,6 @@ warning(const std::string& msg,
 	if constexpr (!_WARNING_)
 		return;
 	_log(msg, "WARNING", location);
-}
-
-/* inline */ void error(const std::string& msg,
-                        const std::source_location&
-                            location /* = std::source_location::current() */) {
-	if constexpr (!_ERROR_)
-		return;
-	_log(msg, "ERROR", location);
 }
 } // namespace log
 

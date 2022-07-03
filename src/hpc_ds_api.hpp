@@ -3,6 +3,7 @@
 #include "hpc_ds_structs.hpp"
 #include <fmt/core.h>
 #include <i3d/image3d.h>
+#include <i3d/transform.h>
 #include <string>
 #include <type_traits>
 #include <vector>
@@ -59,16 +60,6 @@ i3d::Image3d<T> read_image(const std::string& ip,
  * @brief Write full image
  *
  * Creates (several if needed) HTTP requests and sends whole image to datastore.
- * If given image is larger, that the one on the server side, image is
- * approprietely cropped.
- *
- * If in DEBUG, function will check if image is not smaller then the one at
- * server side.
- *
- * To prevent 'unreasonable' behaviour, please make sure that the image is
- * exactly the same size as on the server side. The above mention information is
- * more like description of what will probably happen, not definition of
- * behaviour.
  *
  * @tparam T Scalar used as underlying type for image representation
  * @param img Input image to be send to server
@@ -93,8 +84,26 @@ void write_image(const i3d::Image3d<T>& img,
                  i3d::Vector3d<int> resolution = {1, 1, 1},
                  const std::string version = "latest");
 
-// TODO docs
-// TODO implementation
+/**
+ * @brief Write full image and generate pyramids
+ *
+ * Creates (several if needed) HTTP requests and sends whole image to datastore.
+ * Input image is considered to be full-resolution (that is: {1, 1, 1}).
+ * All other resolutions will be generated with selected <ResamplingMode>
+ * and uploaded to server as well.
+ *
+ * @tparam T Scalar used as underlying type for image representation
+ * @param img Input image in original resolution
+ * @param ip IP address of server (http:// at the beginning is not necessary)
+ * @param port Port, where the server is listening for requests
+ * @param uuid Unique identifier of dataset
+ * @param channel Channel, at which the image is located
+ * @param timepoint Timepoint, at which the image is located
+ * @param angle Angle, at which the image is located
+ * @param version Version, at which the image is located (integer identifier or
+ * "latest")
+ * @param m Sampling mode used for image resampling
+ */
 template <cnpts::Scalar T>
 void write_with_pyramids(const i3d::Image3d<T>& img,
                          const std::string& ip,
@@ -103,7 +112,8 @@ void write_with_pyramids(const i3d::Image3d<T>& img,
                          int channel = 0,
                          int timepoint = 0,
                          int angle = 0,
-                         const std::string& version = "latest");
+                         const std::string& version = "latest",
+                         SamplingMode m = SamplingMode::NEAREST_NEIGHBOUR);
 
 /**
  * @brief Representation of connection to specific image
@@ -234,12 +244,35 @@ class ImageView {
 	                 i3d::Image3d<T>& dest,
 	                 const std::vector<i3d::Vector3d<int>>& offsets) const;
 
-	// TODO docs
+	/**
+	 * @brief Read region of interest from the server
+	 *
+	 * Read all neccessary blocks intersecting with chosen region from the
+	 * server. It is neccessary, that start_point < end_point (elem-wise)..
+	 *
+	 * @tparam T Scalar used as underlying type for image representation
+	 * @param start_point smallest point of the region
+	 * @param end_point largest point of the region
+	 * @return i3d::Image3d<T> Selected region
+	 */
 	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_region(i3d::Vector3d<int> start_point,
 	                            i3d::Vector3d<int> end_point) const;
 
-	// TODO docs
+	/**
+	 * @brief Read region of interest from the server
+	 *
+	 * Read all neccessary blocks intersecting with chosen region from the
+	 * server and insert region into preallocated image <dest> at <offset>.
+	 *
+	 * It is neccessary, that start_point < end_point (elem-wise)..
+	 *
+	 * @tparam T Scalar used as underlying type for image representation
+	 * @param start_point smallest point of the region
+	 * @param end_point largest point of the region
+	 * @param dest destination image
+	 * @param offset offset to destination image
+	 */
 	template <cnpts::Scalar T>
 	void read_region(i3d::Vector3d<int> start_point,
 	                 i3d::Vector3d<int> end_point,
@@ -506,7 +539,23 @@ class Connection {
 	                 int angle,
 	                 i3d::Vector3d<int> resolution,
 	                 const std::string& version) const;
-	// TODO docs
+	/**
+	 * @brief Read region of interest from the server
+	 *
+	 * Read all neccessary blocks intersecting with chosen region from the
+	 * server. It is neccessary, that start_point < end_point (elem-wise)..
+	 *
+	 * @tparam T Scalar used as underlying type for image representation
+	 * @param start_point smallest point of the region
+	 * @param end_point largest point of the region
+	 * @param channel Channel, at which the image is located
+	 * @param timepoint Timepoint, at which the image is located
+	 * @param angle Angle, at which the image is located
+	 * @param resolution Resolution, at which the image is located
+	 * @param version Version, at which the image is located (integer identifier
+	 * or "latest")
+	 * @return Image containing selected block
+	 */
 	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_region(i3d::Vector3d<int> start_point,
 	                            i3d::Vector3d<int> end_point,
@@ -516,7 +565,26 @@ class Connection {
 	                            i3d::Vector3d<int> resolution,
 	                            const std::string& version) const;
 
-	// TODO docs
+	/**
+	 * @brief Read region of interest from the server
+	 *
+	 * Read all neccessary blocks intersecting with chosen region from the
+	 * server and insert region into preallocated image <dest> at <offset>.
+	 *
+	 * It is neccessary, that start_point < end_point (elem-wise)..
+	 *
+	 * @tparam T Scalar used as underlying type for image representation
+	 * @param start_point smallest point of the region
+	 * @param end_point largest point of the region
+	 * @param dest destination image
+	 * @param offset offset to destination image
+	 * @param channel Channel, at which the image is located
+	 * @param timepoint Timepoint, at which the image is located
+	 * @param angle Angle, at which the image is located
+	 * @param resolution Resolution, at which the image is located
+	 * @param version Version, at which the image is located (integer identifier
+	 * or "latest")
+	 */
 	template <cnpts::Scalar T>
 	void read_region(i3d::Vector3d<int> start_point,
 	                 i3d::Vector3d<int> end_point,
@@ -643,13 +711,32 @@ class Connection {
 	                 i3d::Vector3d<int> resolution,
 	                 const std::string& version) const;
 
-	// TODO docs
+	/**
+	 * @brief Write full image and generate pyramids
+	 *
+	 * Creates (several if needed) HTTP requests and sends whole image to
+	datastore.
+	    * Input image is considered to be full-resolution (that is: {1, 1, 1}).
+	* All other resolutions will be generated with selected <ResamplingMode>
+	* and uploaded to server as well.
+
+	 * @tparam T Scalar used as underlying type for image representation
+	 * @param img Input image in original resolution
+	 * @param channel Channel, at which the image is located
+	 * @param timepoint Timepoint, at which the image is located
+	 * @param angle Angle, at which the image is located
+	 * @param version Version, at which the image is located (integer identifier
+ or
+ * "latest")
+	 * @param m Sampling mode used for image resampling
+	 */
 	template <cnpts::Scalar T>
 	void write_with_pyramids(const i3d::Image3d<T>& img,
 	                         int channel,
 	                         int timepoint,
 	                         int angle,
-	                         const std::string& version) const;
+	                         const std::string& version,
+	                         SamplingMode m) const;
 
   private:
 	std::string _ip;
@@ -696,6 +783,21 @@ void write_image(const i3d::Image3d<T>& img,
                  const std::string version /* = "latest" */) {
 	ImageView(ip, port, uuid, channel, timepoint, angle, resolution, version)
 	    .write_image(img);
+}
+
+template <cnpts::Scalar T>
+void write_with_pyramids(
+    const i3d::Image3d<T>& img,
+    const std::string& ip,
+    int port,
+    const std::string& uuid,
+    int channel /* = 0 */,
+    int timepoint /* = 0 */,
+    int angle /* = 0 */,
+    const std::string& version /* = "latest"*/,
+    SamplingMode m /* = SamplingMode::NEAREST_NEIGHBOUR */) {
+	Connection(ip, port, uuid)
+	    .write_with_pyramids(img, channel, timepoint, angle, version, m);
 }
 
 /* ===================================== ImageView */
@@ -1073,17 +1175,20 @@ void Connection::write_with_pyramids(const i3d::Image3d<T>& img,
                                      int channel,
                                      int timepoint,
                                      int angle,
-                                     const std::string& version) const {
+                                     const std::string& version,
+                                     SamplingMode m) const {
 	auto props = get_properties();
 	write_image(img, channel, timepoint, angle, {1, 1, 1}, version);
 
 	for (const auto& map : props.resolution_levels) {
 		i3d::Vector3d<int> res = map.at("resolutions");
-		if (res == {1, 1, 1})
+		if (res == i3d::Vector3d<int>{1, 1, 1})
 			continue;
 
-		i3d::Image3d new_dim = props.dimensions / res;
-		// TODO FINISH
+		i3d::Vector3d<int> new_dim = props.dimensions / res;
+		i3d::Image3d<T> cpy = img;
+		i3d::ResampleToDesiredResolution(cpy, new_dim, m);
+		write_image(cpy, channel, timepoint, angle, res, version);
 	}
 }
 

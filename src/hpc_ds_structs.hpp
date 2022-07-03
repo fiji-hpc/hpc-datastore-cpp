@@ -4,6 +4,7 @@
 #include <fmt/core.h>
 #include <i3d/image3d.h>
 #include <i3d/vector3d.h>
+#include <i3d/transform.h>
 #include <map>
 #include <optional>
 #include <ostream>
@@ -14,6 +15,8 @@
 
 namespace ds {
 
+using i3d::SamplingMode;
+
 /* dataset 'voxel_type' to 'byte_size' map*/
 const inline std::map<std::string, int> type_byte_size{
     {"uint8", 1}, {"uint16", 2}, {"uint32", 4}, {"uint64", 8},  {"int8", 1},
@@ -21,6 +24,7 @@ const inline std::map<std::string, int> type_byte_size{
 
 /* Maximal legal URL length */
 constexpr inline std::size_t MAX_URL_LENGTH = 2048;
+
 
 /**
  * @brief Class representing resolution unit (in DatasetProperties)

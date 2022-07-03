@@ -93,6 +93,18 @@ void write_image(const i3d::Image3d<T>& img,
                  i3d::Vector3d<int> resolution = {1, 1, 1},
                  const std::string version = "latest");
 
+// TODO docs
+// TODO implementation
+template <cnpts::Scalar T>
+void write_with_pyramids(const i3d::Image3d<T>& img,
+                         const std::string& ip,
+                         int port,
+                         const std::string& uuid,
+                         int channel = 0,
+                         int timepoint = 0,
+                         int angle = 0,
+                         const std::string& version = "latest");
+
 /**
  * @brief Representation of connection to specific image
  *
@@ -287,6 +299,7 @@ class ImageView {
 	void write_blocks(const i3d::Image3d<T>& src,
 	                  const std::vector<i3d::Vector3d<int>>& coords,
 	                  const std::vector<i3d::Vector3d<int>>& src_offsets) const;
+
 	/**
 	 * @brief Write image to server
 	 *
@@ -629,6 +642,14 @@ class Connection {
 	                 int angle,
 	                 i3d::Vector3d<int> resolution,
 	                 const std::string& version) const;
+
+	// TODO docs
+	template <cnpts::Scalar T>
+	void write_with_pyramids(const i3d::Image3d<T>& img,
+	                         int channel,
+	                         int timepoint,
+	                         int angle,
+	                         const std::string& version) const;
 
   private:
 	std::string _ip;
@@ -1045,6 +1066,25 @@ void Connection::write_image(const i3d::Image3d<T>& img,
                              i3d::Vector3d<int> resolution,
                              const std::string& version) const {
 	get_view(channel, timepoint, angle, resolution, version).write_image(img);
+}
+
+template <cnpts::Scalar T>
+void Connection::write_with_pyramids(const i3d::Image3d<T>& img,
+                                     int channel,
+                                     int timepoint,
+                                     int angle,
+                                     const std::string& version) const {
+	auto props = get_properties();
+	write_image(img, channel, timepoint, angle, {1, 1, 1}, version);
+
+	for (const auto& map : props.resolution_levels) {
+		i3d::Vector3d<int> res = map.at("resolutions");
+		if (res == {1, 1, 1})
+			continue;
+
+		i3d::Image3d new_dim = props.dimensions / res;
+		// TODO FINISH
+	}
 }
 
 } // namespace ds

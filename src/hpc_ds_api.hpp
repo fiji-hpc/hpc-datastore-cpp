@@ -493,6 +493,28 @@ class Connection {
 	                 int angle,
 	                 i3d::Vector3d<int> resolution,
 	                 const std::string& version) const;
+	// TODO docs
+	template <cnpts::Scalar T>
+	i3d::Image3d<T> read_region(i3d::Vector3d<int> start_point,
+	                            i3d::Vector3d<int> end_point,
+	                            int channel,
+	                            int timepoint,
+	                            int angle,
+	                            i3d::Vector3d<int> resolution,
+	                            const std::string& version) const;
+
+	// TODO docs
+	template <cnpts::Scalar T>
+	void read_region(i3d::Vector3d<int> start_point,
+	                 i3d::Vector3d<int> end_point,
+	                 i3d::Image3d<T>& dest,
+	                 i3d::Vector3d<int> offset,
+	                 int channel,
+	                 int timepoint,
+	                 int angle,
+	                 i3d::Vector3d<int> resolution,
+	                 const std::string& version) const;
+
 	/**
 	 * @brief Read full image
 	 *
@@ -718,7 +740,7 @@ void ImageView::read_blocks(
 
 	/* Fetched properties from server */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
-	DatasetProperties props = details::get_properties();
+	DatasetProperties props = get_properties();
 	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
 
 	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
@@ -775,7 +797,7 @@ template <cnpts::Scalar T>
 void ImageView::read_region(i3d::Vector3d<int> start_point,
                             i3d::Vector3d<int> end_point,
                             i3d::Image3d<T>& dest,
-                            i3d::Vector3d<int> offset = {0, 0, 0}) const {
+                            i3d::Vector3d<int> offset /* = {0, 0, 0} */) const {
 
 	auto temp_img = read_region<T>(start_point, end_point);
 
@@ -783,39 +805,16 @@ void ImageView::read_region(i3d::Vector3d<int> start_point,
 	for (std::size_t x = 0; x < temp_img.GetSizeX(); ++x)
 		for (std::size_t y = 0; y < temp_img.GetSizeY(); ++y)
 			for (std::size_t z = 0; z < temp_img.GetSizeZ(); ++z)
-				dest.SetVoxel(-offset + {x, y, z},
+				dest.SetVoxel(i3d::Vector3d<int>(x, y, z) - offset,
 				              temp_img.GetVoxel({x, y, z}));
 }
 
 template <cnpts::Scalar T>
 i3d::Image3d<T> ImageView::read_image() const {
-	/* Fetch properties from server */
-	DatasetProperties props = get_properties();
-	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
-	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
+	auto props = get_properties();
+	i3d::Vector3d img_dim = props.dimensions / _resolution;
 
-	i3d::Vector3d<int> block_count =
-	    (img_dim + block_dim - 1) / block_dim; // Ceiling
-
-	/* Prepare output image */
-	i3d::Image3d<T> out;
-	out.MakeRoom(img_dim);
-
-	/* Prepare coordinates of blocks and offsets to fetch whole image */
-	std::vector<i3d::Vector3d<int>> blocks;
-	std::vector<i3d::Vector3d<int>> offsets;
-
-	for (int x = 0; x < block_count.x; ++x)
-		for (int y = 0; y < block_count.y; ++y)
-			for (int z = 0; z < block_count.z; ++z) {
-				blocks.emplace_back(x, y, z);
-				offsets.emplace_back(x * block_dim.x, y * block_dim.y,
-				                     z * block_dim.z);
-			}
-
-	/* Fetch whole image and return */
-	read_blocks(blocks, out, offsets);
-	return out;
+	return read_region<T>(0, img_dim);
 }
 
 template <cnpts::Scalar T>
@@ -973,6 +972,32 @@ void Connection::read_blocks(
     const std::string& version) const {
 	get_view(channel, timepoint, angle, resolution, version)
 	    .read_blocks(coords, dest, dest_offsets);
+}
+
+template <cnpts::Scalar T>
+i3d::Image3d<T> Connection::read_region(i3d::Vector3d<int> start_point,
+                                        i3d::Vector3d<int> end_point,
+                                        int channel,
+                                        int timepoint,
+                                        int angle,
+                                        i3d::Vector3d<int> resolution,
+                                        const std::string& version) const {
+	return get_view(channel, timepoint, angle, resolution, version)
+	    .read_region<T>(start_point, end_point);
+}
+
+template <cnpts::Scalar T>
+void Connection::read_region(i3d::Vector3d<int> start_point,
+                             i3d::Vector3d<int> end_point,
+                             i3d::Image3d<T>& dest,
+                             i3d::Vector3d<int> offset,
+                             int channel,
+                             int timepoint,
+                             int angle,
+                             i3d::Vector3d<int> resolution,
+                             const std::string& version) const {
+	get_view(channel, timepoint, angle, resolution, version)
+	    .read_region<T>(start_point, end_point, dest, offset);
 }
 
 template <cnpts::Scalar T>

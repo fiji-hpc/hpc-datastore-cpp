@@ -88,7 +88,7 @@ See samples for an example.
 ## 3 Documentation
 
 The documentation can be viewed directly in the source code, most importantly in [`hpc_ds_api.hpp`](src/hpc_ds_api.hpp).
-There is also doxygen-generated documentation available in [html](docs/generated/html/index.html) and [pdf](docs/generated/latex/refman.pdf).
+There is also doxygen-generated documentation available in [html](https://htmlpreview.github.io/?https://github.com/somik861/hpc-datastore-cpp/blob/main/docs/generated/html/index.html) and [pdf](docs/generated/latex/refman.pdf).
 
 ## 4 Usage
 The only necessary file to include is [`hpc_ds_api.hpp`](src/hpc_ds_api.hpp).

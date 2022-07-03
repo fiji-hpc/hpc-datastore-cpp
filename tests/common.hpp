@@ -39,11 +39,29 @@ void fill_random(i3d::Image3d<T>& img) {
 }
 
 template <typename T>
-void shuffle(T& cont)
-{
+void shuffle(T& cont) {
 	std::mt19937_64 gen{std::random_device()()};
-	
+
 	std::ranges::shuffle(cont, gen);
+}
+
+void test_start(const std::string& test_name) {
+	std::string border(10, '=');
+	std::cout << border + " " + test_name + " " + border << '\n';
+}
+void test_ok() {
+	std::string border(10, '-');
+	std::cout << border + " [ SUCCESS ] " + border << '\n';
+}
+void test_nok() {
+	std::string border(10, '-');
+	std::cout << border + " [ FAILED ] " + border << '\n';
+}
+
+void phase_ok() { std::cout << "[OK]" << std::endl; }
+void phase_nok() { std::cout << "[NOK]" << std::endl; }
+void phase_start(const std::string& s) {
+	std::cout << "Phase: " << s << " ... " << std::flush;
 }
 
 template <typename T>

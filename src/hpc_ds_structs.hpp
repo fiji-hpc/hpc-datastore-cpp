@@ -3,8 +3,8 @@
 #include <cassert>
 #include <fmt/core.h>
 #include <i3d/image3d.h>
-#include <i3d/vector3d.h>
 #include <i3d/transform.h>
+#include <i3d/vector3d.h>
 #include <map>
 #include <optional>
 #include <ostream>
@@ -24,7 +24,6 @@ const inline std::map<std::string, int> type_byte_size{
 
 /* Maximal legal URL length */
 constexpr inline std::size_t MAX_URL_LENGTH = 2048;
-
 
 /**
  * @brief Class representing resolution unit (in DatasetProperties)
@@ -194,6 +193,12 @@ class DatasetProperties {
 			                         std::max(start[i], 0));
 		}
 		return out;
+	}
+
+	i3d::Vector3d<int> get_block_count(i3d::Vector3d<int> resolution) const {
+		i3d::Vector3d<int> block_dim = get_block_dimensions(resolution);
+
+		return (dimensions + block_dim - 1) / block_dim;
 	}
 
 	friend std::ostream& operator<<(std::ostream& stream,

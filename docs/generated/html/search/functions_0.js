@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['connection_0',['Connection',['../classdatastore_1_1_connection.html#a765b984fa9b01dd1157698bf2aa913c9',1,'datastore::Connection']]]
+  ['connection_0',['Connection',['../classds_1_1_connection.html#a776a9ac914db1f7346c6f08a3bb936c3',1,'ds::Connection']]]
 ];

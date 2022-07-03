@@ -1,0 +1,88 @@
+\hypertarget{classds_1_1_dataset_properties}{}\doxysection{ds\+::Dataset\+Properties Class Reference}
+\label{classds_1_1_dataset_properties}\index{ds::DatasetProperties@{ds::DatasetProperties}}
+
+
+Class representing dataset properties.  
+
+
+
+
+{\ttfamily \#include $<$hpc\+\_\+ds\+\_\+structs.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_ab283588c31e3e0739b63efdda953ce1a}\label{classds_1_1_dataset_properties_ab283588c31e3e0739b63efdda953ce1a}} 
+i3d\+::\+Vector3d$<$ int $>$ {\bfseries get\+\_\+block\+\_\+dimensions} (i3d\+::\+Vector3d$<$ int $>$ resolution) const
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_abd2c460fac2d31e918750823e2292bc7}\label{classds_1_1_dataset_properties_abd2c460fac2d31e918750823e2292bc7}} 
+i3d\+::\+Vector3d$<$ int $>$ {\bfseries get\+\_\+block\+\_\+size} (i3d\+::\+Vector3d$<$ int $>$ coord, i3d\+::\+Vector3d$<$ int $>$ resolution) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_a718f3d31456b665c11e9eff435fb87a7}\label{classds_1_1_dataset_properties_a718f3d31456b665c11e9eff435fb87a7}} 
+std\+::string {\bfseries uuid}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_adaa02223a9f54289d7cfa3b4ad91c4c1}\label{classds_1_1_dataset_properties_adaa02223a9f54289d7cfa3b4ad91c4c1}} 
+std\+::string {\bfseries voxel\+\_\+type}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_af0644c22092edc44a40c3aefcca681a1}\label{classds_1_1_dataset_properties_af0644c22092edc44a40c3aefcca681a1}} 
+i3d\+::\+Vector3d$<$ int $>$ {\bfseries dimensions}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_aefccb2cf9cdcc8bb5a566407cbbc6a70}\label{classds_1_1_dataset_properties_aefccb2cf9cdcc8bb5a566407cbbc6a70}} 
+int {\bfseries channels}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_a2f35396a434cf3dc0835174a35373dbc}\label{classds_1_1_dataset_properties_a2f35396a434cf3dc0835174a35373dbc}} 
+int {\bfseries angles}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_a628cd8b0fb692dc5574a50496688fefb}\label{classds_1_1_dataset_properties_a628cd8b0fb692dc5574a50496688fefb}} 
+std\+::optional$<$ std\+::string $>$ {\bfseries transformations}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_ab326e7c78a981fa6c43626a61638ce72}\label{classds_1_1_dataset_properties_ab326e7c78a981fa6c43626a61638ce72}} 
+std\+::string {\bfseries voxel\+\_\+unit}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_aeb1fb1165e6bc8d54d85fbe08311cdfb}\label{classds_1_1_dataset_properties_aeb1fb1165e6bc8d54d85fbe08311cdfb}} 
+std\+::optional$<$ i3d\+::\+Vector3d$<$ double $>$ $>$ {\bfseries voxel\+\_\+resolution}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_a6b3a5e9b3e05b0759f2fb9c06b890b7f}\label{classds_1_1_dataset_properties_a6b3a5e9b3e05b0759f2fb9c06b890b7f}} 
+std\+::optional$<$ \mbox{\hyperlink{classds_1_1_resolution_unit}{Resolution\+Unit}} $>$ {\bfseries timepoint\+\_\+resolution}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_a0376fe5dc6119baa7c08de068cd7728e}\label{classds_1_1_dataset_properties_a0376fe5dc6119baa7c08de068cd7728e}} 
+std\+::optional$<$ \mbox{\hyperlink{classds_1_1_resolution_unit}{Resolution\+Unit}} $>$ {\bfseries channel\+\_\+resolution}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_aff0f47b1ca241e3d97f0f8ff2d0c651e}\label{classds_1_1_dataset_properties_aff0f47b1ca241e3d97f0f8ff2d0c651e}} 
+std\+::optional$<$ \mbox{\hyperlink{classds_1_1_resolution_unit}{Resolution\+Unit}} $>$ {\bfseries angle\+\_\+resolution}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_ae3b6e64461a749bac78842262b5437f7}\label{classds_1_1_dataset_properties_ae3b6e64461a749bac78842262b5437f7}} 
+std\+::string {\bfseries compression}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_a23540c211d4a203e39c415aca10e24e5}\label{classds_1_1_dataset_properties_a23540c211d4a203e39c415aca10e24e5}} 
+std\+::vector$<$ std\+::map$<$ std\+::string, i3d\+::\+Vector3d$<$ int $>$ $>$ $>$ {\bfseries resolution\+\_\+levels}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_a5dd3bb9fcfd35cfde754a56303a659f9}\label{classds_1_1_dataset_properties_a5dd3bb9fcfd35cfde754a56303a659f9}} 
+std\+::vector$<$ int $>$ {\bfseries versions}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_a10c6dc2b3d538b9f6905c9b55bea8a5a}\label{classds_1_1_dataset_properties_a10c6dc2b3d538b9f6905c9b55bea8a5a}} 
+std\+::string {\bfseries label}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_acf7e6b90d0e8c9526bfcfc3600e9c533}\label{classds_1_1_dataset_properties_acf7e6b90d0e8c9526bfcfc3600e9c533}} 
+std\+::optional$<$ std\+::string $>$ {\bfseries view\+\_\+registrations}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_a9a502bf525cbe5eed7d4816e8f262b47}\label{classds_1_1_dataset_properties_a9a502bf525cbe5eed7d4816e8f262b47}} 
+std\+::vector$<$ int $>$ {\bfseries timepoint\+\_\+ids}
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classds_1_1_dataset_properties_ad4445b24f331abf2a2129f3db2f0fcbd}\label{classds_1_1_dataset_properties_ad4445b24f331abf2a2129f3db2f0fcbd}} 
+std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&stream, const \mbox{\hyperlink{classds_1_1_dataset_properties}{Dataset\+Properties}} \&ds)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class representing dataset properties. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/somik/\+CBIA/hpc-\/datastore-\/cpp/src/hpc\+\_\+ds\+\_\+structs.\+hpp\end{DoxyCompactItemize}

@@ -1,0 +1,383 @@
+\hypertarget{classds_1_1_image_view}{}\doxysection{ds\+::Image\+View Class Reference}
+\label{classds_1_1_image_view}\index{ds::ImageView@{ds::ImageView}}
+
+
+Representation of connection to specific image.  
+
+
+
+
+{\ttfamily \#include $<$hpc\+\_\+ds\+\_\+api.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classds_1_1_image_view_a6bc9a78e3e37407d25906265b5976f49}{Image\+View}} (std\+::string ip, int port, std\+::string uuid, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, std\+::string version)
+\begin{DoxyCompactList}\small\item\em Construct a new Image View object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classds_1_1_dataset_properties}{Dataset\+Properties}} \mbox{\hyperlink{classds_1_1_image_view_a69ef71caffb16fafdcef4cadab259093}{get\+\_\+properties}} () const
+\begin{DoxyCompactList}\small\item\em Get dataset properties. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classds_1_1_image_view_a5547df92e468c571611bc31fec918519}{read\+\_\+block}} (i3d\+::\+Vector3d$<$ int $>$ coord) const
+\begin{DoxyCompactList}\small\item\em Read one block from server. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_image_view_a2f583f4485213c6dc6dcb91476fa6a6e}{read\+\_\+block}} (i3d\+::\+Vector3d$<$ int $>$ coord, i3d\+::\+Image3d$<$ T $>$ \&dest, i3d\+::\+Vector3d$<$ int $>$ dest\+\_\+offset=\{0, 0, 0\}) const
+\begin{DoxyCompactList}\small\item\em Read one block from server to image. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\std\+::vector$<$ i3d\+::\+Image3d$<$ T $>$ $>$ \mbox{\hyperlink{classds_1_1_image_view_a2e425fbe6b7eaf8a6940ea8e4bde8c42}{read\+\_\+blocks}} (const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords) const
+\begin{DoxyCompactList}\small\item\em Read blocks from server and return them. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_image_view_ad0b5524236ec49ab687f2784410e633d}{read\+\_\+blocks}} (const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, i3d\+::\+Image3d$<$ T $>$ \&dest, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&offsets) const
+\begin{DoxyCompactList}\small\item\em Read blocks from server and saves them into prealocated image. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classds_1_1_image_view_a319e3eee6bf89a3eb6ccafc603884bb9}{read\+\_\+region}} (i3d\+::\+Vector3d$<$ int $>$ start\+\_\+point, i3d\+::\+Vector3d$<$ int $>$ end\+\_\+point) const
+\begin{DoxyCompactList}\small\item\em Read region of interest from the server. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_image_view_a47bdec7c863d8a2ec813d5488167f92f}{read\+\_\+region}} (i3d\+::\+Vector3d$<$ int $>$ start\+\_\+point, i3d\+::\+Vector3d$<$ int $>$ end\+\_\+point, i3d\+::\+Image3d$<$ T $>$ \&dest, i3d\+::\+Vector3d$<$ int $>$ offset=\{0, 0, 0\}) const
+\begin{DoxyCompactList}\small\item\em Read region of interest from the server. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classds_1_1_image_view_a1ee17246ba9dbec1119b87502bbd2dd9}{read\+\_\+image}} () const
+\begin{DoxyCompactList}\small\item\em Read full image. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_image_view_a360c1c6e6316ae6b74a79b6daa314bd6}{write\+\_\+block}} (const i3d\+::\+Image3d$<$ T $>$ \&src, i3d\+::\+Vector3d$<$ int $>$ coord, i3d\+::\+Vector3d$<$ int $>$ src\+\_\+offset=\{0, 0, 0\}) const
+\begin{DoxyCompactList}\small\item\em Write block to server. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_image_view_a43a60d764663893d8ac6b8cb48527ae7}{write\+\_\+blocks}} (const i3d\+::\+Image3d$<$ T $>$ \&src, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&src\+\_\+offsets) const
+\begin{DoxyCompactList}\small\item\em Write blocks to server. \end{DoxyCompactList}\item 
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_image_view_a4f22b59ef64bff6811c9fbdce6c26a2f}{write\+\_\+image}} (const i3d\+::\+Image3d$<$ T $>$ \&img) const
+\begin{DoxyCompactList}\small\item\em Write image to server. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Representation of connection to specific image. 
+
+Class representing connection to specific image on the server. This class provides basic methods for read/write operations necessary to transfer images from/to server. This class does not cache or precollect any data, so the first HTTP request will be send only when corresponding function is called. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classds_1_1_image_view_a6bc9a78e3e37407d25906265b5976f49}\label{classds_1_1_image_view_a6bc9a78e3e37407d25906265b5976f49}} 
+\index{ds::ImageView@{ds::ImageView}!ImageView@{ImageView}}
+\index{ImageView@{ImageView}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{ImageView()}{ImageView()}}
+{\footnotesize\ttfamily ds\+::\+Image\+View\+::\+Image\+View (\begin{DoxyParamCaption}\item[{std\+::string}]{ip,  }\item[{int}]{port,  }\item[{std\+::string}]{uuid,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{std\+::string}]{version }\end{DoxyParamCaption})}
+
+
+
+Construct a new Image View object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & IP address of server (\href{http://}{\texttt{ http\+://}} at the beginning is not necessary) \\
+\hline
+{\em port} & Port, where the server is listening for requests \\
+\hline
+{\em uuid} & Unique identifier of dataset \\
+\hline
+{\em channel} & Channel, at which the image is located \\
+\hline
+{\em timepoint} & Timepoint, at which the image is located \\
+\hline
+{\em angle} & Angle, at which the image is located \\
+\hline
+{\em resolution} & Resolution, at which the image is located \\
+\hline
+{\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classds_1_1_image_view_a69ef71caffb16fafdcef4cadab259093}\label{classds_1_1_image_view_a69ef71caffb16fafdcef4cadab259093}} 
+\index{ds::ImageView@{ds::ImageView}!get\_properties@{get\_properties}}
+\index{get\_properties@{get\_properties}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{get\_properties()}{get\_properties()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classds_1_1_dataset_properties}{Dataset\+Properties}} ds\+::\+Image\+View\+::get\+\_\+properties (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Get dataset properties. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{classds_1_1_dataset_properties}{Dataset\+Properties}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classds_1_1_image_view_a5547df92e468c571611bc31fec918519}\label{classds_1_1_image_view_a5547df92e468c571611bc31fec918519}} 
+\index{ds::ImageView@{ds::ImageView}!read\_block@{read\_block}}
+\index{read\_block@{read\_block}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{read\_block()}{read\_block()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+i3d\+::\+Image3d$<$ T $>$ ds\+::\+Image\+View\+::read\+\_\+block (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord }\end{DoxyParamCaption}) const}
+
+
+
+Read one block from server. 
+
+Reads one block of image located at $<$coord$>$ and returns it. The information about size of the image is collected from the server.
+
+If in DEBUG, function will check wheter given coordinate corresponds to valid block.
+
+As there is no (meaningfull) way for C++ to choose correct underlying type in runtime, make sure to specify correct template type.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em coord} & Block coordinate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Image containing selected block 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classds_1_1_image_view_a2f583f4485213c6dc6dcb91476fa6a6e}\label{classds_1_1_image_view_a2f583f4485213c6dc6dcb91476fa6a6e}} 
+\index{ds::ImageView@{ds::ImageView}!read\_block@{read\_block}}
+\index{read\_block@{read\_block}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{read\_block()}{read\_block()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+void ds\+::\+Image\+View\+::read\+\_\+block (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{dest\+\_\+offset = {\ttfamily \{0,~0,~0\}} }\end{DoxyParamCaption}) const}
+
+
+
+Read one block from server to image. 
+
+Reads one block of image located at $<$coord$>$ and saves it to $<$dest$>$ with offset $<$dest\+\_\+offset$>$.
+
+If in DEBUG, function will check wheter given coordinate corresponds to valid block as well as wheter the block fits into the image (taking offset into account).
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em coord} & Block coordinate \\
+\hline
+{\em dest} & Image to write data to \\
+\hline
+{\em dest\+\_\+offset} & Offset by which the corresponding write should be moved \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classds_1_1_image_view_a2e425fbe6b7eaf8a6940ea8e4bde8c42}\label{classds_1_1_image_view_a2e425fbe6b7eaf8a6940ea8e4bde8c42}} 
+\index{ds::ImageView@{ds::ImageView}!read\_blocks@{read\_blocks}}
+\index{read\_blocks@{read\_blocks}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{read\_blocks()}{read\_blocks()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+std\+::vector$<$ i3d\+::\+Image3d$<$ T $>$ $>$ ds\+::\+Image\+View\+::read\+\_\+blocks (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords }\end{DoxyParamCaption}) const}
+
+
+
+Read blocks from server and return them. 
+
+Reads blocks specified in $<$coords$>$ and returns them. Corresponding sizes are collected from server and calculated specificaly for each block.
+
+This function is not optimized, meaning that for each coord in $<$coord$>$, one HTTP request will be sent out to the server. This can heavily slow down speed of the application as communication via network is not cheap. If you do not have specific needs,most of the time it will be faster to collect blocks into prealocated image (second overload of read\+\_\+blocks), however it will eat more RAM.
+
+If in DEBUG, the fucntion checks if coordinates given in $<$coords$>$ points to a valid blocks.
+
+As there is no (meaningfull) way for C++ to choose correct underlying type in runtime, make sure to specify correct template type.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em coords} & Block coordinates \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Vector of fetched blocks (the order is the same as given in $<$coords$>$) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classds_1_1_image_view_ad0b5524236ec49ab687f2784410e633d}\label{classds_1_1_image_view_ad0b5524236ec49ab687f2784410e633d}} 
+\index{ds::ImageView@{ds::ImageView}!read\_blocks@{read\_blocks}}
+\index{read\_blocks@{read\_blocks}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{read\_blocks()}{read\_blocks()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+void ds\+::\+Image\+View\+::read\+\_\+blocks (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{offsets }\end{DoxyParamCaption}) const}
+
+
+
+Read blocks from server and saves them into prealocated image. 
+
+Read blocks specified in $<$coords$>$ and saves them into locations given in $<$offsets$>$.
+
+If in DEBUG, the function checks if coordinates given in $<$coords$>$ points to a valid blocks.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em coords} & Block coordinates \\
+\hline
+{\em dest} & Prealocated destination image \\
+\hline
+{\em offsets} & Offsets at wich the corresponding blocks should be saved \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classds_1_1_image_view_a1ee17246ba9dbec1119b87502bbd2dd9}\label{classds_1_1_image_view_a1ee17246ba9dbec1119b87502bbd2dd9}} 
+\index{ds::ImageView@{ds::ImageView}!read\_image@{read\_image}}
+\index{read\_image@{read\_image}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{read\_image()}{read\_image()}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+i3d\+::\+Image3d$<$ T $>$ ds\+::\+Image\+View\+::read\+\_\+image}
+
+
+
+Read full image. 
+
+Read full image from the server and return it. The information about dimensions are fetched from the server.
+
+As there is no (meaningfull) way for C++ to choose correct underlying type in runtime, make sure to specify correct template type.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+i3d\+::\+Image3d$<$\+T$>$ Fetched image 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classds_1_1_image_view_a319e3eee6bf89a3eb6ccafc603884bb9}\label{classds_1_1_image_view_a319e3eee6bf89a3eb6ccafc603884bb9}} 
+\index{ds::ImageView@{ds::ImageView}!read\_region@{read\_region}}
+\index{read\_region@{read\_region}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{read\_region()}{read\_region()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+i3d\+::\+Image3d$<$ T $>$ ds\+::\+Image\+View\+::read\+\_\+region (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{start\+\_\+point,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{end\+\_\+point }\end{DoxyParamCaption}) const}
+
+
+
+Read region of interest from the server. 
+
+Read all neccessary blocks intersecting with chosen region from the server. It is neccessary, that start\+\_\+point \texorpdfstring{$<$}{<} end\+\_\+point (elem-\/wise)..
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em start\+\_\+point} & smallest point of the region \\
+\hline
+{\em end\+\_\+point} & largest point of the region \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+i3d\+::\+Image3d$<$\+T$>$ Selected region 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classds_1_1_image_view_a47bdec7c863d8a2ec813d5488167f92f}\label{classds_1_1_image_view_a47bdec7c863d8a2ec813d5488167f92f}} 
+\index{ds::ImageView@{ds::ImageView}!read\_region@{read\_region}}
+\index{read\_region@{read\_region}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{read\_region()}{read\_region()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+void ds\+::\+Image\+View\+::read\+\_\+region (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{start\+\_\+point,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{end\+\_\+point,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{offset = {\ttfamily \{0,~0,~0\}} }\end{DoxyParamCaption}) const}
+
+
+
+Read region of interest from the server. 
+
+Read all neccessary blocks intersecting with chosen region from the server and insert region into preallocated image $<$dest$>$ at $<$offset$>$.
+
+It is neccessary, that start\+\_\+point \texorpdfstring{$<$}{<} end\+\_\+point (elem-\/wise)..
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em start\+\_\+point} & smallest point of the region \\
+\hline
+{\em end\+\_\+point} & largest point of the region \\
+\hline
+{\em dest} & destination image \\
+\hline
+{\em offset} & offset to destination image \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classds_1_1_image_view_a360c1c6e6316ae6b74a79b6daa314bd6}\label{classds_1_1_image_view_a360c1c6e6316ae6b74a79b6daa314bd6}} 
+\index{ds::ImageView@{ds::ImageView}!write\_block@{write\_block}}
+\index{write\_block@{write\_block}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{write\_block()}{write\_block()}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+void ds\+::\+Image\+View\+::write\+\_\+block (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{src,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{src\+\_\+offset = {\ttfamily \{0,~0,~0\}} }\end{DoxyParamCaption}) const}
+
+
+
+Write block to server. 
+
+Write block from source image to server. The information about dimensions are fetched from the server.
+
+If in DEBUG, the function checks if coordinate given in $<$coord$>$ points to a valid block, as well as wheter the offset specified for block is within image boundaries.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em src} & Source image to collect block from \\
+\hline
+{\em coord} & Block coordinates \\
+\hline
+{\em src\+\_\+offset} & Offset of given block in source image \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classds_1_1_image_view_a43a60d764663893d8ac6b8cb48527ae7}\label{classds_1_1_image_view_a43a60d764663893d8ac6b8cb48527ae7}} 
+\index{ds::ImageView@{ds::ImageView}!write\_blocks@{write\_blocks}}
+\index{write\_blocks@{write\_blocks}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{write\_blocks()}{write\_blocks()}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+void ds\+::\+Image\+View\+::write\+\_\+blocks (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{src,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{src\+\_\+offsets }\end{DoxyParamCaption}) const}
+
+
+
+Write blocks to server. 
+
+Write blocks from source image to server. The information about dimensions are fetched from the server.
+
+If in DEBUG, the function checks if coordinates given in $<$coords$>$ points to a valid block, as well as wheter the offsets specified for each block is within image boundaries.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em src} & Source image to collect blocks from \\
+\hline
+{\em coords} & Vector of block coordinates \\
+\hline
+{\em src\+\_\+offsets} & Offsets of corresponding blocks in source image \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classds_1_1_image_view_a4f22b59ef64bff6811c9fbdce6c26a2f}\label{classds_1_1_image_view_a4f22b59ef64bff6811c9fbdce6c26a2f}} 
+\index{ds::ImageView@{ds::ImageView}!write\_image@{write\_image}}
+\index{write\_image@{write\_image}!ds::ImageView@{ds::ImageView}}
+\doxysubsubsection{\texorpdfstring{write\_image()}{write\_image()}}
+{\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
+void ds\+::\+Image\+View\+::write\+\_\+image (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{img }\end{DoxyParamCaption}) const}
+
+
+
+Write image to server. 
+
+Write full image to server.
+
+It is recommended to make sure that the dimension of the source image is the same as the dimension of image at server side.
+
+Mostly, given smaller source image will emit error and fail to upload. Given larger source image will result in cropping.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Scalar used as underlying type for image representation \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em img} & Source image \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/somik/\+CBIA/hpc-\/datastore-\/cpp/src/hpc\+\_\+ds\+\_\+api.\+hpp\end{DoxyCompactItemize}

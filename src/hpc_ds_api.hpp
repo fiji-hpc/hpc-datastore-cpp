@@ -1079,7 +1079,7 @@ Connection::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
                         int angle,
                         i3d::Vector3d<int> resolution,
                         const std::string& version) const {
-	get_view(channel, timepoint, angle, resolution, version)
+	return get_view(channel, timepoint, angle, resolution, version)
 	    .read_blocks<T>(coords);
 }
 

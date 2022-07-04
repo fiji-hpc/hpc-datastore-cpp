@@ -65,8 +65,8 @@ void phase_start(const std::string& s) {
 }
 
 template <typename T>
-bool equal_subimage(const i3d::Image3d<T> haystack,
-                    const i3d::Image3d<T> needle,
+bool equal_subimage(const i3d::Image3d<T>& haystack,
+                    const i3d::Image3d<T>& needle,
                     i3d::Vector3d<int> offset) {
 	for (std::size_t x = 0; x < needle.GetSizeX(); ++x)
 		for (std::size_t y = 0; y < needle.GetSizeY(); ++y)
@@ -77,6 +77,35 @@ bool equal_subimage(const i3d::Image3d<T> haystack,
 			}
 
 	return true;
+}
+
+template <typename T>
+void copy_to_subimage(i3d::Image3d<T>& haystack,
+                      const i3d::Image3d<T> needle,
+                      i3d::Vector3d<int> offset) {
+	for (std::size_t x = 0; x < needle.GetSizeX(); ++x)
+		for (std::size_t y = 0; y < needle.GetSizeY(); ++y)
+			for (std::size_t z = 0; z < needle.GetSizeZ(); ++z) {
+				i3d::Vector3d<std::size_t> coord{x, y, z};
+				haystack.SetVoxel(coord + offset, needle.GetVoxel(coord));
+			}
+}
+
+template <typename T>
+i3d::Image3d<T> get_subimage(const i3d::Image3d<T>& src,
+                             i3d::Vector3d<int> start,
+                             i3d::Vector3d<int> size) {
+	i3d::Image3d<T> out;
+	out.MakeRoom(size);
+
+	for (std::size_t x = 0; x < out.GetSizeX(); ++x)
+		for (std::size_t y = 0; y < out.GetSizeY(); ++y)
+			for (std::size_t z = 0; z < out.GetSizeZ(); ++z) {
+				i3d::Vector3d coord = {x, y, z};
+				out.SetVoxel(coord, src.GetVoxel(coord + start));
+			}
+
+	return out;
 }
 
 template <typename T>

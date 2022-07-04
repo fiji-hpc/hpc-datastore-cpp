@@ -65,6 +65,21 @@ void phase_start(const std::string& s) {
 }
 
 template <typename T>
+bool equal_subimage(const i3d::Image3d<T> haystack,
+                    const i3d::Image3d<T> needle,
+                    i3d::Vector3d<int> offset) {
+	for (std::size_t x = 0; x < needle.GetSizeX(); ++x)
+		for (std::size_t y = 0; y < needle.GetSizeY(); ++y)
+			for (std::size_t z = 0; z < needle.GetSizeZ(); ++z) {
+				i3d::Vector3d<std::size_t> coord{x, y, z};
+				if (haystack.GetVoxel(coord + offset) != needle.GetVoxel(coord))
+					return false;
+			}
+
+	return true;
+}
+
+template <typename T>
 bool operator==(const i3d::Image3d<T>& rhs, const i3d::Image3d<T>& lhs) {
 	if (rhs.GetSize() != lhs.GetSize())
 		return false;

@@ -4,5 +4,5 @@
 int main() {
 	auto props = ds::get_dataset_properties(SERVER_IP, SERVER_PORT, DS_UUID);
 
-	SELECT_TYPE(props.voxel_type, units::test_read_block)
+	SELECT_TYPE(props.voxel_type, units::test_block)
 };

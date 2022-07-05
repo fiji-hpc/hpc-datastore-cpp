@@ -905,6 +905,7 @@ i3d::Image3d<T> ImageView::read_region(i3d::Vector3d<int> start_point,
 	std::vector<i3d::Vector3d<int>> coords = details::get_intercepted_blocks(
 	    start_point, end_point, img_dim, block_dim);
 
+	
 	std::vector<i3d::Vector3d<int>> offsets;
 	for (auto coord : coords)
 		offsets.emplace_back(coord * block_dim - start_point);
@@ -928,7 +929,7 @@ void ImageView::read_region(i3d::Vector3d<int> start_point,
 	for (std::size_t x = 0; x < temp_img.GetSizeX(); ++x)
 		for (std::size_t y = 0; y < temp_img.GetSizeY(); ++y)
 			for (std::size_t z = 0; z < temp_img.GetSizeZ(); ++z)
-				dest.SetVoxel(i3d::Vector3d<int>(x, y, z) - offset,
+				dest.SetVoxel(x - offset.x, y - offset.y, z - offset.z,
 				              temp_img.GetVoxel({x, y, z}));
 }
 

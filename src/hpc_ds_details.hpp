@@ -434,10 +434,19 @@ void read_data(std::span<const char> data,
 
 	for (int x = 0; x < block_dim.x; ++x)
 		for (int y = 0; y < block_dim.y; ++y)
-			for (int z = 0; z < block_dim.z; ++z)
+			for (int z = 0; z < block_dim.z; ++z) {
+				i3d::Vector3d<int> coord{x + offset.x, y + offset.y,
+				                         z + offset.z};
+
+				if (!(0 <= coord.x && coord.x < int(dest.GetSizeX())) ||
+				    !(0 <= coord.y && coord.y < int(dest.GetSizeY())) ||
+				    !(0 <= coord.z && coord.z < int(dest.GetSizeZ())))
+					continue;
+
 				dest.SetVoxel(
-				    x + offset.x, y + offset.y, z + offset.z,
+				    coord,
 				    get_elem_at<T>(data, voxel_type, {x, y, z}, block_dim));
+			}
 }
 
 template <typename T>

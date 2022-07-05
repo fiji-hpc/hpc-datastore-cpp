@@ -321,7 +321,7 @@ get_intercepted_blocks(i3d::Vector3d<int> start_point,
                        i3d::Vector3d<int> end_point,
                        i3d::Vector3d<int> img_dim,
                        i3d::Vector3d<int> block_dim) {
-	assert(start_point < end_point);
+	assert(lt(start_point, end_point));
 
 	i3d::Vector3d<int> block_count = (img_dim + block_dim - 1) / block_dim;
 	std::vector<i3d::Vector3d<int>> out;
@@ -330,8 +330,8 @@ get_intercepted_blocks(i3d::Vector3d<int> start_point,
 		for (int y = 0; y < block_count.y; ++y)
 			for (int z = 0; z < block_count.z; ++z) {
 				i3d::Vector3d<int> coord = {x, y, z};
-				if (start_point < (coord + 1) * block_dim &&
-				    coord * block_dim < end_point)
+				if (lt(start_point, (coord + 1) * block_dim) &&
+				    lt(coord * block_dim, end_point))
 					out.push_back(coord);
 			}
 
@@ -440,12 +440,11 @@ void read_data(std::span<const char> data,
 
 				if (!(0 <= coord.x && coord.x < int(dest.GetSizeX())) ||
 				    !(0 <= coord.y && coord.y < int(dest.GetSizeY())) ||
-				    !(0 <= coord.z && coord.z < int(dest.GetSizeZ())))
+				    !(0 <= coord.z && coord.z < int(dest.GetSizeZ()))) 
 					continue;
 
-				dest.SetVoxel(
-				    coord,
-				    get_elem_at<T>(data, voxel_type, {x, y, z}, block_dim));
+				dest.SetVoxel(coord, get_elem_at<T>(data, voxel_type, {x, y, z},
+				                                    block_dim));
 			}
 }
 

@@ -15,9 +15,10 @@ void test_image() {
 	phase_start("Generate random images");
 	i3d::Image3d<T> random_img, view_random_img, conn_random_img;
 
-	random_img.MakeRoom(props.dimensions / IMG_RESOLUTION);
-	view_random_img.MakeRoom(props.dimensions / IMG_RESOLUTION);
-	conn_random_img.MakeRoom(props.dimensions / IMG_RESOLUTION);
+	auto img_dim = props.get_img_dimensions(IMG_RESOLUTION);
+	random_img.MakeRoom(img_dim);
+	view_random_img.MakeRoom(img_dim);
+	conn_random_img.MakeRoom(img_dim);
 
 	fill_random(random_img);
 	fill_random(view_random_img);
@@ -37,7 +38,8 @@ void test_image() {
 		auto got = ds::read_image<T>(SERVER_IP, SERVER_PORT, DS_UUID,
 		                             IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE,
 		                             IMG_RESOLUTION, IMG_VERSION);
-		assert(random_img == got);
+
+		assert(random_img == got);   
 	}
 	phase_ok();
 

@@ -13,6 +13,19 @@
 #include <string>
 #include <vector>
 
+template <typename T, typename U>
+bool lt(i3d::Vector3d<T> lhs, i3d::Vector3d<U> rhs) {
+	return lhs.x < rhs.x && lhs.y < rhs.y && lhs.z < rhs.z;
+}
+
+template <typename T, typename U>
+bool eq(i3d::Vector3d<T> lhs, i3d::Vector3d<U> rhs) {
+	for (int i = 0; i < 3; ++i)
+		if (static_cast<long long>(lhs[i]) != static_cast<long long>(rhs[i]))
+			return false;
+	return true;
+}
+
 namespace ds {
 
 using i3d::SamplingMode;
@@ -199,6 +212,10 @@ class DatasetProperties {
 		i3d::Vector3d<int> block_dim = get_block_dimensions(resolution);
 
 		return (dimensions + block_dim - 1) / block_dim;
+	}
+
+	i3d::Vector3d<int> get_img_dimensions(i3d::Vector3d<int> resolution) {
+		return dimensions / resolution;
 	}
 
 	friend std::ostream& operator<<(std::ostream& stream,

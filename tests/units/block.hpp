@@ -24,7 +24,7 @@ void test_block() {
 	phase_start("Generate random image");
 
 	i3d::Image3d<T> random_img;
-	random_img.MakeRoom(props.dimensions / IMG_RESOLUTION);
+	random_img.MakeRoom(props.get_img_dimensions(IMG_RESOLUTION));
 	fill_random(random_img);
 
 	phase_ok();

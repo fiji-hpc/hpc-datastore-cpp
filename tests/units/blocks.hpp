@@ -47,7 +47,7 @@ void test_blocks() {
 
 	auto fill_image = [&](auto& img, const auto& blocks, auto& offsets) {
 		auto block_dim = props.get_block_dimensions(IMG_RESOLUTION);
-		img.MakeRoom(props.dimensions / IMG_RESOLUTION);
+		img.MakeRoom(props.get_img_dimensions(IMG_RESOLUTION));
 
 		for (std::size_t i = 0; i < shuffled.size(); ++i) {
 			auto offset = shuffled[i] * block_dim;

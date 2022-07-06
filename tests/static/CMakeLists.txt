@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.18)
 project(HPC_Datastore_unit_tests CXX)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wconversion -fmax-errors=1 -g -O2 -static-libgcc -static-libstdc++")
-set(CMAKE_CXX_COMPILER g++)
+set(CMAKE_CXX_COMPILER g++-11)
 set(CMAKE_CXX_STANDARD 20)
 
 # disable info message print
@@ -83,11 +83,11 @@ set(LIBS ${LIBS} rxspencer)
 # set(LIBS ${LIBS} "${CMAKE_SOURCE_DIR}/libs/src-core/libi3core.a" "${CMAKE_SOURCE_DIR}/libs/src/libi3dalgo.a")
 
 add_executable(unit_tests "../units/main.cpp")
-target_link_libraries(unit_tests "${CMAKE_SOURCE_DIR}/libs/src-core/libi3dcore.a" "${CMAKE_SOURCE_DIR}/libs/src/libi3dalgo.a" ${LIBS})
+target_link_libraries(unit_tests "${CMAKE_SOURCE_DIR}/libs/libi3dcore.a" "${CMAKE_SOURCE_DIR}/libs/libi3dalgo.a" ${LIBS})
 
 foreach(PROJ read_blocks read_image write_blocks write_image)
     add_executable("${PROJ}" "../speeds/${PROJ}.cpp")
-    target_link_libraries("${PROJ}" "${CMAKE_SOURCE_DIR}/libs/src-core/libi3dcore.a" "${CMAKE_SOURCE_DIR}/libs/src/libi3dalgo.a" ${LIBS})
+    target_link_libraries("${PROJ}" "${CMAKE_SOURCE_DIR}/libs/libi3dcore.a" "${CMAKE_SOURCE_DIR}/libs/libi3dalgo.a" ${LIBS})
     set_target_properties("${PROJ}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/speeds")
 endforeach()
 

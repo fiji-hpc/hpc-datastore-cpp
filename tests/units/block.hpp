@@ -120,8 +120,8 @@ void test_block() {
 
 	phase_start("Read location");
 
+	view.write_image(random_img);
 	{
-	    view.write_image(random_img);
 	    i3d::Vector3d<int> block_dim =
 	        props.get_block_dimensions(IMG_RESOLUTION);
 

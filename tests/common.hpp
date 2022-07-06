@@ -125,13 +125,7 @@ bool operator==(const i3d::Image3d<T>& rhs, const i3d::Image3d<T>& lhs) {
 		func<uint8_t>();                                                       \
 	else if (type == "uint16")                                                 \
 		func<uint16_t>();                                                      \
-	else if (type == "uint64")                                                 \
-		func<uint64_t>();                                                      \
-	else if (type == "int32")                                                  \
-		func<int32_t>();                                                       \
 	else if (type == "float32")                                                \
 		func<float>();                                                         \
-	else if (type == "float64")                                                \
-		func<double>();                                                        \
 	else                                                                       \
 		std::cout << "Image type is not supported !! \n";

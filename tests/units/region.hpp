@@ -60,9 +60,9 @@ void test_region() {
 	ds::Connection conn(SERVER_IP, SERVER_PORT, DS_UUID);
 	ds::ImageView view(SERVER_IP, SERVER_PORT, DS_UUID, IMG_CHANNEL,
 	                   IMG_TIMEPOINT, IMG_ANGLE, IMG_RESOLUTION, IMG_VERSION);
-
+	/*
 	phase_start("Region matching image");
-	
+
 	view.write_image(random_img);
 	{
 
@@ -88,11 +88,11 @@ void test_region() {
 	    view.read_region({0, 0, 0}, random_img.GetSize(), view_got, {0, 0, 0});
 	    assert(view_got == random_img);
 	}
-	
+
 	phase_ok();
 
 	phase_start("Region matching block");
-	
+
 	view.write_image(random_img);
 	{
 
@@ -126,69 +126,164 @@ void test_region() {
 	    assert(view_img == random_img);
 	    assert(conn_img == random_img);
 	}
-	
-	phase_ok();
 
+	phase_ok();
+	*/
 	phase_start("In block region");
-	// TODO
-	phase_ok();
-
-	phase_start("Accross block region");
-	// TODO
-	phase_ok();
-
-	phase_start("Random region");
 
 	view.write_image(random_img);
 	{
-		std::mt19937_64 gen(std::random_device{}());
-		i3d::Vector3d<int> img_dim = props.get_img_dimensions(IMG_RESOLUTION);
+		auto block_size = props.get_block_size({0, 0, 0}, IMG_RESOLUTION);
+		i3d::Vector3d<int> diff = {1, 1, 1};
 
-		std::vector dists = {
-		    std::uniform_int_distribution<>(0, img_dim.x - 1),
-		    std::uniform_int_distribution<>(0, img_dim.y - 1),
-		    std::uniform_int_distribution<>(0, img_dim.z - 1),
-		};
+		i3d::Vector3d<int> start{0, 0, 0};
+		i3d::Vector3d<int> end = block_size;
+		bool toggle = false;
 
-		auto get_region =
-		    [&]() -> std::pair<i3d::Vector3d<int>, i3d::Vector3d<int>> {
-			i3d::Vector3d<int> start, end;
+		while (lt(start, end)) {
+			auto view_reg = view.read_region<T>(start, end);
+			auto conn_reg =
+			    conn.read_region<T>(start, end, IMG_CHANNEL, IMG_TIMEPOINT,
+			                        IMG_ANGLE, IMG_RESOLUTION, IMG_VERSION);
 
-			do {
-				for (int i = 0; i < 3; ++i) {
-					start[i] = dists[i](gen);
-					end[i] = dists[i](gen);
-				}
-			} while (!lt(start, end));
+			auto view_cpy = view_reg;
+			auto conn_cpy = conn_reg;
 
-			return {start, end};
-		};
+			view_cpy.SetAllVoxels(0);
+			conn_cpy.SetAllVoxels(0);
 
-		const std::size_t RANDOM_COUNT = 20;
-		for (std::size_t n = 0; n < RANDOM_COUNT; ++n) {
-			auto [s, e] = get_region();
-			auto view_got = view.read_region<T>(s, e);
-			assert(eq(view_got.GetSize(), e - s));
-			assert(equal_subimage(random_img, view_got, s));
-
-			view_got.SetAllVoxels(0);
-			view.read_region(s, e, view_got);
-			assert(equal_subimage(random_img, view_got, s));
-
-			auto conn_got =
-			    conn.read_region<T>(s, e, IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE,
-			                        IMG_RESOLUTION, IMG_VERSION);
-			assert(eq(conn_got.GetSize(), e - s));
-			assert(equal_subimage(random_img, conn_got, s));
-
-			conn_got.SetAllVoxels(0);
-			conn.read_region(s, e, conn_got, {0, 0, 0}, IMG_CHANNEL,
+			view.read_region(start, end, view_cpy);
+			conn.read_region(start, end, conn_cpy, {0, 0, 0}, IMG_CHANNEL,
 			                 IMG_TIMEPOINT, IMG_ANGLE, IMG_RESOLUTION,
 			                 IMG_VERSION);
-			assert(equal_subimage(random_img, conn_got, s));
+
+			auto reg_dim = end - start;
+
+			assert(eq(view_reg.GetSize(), reg_dim));
+			assert(equal_subimage(random_img, view_reg, start));
+
+			assert(view_reg == view_cpy);
+			assert(view_reg == conn_reg);
+			assert(view_reg == conn_cpy);
+
+			switch (toggle) {
+			case false:
+				start += diff;
+				break;
+			case true:
+				end -= diff;
+				break;
+			}
+
+			toggle = !toggle;
 		}
 	}
 
+	phase_ok();
+
+	phase_start("Accross block region");
+	{
+		auto img_size = props.get_img_dimensions(IMG_RESOLUTION);
+		i3d::Vector3d<int> diff = {10, 10, 10};
+
+		i3d::Vector3d<int> start{0, 0, 0};
+		i3d::Vector3d<int> end = img_size;
+		bool toggle = false;
+
+		while (lt(start, end)) {
+			auto view_reg = view.read_region<T>(start, end);
+			auto conn_reg =
+			    conn.read_region<T>(start, end, IMG_CHANNEL, IMG_TIMEPOINT,
+			                        IMG_ANGLE, IMG_RESOLUTION, IMG_VERSION);
+
+			auto view_cpy = view_reg;
+			auto conn_cpy = conn_reg;
+
+			view_cpy.SetAllVoxels(0);
+			conn_cpy.SetAllVoxels(0);
+
+			view.read_region(start, end, view_cpy);
+			conn.read_region(start, end, conn_cpy, {0, 0, 0}, IMG_CHANNEL,
+			                 IMG_TIMEPOINT, IMG_ANGLE, IMG_RESOLUTION,
+			                 IMG_VERSION);
+
+			auto reg_dim = end - start;
+
+			assert(eq(view_reg.GetSize(), reg_dim));
+			assert(equal_subimage(random_img, view_reg, start));
+
+			assert(view_reg == view_cpy);
+			assert(view_reg == conn_reg);
+			assert(view_reg == conn_cpy);
+
+			switch (toggle) {
+			case false:
+				start += diff;
+				break;
+			case true:
+				end -= diff;
+				break;
+			}
+
+			toggle = !toggle;
+		}
+	}
+
+	phase_ok();
+
+	phase_start("Random region");
+	/*
+	    view.write_image(random_img);
+	    {
+	        std::mt19937_64 gen(std::random_device{}());
+	        i3d::Vector3d<int> img_dim =
+	   props.get_img_dimensions(IMG_RESOLUTION);
+
+	        std::vector dists = {
+	            std::uniform_int_distribution<>(0, img_dim.x - 1),
+	            std::uniform_int_distribution<>(0, img_dim.y - 1),
+	            std::uniform_int_distribution<>(0, img_dim.z - 1),
+	        };
+
+	        auto get_region =
+	            [&]() -> std::pair<i3d::Vector3d<int>, i3d::Vector3d<int>> {
+	            i3d::Vector3d<int> start, end;
+
+	            do {
+	                for (int i = 0; i < 3; ++i) {
+	                    start[i] = dists[i](gen);
+	                    end[i] = dists[i](gen);
+	                }
+	            } while (!lt(start, end));
+
+	            return {start, end};
+	        };
+
+	        const std::size_t RANDOM_COUNT = 20;
+	        for (std::size_t n = 0; n < RANDOM_COUNT; ++n) {
+	            auto [s, e] = get_region();
+	            auto view_got = view.read_region<T>(s, e);
+	            assert(eq(view_got.GetSize(), e - s));
+	            assert(equal_subimage(random_img, view_got, s));
+
+	            view_got.SetAllVoxels(0);
+	            view.read_region(s, e, view_got);
+	            assert(equal_subimage(random_img, view_got, s));
+
+	            auto conn_got =
+	                conn.read_region<T>(s, e, IMG_CHANNEL, IMG_TIMEPOINT,
+	   IMG_ANGLE, IMG_RESOLUTION, IMG_VERSION);
+	   assert(eq(conn_got.GetSize(), e
+	   - s)); assert(equal_subimage(random_img, conn_got, s));
+
+	            conn_got.SetAllVoxels(0);
+	            conn.read_region(s, e, conn_got, {0, 0, 0}, IMG_CHANNEL,
+	                             IMG_TIMEPOINT, IMG_ANGLE, IMG_RESOLUTION,
+	                             IMG_VERSION);
+	            assert(equal_subimage(random_img, conn_got, s));
+	        }
+	    }
+	*/
 	phase_ok();
 
 	test_ok();

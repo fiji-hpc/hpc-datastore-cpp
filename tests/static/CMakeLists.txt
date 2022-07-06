@@ -24,6 +24,3 @@ set(LIBS ${LIBS} i3dcore i3dalgo)
 
 add_executable(unit_tests "main.cpp")
 target_link_libraries(unit_tests PRIVATE ${LIBS})
-
-
-

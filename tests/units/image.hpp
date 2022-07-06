@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common.hpp"
+#include <i3d/transform.h>
 #include <iostream>
 
 namespace units {
@@ -39,7 +40,7 @@ void test_image() {
 		                             IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE,
 		                             IMG_RESOLUTION, IMG_VERSION);
 
-		assert(random_img == got);   
+		assert(random_img == got);
 	}
 	phase_ok();
 
@@ -61,6 +62,61 @@ void test_image() {
 		view.write_image(view_random_img);
 		auto view_got = view.read_image<T>();
 		assert(view_random_img == view_got);
+	}
+
+	phase_ok();
+
+	phase_start("Write with pyramids");
+
+	{
+		std::vector<ds::SamplingMode> modes = {
+		    // ds::SamplingMode::LANCZOS, ds::SamplingMode::LINEAR, <--- not
+		    // suported by i3d
+		    ds::SamplingMode::NEAREST_NEIGHBOUR};
+
+		for (auto& mode : modes) {
+			fill_random(random_img);
+			ds::write_with_pyramids(random_img, SERVER_IP, SERVER_PORT, DS_UUID,
+			                        IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE,
+			                        IMG_VERSION, mode);
+
+			for (auto& resolution : props.get_all_resolutions()) {
+				i3d::Image3d<T> cpy;
+				i3d::Resample(random_img, cpy,
+				              props.get_img_dimensions(resolution), mode);
+
+				assert(cpy == conn.read_image<T>(IMG_CHANNEL, IMG_TIMEPOINT,
+				                                 IMG_ANGLE, resolution,
+				                                 IMG_VERSION));
+			}
+		}
+	}
+
+	phase_ok();
+
+	phase_start("Write with pyramids using Connection");
+
+	{
+
+		std::vector<ds::SamplingMode> modes = {
+		    // ds::SamplingMode::LANCZOS, ds::SamplingMode::LINEAR, <--- not
+		    // suported by i3d
+		    ds::SamplingMode::NEAREST_NEIGHBOUR};
+
+		for (auto& mode : modes) {
+			fill_random(random_img);
+			conn.write_with_pyramids(random_img, IMG_CHANNEL, IMG_TIMEPOINT,
+			                         IMG_ANGLE, IMG_VERSION, mode);
+
+			for (auto& resolution : props.get_all_resolutions()) {
+				i3d::Image3d<T> cpy;
+				i3d::Resample(random_img, cpy, resolution, mode);
+
+				assert(cpy == conn.read_image<T>(IMG_CHANNEL, IMG_TIMEPOINT,
+				                                 IMG_ANGLE, resolution,
+				                                 IMG_VERSION));
+			}
+		}
 	}
 
 	phase_ok();

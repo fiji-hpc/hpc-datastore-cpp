@@ -1186,8 +1186,8 @@ void Connection::write_with_pyramids(const i3d::Image3d<T>& img,
 			continue;
 
 		i3d::Vector3d<int> new_dim = props.dimensions / res;
-		i3d::Image3d<T> cpy = img;
-		i3d::ResampleToDesiredResolution(cpy, new_dim, m);
+		i3d::Image3d<T> cpy;
+		i3d::Resample(img, cpy, new_dim, m);
 		write_image(cpy, channel, timepoint, angle, res, version);
 	}
 }

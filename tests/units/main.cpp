@@ -1,8 +1,8 @@
 #include "../../src/hpc_ds_api.hpp"
 #include "block.hpp"
 #include "blocks.hpp"
-#include "region.hpp"
 #include "image.hpp"
+#include "region.hpp"
 
 int main() {
 	auto props = ds::get_dataset_properties(SERVER_IP, SERVER_PORT, DS_UUID);

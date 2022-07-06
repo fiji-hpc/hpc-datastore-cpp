@@ -44,7 +44,7 @@ I recommend using [vcpkg](https://github.com/microsoft/vcpkg) to fetch necessary
 (all samples are written with **vcpkg** in mind).
 
 #### 2.1.1 I3Dlib
-However, as the **i3dlib** is not available from **vcpkg** repositories, you will have to download, build and install library from [official website](https://cbia.fi.muni.cz/software/i3d-library.html). For this particular project, *i3dcore* part of the library is sufficient, though you may want to customize used image compression libraries to enable/disable certain image formats. 
+However, as the **i3dlib** is not available from **vcpkg** repositories, you will have to download, build and install library from [official website](https://cbia.fi.muni.cz/software/i3d-library.html). For this particular project, *i3dcore* part of the library is sufficient for most of the functionality, though you may want to customize used image compression libraries to enable/disable certain image formats. The *i3dalgo* is used only for `write_with_pyramids` (function is templated, so if you will not use it, it will compile fine even without *i3dalgo*).
 (If you do not want mess with anything, simple *make build* and *sudo make install* should be enough, assuming all neccessary dependencies are installed on your system).
 
 #### 2.1.2 VCPKG
@@ -79,9 +79,6 @@ Disables info messages
 
 Disables warning messages
 
-* **DATASTORE_ERROR**
-
-Disables error messages
 
 See samples for an example.
 

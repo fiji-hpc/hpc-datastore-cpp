@@ -31,7 +31,7 @@ void test_image() {
 	ds::ImageView view(SERVER_IP, SERVER_PORT, DS_UUID, IMG_CHANNEL,
 	                   IMG_TIMEPOINT, IMG_ANGLE, IMG_RESOLUTION, IMG_VERSION);
 
-	/*
+	
 	phase_start("Read/Write image");
 	{
 	    ds::write_image(random_img, SERVER_IP, SERVER_PORT, DS_UUID,
@@ -66,7 +66,7 @@ void test_image() {
 	}
 
 	phase_ok();
-	*/
+	
 	phase_start("Write with pyramids");
 
 	{

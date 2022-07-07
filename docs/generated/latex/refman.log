@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.10)  7 JUL 2022 14:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.10)  7 JUL 2022 16:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1005,11 +1005,9 @@ Underfull \hbox (badness 10000) detected at line 277
 Chapter 4.
 (./hpc__ds__api_8hpp_source.tex [27
 
-] [28] [29] [30] [31] [32] [33] [34])
-(./hpc__ds__details_8hpp_source.tex [35] [36] [37] [38] [39] [40] [41])
-(./hpc__ds__structs_8hpp_source.tex [42] [43] [44]) [45] [46
-
-] (./refman.ind
+] [28] [29] [30] [31] [32] [33] [34]
+[35]) (./hpc__ds__details_8hpp_source.tex [36] [37] [38] [39] [40] [41]
+[42]) (./hpc__ds__structs_8hpp_source.tex [43] [44] [45]) [46] (./refman.ind
 Overfull \hbox (23.83827pt too wide) in paragraph at lines 5--7
 []\T1/phv/m/n/10 /home/somik/CBIA/hpc-datastore-cpp/src/hpc_ds_details.hpp,
  []
@@ -1020,6 +1018,7 @@ Overfull \hbox (24.46822pt too wide) in paragraph at lines 7--9
  []
 
 [47
+
 
 
 ]) (./refman.aux)
@@ -1045,7 +1044,7 @@ e/2022/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></opt/texlive/2022/texmf-
 dist/fonts/type1/urw/helvetic/uhvb8ac.pfb></opt/texlive/2022/texmf-dist/fonts/t
 ype1/urw/helvetic/uhvr8a.pfb></opt/texlive/2022/texmf-dist/fonts/type1/urw/helv
 etic/uhvro8a.pfb>
-Output written on refman.pdf (51 pages, 208608 bytes).
+Output written on refman.pdf (51 pages, 209711 bytes).
 PDF statistics:
  895 PDF objects out of 1000 (max. 8388607)
  807 compressed objects within 9 object streams

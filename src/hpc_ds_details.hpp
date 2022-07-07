@@ -440,7 +440,7 @@ void read_data(std::span<const char> data,
 
 				if (!(0 <= coord.x && coord.x < int(dest.GetSizeX())) ||
 				    !(0 <= coord.y && coord.y < int(dest.GetSizeY())) ||
-				    !(0 <= coord.z && coord.z < int(dest.GetSizeZ()))) 
+				    !(0 <= coord.z && coord.z < int(dest.GetSizeZ())))
 					continue;
 
 				dest.SetVoxel(coord, get_elem_at<T>(data, voxel_type, {x, y, z},

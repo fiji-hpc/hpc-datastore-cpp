@@ -4,6 +4,7 @@
 #include <fmt/core.h>
 #include <i3d/image3d.h>
 #include <i3d/transform.h>
+#include <memory>
 #include <string>
 #include <type_traits>
 #include <vector>
@@ -21,7 +22,7 @@ namespace ds {
  * @param uuid Unique identifier of dataset
  * @return DatasetProperties
  */
-inline DatasetProperties get_dataset_properties(const std::string& ip,
+inline dataset_props_ptr get_dataset_properties(const std::string& ip,
                                                 int port,
                                                 const std::string& uuid);
 
@@ -54,7 +55,8 @@ i3d::Image3d<T> read_image(const std::string& ip,
                            int timepoint = 0,
                            int angle = 0,
                            i3d::Vector3d<int> resolution = {1, 1, 1},
-                           const std::string& version = "latest");
+                           const std::string& version = "latest",
+                           dataset_props_ptr props = nullptr);
 
 /**
  * @brief Write full image
@@ -82,7 +84,8 @@ void write_image(const i3d::Image3d<T>& img,
                  int timepoint = 0,
                  int angle = 0,
                  i3d::Vector3d<int> resolution = {1, 1, 1},
-                 const std::string version = "latest");
+                 const std::string version = "latest",
+                 dataset_props_ptr props = nullptr);
 
 /**
  * @brief Write full image and generate pyramids
@@ -113,7 +116,8 @@ void write_with_pyramids(const i3d::Image3d<T>& img,
                          int timepoint = 0,
                          int angle = 0,
                          const std::string& version = "latest",
-                         SamplingMode m = SamplingMode::NEAREST_NEIGHBOUR);
+                         SamplingMode m = SamplingMode::NEAREST_NEIGHBOUR,
+                         dataset_props_ptr props = nullptr);
 
 /**
  * @brief Representation of connection to specific image
@@ -154,7 +158,7 @@ class ImageView {
 	 *
 	 * @return DatasetProperties
 	 */
-	DatasetProperties get_properties() const;
+	dataset_props_ptr get_properties() const;
 
 	/**
 	 * @brief Read one block from server
@@ -173,7 +177,8 @@ class ImageView {
 	 * @return Image containing selected block
 	 */
 	template <cnpts::Scalar T>
-	i3d::Image3d<T> read_block(i3d::Vector3d<int> coord) const;
+	i3d::Image3d<T> read_block(i3d::Vector3d<int> coord,
+	                           dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Read one block from server to image
@@ -194,7 +199,8 @@ class ImageView {
 	template <cnpts::Scalar T>
 	void read_block(i3d::Vector3d<int> coord,
 	                i3d::Image3d<T>& dest,
-	                i3d::Vector3d<int> dest_offset = {0, 0, 0}) const;
+	                i3d::Vector3d<int> dest_offset = {0, 0, 0},
+	                dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Read blocks from server and return them
@@ -223,7 +229,8 @@ class ImageView {
 	 */
 	template <cnpts::Scalar T>
 	std::vector<i3d::Image3d<T>>
-	read_blocks(const std::vector<i3d::Vector3d<int>>& coords) const;
+	read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
+	            dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Read blocks from server and saves them into prealocated image
@@ -242,7 +249,8 @@ class ImageView {
 	template <cnpts::Scalar T>
 	void read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	                 i3d::Image3d<T>& dest,
-	                 const std::vector<i3d::Vector3d<int>>& offsets) const;
+	                 const std::vector<i3d::Vector3d<int>>& offsets,
+	                 dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Read region of interest from the server
@@ -257,7 +265,8 @@ class ImageView {
 	 */
 	template <cnpts::Scalar T>
 	i3d::Image3d<T> read_region(i3d::Vector3d<int> start_point,
-	                            i3d::Vector3d<int> end_point) const;
+	                            i3d::Vector3d<int> end_point,
+	                            dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Read region of interest from the server
@@ -277,7 +286,8 @@ class ImageView {
 	void read_region(i3d::Vector3d<int> start_point,
 	                 i3d::Vector3d<int> end_point,
 	                 i3d::Image3d<T>& dest,
-	                 i3d::Vector3d<int> offset = {0, 0, 0}) const;
+	                 i3d::Vector3d<int> offset = {0, 0, 0},
+	                 dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Read full image
@@ -292,7 +302,7 @@ class ImageView {
 	 * @return i3d::Image3d<T> Fetched image
 	 */
 	template <cnpts::Scalar T>
-	i3d::Image3d<T> read_image() const;
+	i3d::Image3d<T> read_image(dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Write block to server
@@ -312,7 +322,8 @@ class ImageView {
 	template <cnpts::Scalar T>
 	void write_block(const i3d::Image3d<T>& src,
 	                 i3d::Vector3d<int> coord,
-	                 i3d::Vector3d<int> src_offset = {0, 0, 0}) const;
+	                 i3d::Vector3d<int> src_offset = {0, 0, 0},
+	                 dataset_props_ptr props = nullptr) const;
 	/**
 	 * @brief Write blocks to server
 	 *
@@ -331,7 +342,8 @@ class ImageView {
 	template <cnpts::Scalar T>
 	void write_blocks(const i3d::Image3d<T>& src,
 	                  const std::vector<i3d::Vector3d<int>>& coords,
-	                  const std::vector<i3d::Vector3d<int>>& src_offsets) const;
+	                  const std::vector<i3d::Vector3d<int>>& src_offsets,
+	                  dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Write image to server
@@ -348,7 +360,8 @@ class ImageView {
 	 * @param img Source image
 	 */
 	template <cnpts::Scalar T>
-	void write_image(const i3d::Image3d<T>& img) const;
+	void write_image(const i3d::Image3d<T>& img,
+	                 dataset_props_ptr props = nullptr) const;
 
   private:
 	std::string _ip;
@@ -407,7 +420,7 @@ class Connection {
 	 *
 	 * @return DatasetProperties
 	 */
-	DatasetProperties get_properties() const;
+	dataset_props_ptr get_properties() const;
 
 	/**
 	 * @brief Read one block from server to image
@@ -435,7 +448,8 @@ class Connection {
 	                           int timepoint,
 	                           int angle,
 	                           i3d::Vector3d<int> resolution,
-	                           const std::string& version) const;
+	                           const std::string& version,
+	                           dataset_props_ptr props = nullptr) const;
 	/**
 	 * @brief Read one block from server to image
 	 *
@@ -466,7 +480,8 @@ class Connection {
 	                int timepoint,
 	                int angle,
 	                i3d::Vector3d<int> resolution,
-	                const std::string& version) const;
+	                const std::string& version,
+	                dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Read blocks from server and return them
@@ -506,7 +521,8 @@ class Connection {
 	            int timepoint,
 	            int angle,
 	            i3d::Vector3d<int> resolution,
-	            const std::string& version) const;
+	            const std::string& version,
+	            dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Read blocks from server and saves them into prealocated image
@@ -538,7 +554,8 @@ class Connection {
 	                 int timepoint,
 	                 int angle,
 	                 i3d::Vector3d<int> resolution,
-	                 const std::string& version) const;
+	                 const std::string& version,
+	                 dataset_props_ptr props = nullptr) const;
 	/**
 	 * @brief Read region of interest from the server
 	 *
@@ -563,7 +580,8 @@ class Connection {
 	                            int timepoint,
 	                            int angle,
 	                            i3d::Vector3d<int> resolution,
-	                            const std::string& version) const;
+	                            const std::string& version,
+	                            dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Read region of interest from the server
@@ -594,7 +612,8 @@ class Connection {
 	                 int timepoint,
 	                 int angle,
 	                 i3d::Vector3d<int> resolution,
-	                 const std::string& version) const;
+	                 const std::string& version,
+	                 dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Read full image
@@ -619,7 +638,8 @@ class Connection {
 	                           int timepoint,
 	                           int angle,
 	                           i3d::Vector3d<int> resolution,
-	                           const std::string& version) const;
+	                           const std::string& version,
+	                           dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Write block to server
@@ -650,7 +670,8 @@ class Connection {
 	                 int timepoint,
 	                 int angle,
 	                 i3d::Vector3d<int> resolution,
-	                 const std::string& version) const;
+	                 const std::string& version,
+	                 dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Write blocks to server
@@ -681,7 +702,8 @@ class Connection {
 	                  int timepoint,
 	                  int angle,
 	                  i3d::Vector3d<int> resolution,
-	                  const std::string& version) const;
+	                  const std::string& version,
+	                  dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Write image to server
@@ -709,7 +731,8 @@ class Connection {
 	                 int timepoint,
 	                 int angle,
 	                 i3d::Vector3d<int> resolution,
-	                 const std::string& version) const;
+	                 const std::string& version,
+	                 dataset_props_ptr props = nullptr) const;
 
 	/**
 	 * @brief Write full image and generate pyramids
@@ -736,7 +759,8 @@ class Connection {
 	                         int timepoint,
 	                         int angle,
 	                         const std::string& version,
-	                         SamplingMode m) const;
+	                         SamplingMode m,
+	                         dataset_props_ptr props = nullptr) const;
 
   private:
 	std::string _ip;
@@ -750,11 +774,12 @@ class Connection {
 
 namespace ds {
 /* ===================================== Global space */
-/* inline */ DatasetProperties get_dataset_properties(const std::string& ip,
+/* inline */ dataset_props_ptr get_dataset_properties(const std::string& ip,
                                                       int port,
                                                       const std::string& uuid) {
 	std::string dataset_url = details::get_dataset_url(ip, port, uuid);
-	return details::get_dataset_properties(dataset_url);
+	return std::make_shared<DatasetProperties>(
+	    details::get_dataset_properties(dataset_url));
 }
 
 template <cnpts::Scalar T>
@@ -765,10 +790,11 @@ i3d::Image3d<T> read_image(const std::string& ip,
                            int timepoint /*  = 0 */,
                            int angle /* = 0 */,
                            i3d::Vector3d<int> resolution /* = {1, 1, 1} */,
-                           const std::string& version /* = "latest" */) {
+                           const std::string& version /* = "latest" */,
+                           dataset_props_ptr props /* = nullptr */) {
 	return ImageView(ip, port, uuid, channel, timepoint, angle, resolution,
 	                 version)
-	    .read_image<T>();
+	    .read_image<T>(props);
 }
 
 template <cnpts::Scalar T>
@@ -780,24 +806,25 @@ void write_image(const i3d::Image3d<T>& img,
                  int timepoint /* = 0 */,
                  int angle /* = 0 */,
                  i3d::Vector3d<int> resolution /*  = {1, 1, 1} */,
-                 const std::string version /* = "latest" */) {
+                 const std::string version /* = "latest" */,
+                 dataset_props_ptr props /* = nullptr */) {
 	ImageView(ip, port, uuid, channel, timepoint, angle, resolution, version)
-	    .write_image(img);
+	    .write_image(img, props);
 }
 
 template <cnpts::Scalar T>
-void write_with_pyramids(
-    const i3d::Image3d<T>& img,
-    const std::string& ip,
-    int port,
-    const std::string& uuid,
-    int channel /* = 0 */,
-    int timepoint /* = 0 */,
-    int angle /* = 0 */,
-    const std::string& version /* = "latest"*/,
-    SamplingMode m /* = SamplingMode::NEAREST_NEIGHBOUR */) {
+void write_with_pyramids(const i3d::Image3d<T>& img,
+                         const std::string& ip,
+                         int port,
+                         const std::string& uuid,
+                         int channel /* = 0 */,
+                         int timepoint /* = 0 */,
+                         int angle /* = 0 */,
+                         const std::string& version /* = "latest"*/,
+                         SamplingMode m /* = SamplingMode::NEAREST_NEIGHBOUR */,
+                         dataset_props_ptr props /* = nullptr */) {
 	Connection(ip, port, uuid)
-	    .write_with_pyramids(img, channel, timepoint, angle, version, m);
+	    .write_with_pyramids(img, channel, timepoint, angle, version, m, props);
 }
 
 /* ===================================== ImageView */
@@ -814,20 +841,24 @@ ImageView::ImageView(std::string ip,
       _channel(channel), _timepoint(timepoint), _angle(angle),
       _resolution(resolution), _version(std::move(version)) {}
 
-DatasetProperties ImageView::get_properties() const {
+dataset_props_ptr ImageView::get_properties() const {
 	return get_dataset_properties(_ip, _port, _uuid);
 }
 
 template <cnpts::Scalar T>
-i3d::Image3d<T> ImageView::read_block(i3d::Vector3d<int> coord) const {
+i3d::Image3d<T>
+ImageView::read_block(i3d::Vector3d<int> coord,
+                      dataset_props_ptr props /* = nullptr */) const {
 	/* Fetch properties from server */
-	DatasetProperties props = get_properties();
-	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
+	if (!props)
+		props = get_properties();
+
+	i3d::Vector3d<int> block_dim = props->get_block_dimensions(_resolution);
 
 	/* Prepare output image */
 	i3d::Image3d<T> img;
 	i3d::Vector3d<int> block_size = details::data_manip::get_block_size(
-	    coord, block_dim, props.dimensions / _resolution);
+	    coord, block_dim, props->get_img_dimensions(_resolution));
 	img.MakeRoom(block_size);
 
 	/* Fetch and return */
@@ -836,16 +867,20 @@ i3d::Image3d<T> ImageView::read_block(i3d::Vector3d<int> coord) const {
 }
 
 template <cnpts::Scalar T>
-void ImageView::read_block(
-    i3d::Vector3d<int> coord,
-    i3d::Image3d<T>& dest,
-    i3d::Vector3d<int> dest_offset /*  = {0, 0, 0} */) const {
-	read_blocks({coord}, dest, {dest_offset});
+void ImageView::read_block(i3d::Vector3d<int> coord,
+                           i3d::Image3d<T>& dest,
+                           i3d::Vector3d<int> dest_offset /*  = {0, 0, 0} */,
+                           dataset_props_ptr props /* = nullptr */) const {
+	read_blocks({coord}, dest, {dest_offset}, props);
 }
 
 template <cnpts::Scalar T>
 std::vector<i3d::Image3d<T>>
-ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords) const {
+ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
+                       dataset_props_ptr props /* = nullptr */) const {
+	if (!props)
+		props = get_properties();
+
 	/* Process blocks one by one */
 	std::vector<i3d::Image3d<T>> out;
 	for (auto coord : coords)
@@ -856,17 +891,20 @@ ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords) const {
 
 // TODO optimise
 template <cnpts::Scalar T>
-void ImageView::read_blocks(
-    const std::vector<i3d::Vector3d<int>>& coords,
-    i3d::Image3d<T>& dest,
-    const std::vector<i3d::Vector3d<int>>& offsets) const {
+void ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
+                            i3d::Image3d<T>& dest,
+                            const std::vector<i3d::Vector3d<int>>& offsets,
+                            dataset_props_ptr props /* = nullptr */
+) const {
+
+	if (!props)
+		props = get_properties();
 
 	/* Fetched properties from server */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
-	DatasetProperties props = get_properties();
-	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
+	i3d::Vector3d<int> block_dim = props->get_block_dimensions(_resolution);
 
-	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
+	i3d::Vector3d<int> img_dim = props->get_img_dimensions(_resolution);
 
 	if (coords.size() != offsets.size())
 		throw std::logic_error("Count of coordinates != count of offsets");
@@ -891,16 +929,20 @@ void ImageView::read_blocks(
 		                coord.z, _timepoint, _channel, _angle);
 		auto [data, response] = details::requests::make_request(url);
 
-		details::data_manip::read_data(data, props.voxel_type, dest, offset);
+		details::data_manip::read_data(data, props->voxel_type, dest, offset);
 	}
 }
 
 template <cnpts::Scalar T>
-i3d::Image3d<T> ImageView::read_region(i3d::Vector3d<int> start_point,
-                                       i3d::Vector3d<int> end_point) const {
-	auto props = get_properties();
-	i3d::Vector3d img_dim = props.dimensions / _resolution;
-	i3d::Vector3d block_dim = props.get_block_dimensions(_resolution);
+i3d::Image3d<T>
+ImageView::read_region(i3d::Vector3d<int> start_point,
+                       i3d::Vector3d<int> end_point,
+                       dataset_props_ptr props /* = nullptr */) const {
+	if (!props)
+		props = get_properties();
+
+	i3d::Vector3d img_dim = props->get_img_dimensions(_resolution);
+	i3d::Vector3d block_dim = props->get_block_dimensions(_resolution);
 
 	std::vector<i3d::Vector3d<int>> coords = details::get_intercepted_blocks(
 	    start_point, end_point, img_dim, block_dim);
@@ -912,7 +954,7 @@ i3d::Image3d<T> ImageView::read_region(i3d::Vector3d<int> start_point,
 	i3d::Image3d<T> out_img;
 	out_img.MakeRoom(end_point - start_point);
 
-	read_blocks(coords, out_img, offsets);
+	read_blocks(coords, out_img, offsets, props);
 	return out_img;
 }
 
@@ -920,9 +962,9 @@ template <cnpts::Scalar T>
 void ImageView::read_region(i3d::Vector3d<int> start_point,
                             i3d::Vector3d<int> end_point,
                             i3d::Image3d<T>& dest,
-                            i3d::Vector3d<int> offset /* = {0, 0, 0} */) const {
-
-	auto temp_img = read_region<T>(start_point, end_point);
+                            i3d::Vector3d<int> offset /* = {0, 0, 0} */,
+                            dataset_props_ptr props /* = nullptr */) const {
+	auto temp_img = read_region<T>(start_point, end_point, props);
 
 	// Copy to desired location
 	for (std::size_t x = 0; x < temp_img.GetSizeX(); ++x)
@@ -933,34 +975,38 @@ void ImageView::read_region(i3d::Vector3d<int> start_point,
 }
 
 template <cnpts::Scalar T>
-i3d::Image3d<T> ImageView::read_image() const {
-	auto props = get_properties();
-	i3d::Vector3d img_dim = props.dimensions / _resolution;
+i3d::Image3d<T>
+ImageView::read_image(dataset_props_ptr props /* = nullptr */) const {
+	if (!props)
+		props = get_properties();
 
-	return read_region<T>(0, img_dim);
+	i3d::Vector3d img_dim = props->get_img_dimensions(_resolution);
+	return read_region<T>(0, img_dim, props);
 }
 
 template <cnpts::Scalar T>
-void ImageView::write_block(
-    const i3d::Image3d<T>& src,
-    i3d::Vector3d<int> coord,
-    i3d::Vector3d<int> src_offset /*  = {0, 0, 0} */) const {
-	write_blocks(src, {coord}, {src_offset});
+void ImageView::write_block(const i3d::Image3d<T>& src,
+                            i3d::Vector3d<int> coord,
+                            i3d::Vector3d<int> src_offset /*  = {0, 0, 0} */,
+                            dataset_props_ptr props /* = nullptr */) const {
+	write_blocks(src, {coord}, {src_offset}, props);
 }
 
 // TODO optimise
 template <cnpts::Scalar T>
-void ImageView::write_blocks(
-    const i3d::Image3d<T>& src,
-    const std::vector<i3d::Vector3d<int>>& coords,
-    const std::vector<i3d::Vector3d<int>>& src_offsets) const {
+void ImageView::write_blocks(const i3d::Image3d<T>& src,
+                             const std::vector<i3d::Vector3d<int>>& coords,
+                             const std::vector<i3d::Vector3d<int>>& src_offsets,
+                             dataset_props_ptr props /* = nullptr */) const {
+
+	if (!props)
+		props = get_properties();
 
 	/* Fetch server properties */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
-	DatasetProperties props = get_properties();
-	;
-	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
-	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
+
+	i3d::Vector3d<int> block_dim = props->get_block_dimensions(_resolution);
+	i3d::Vector3d<int> img_dim = props->get_img_dimensions(_resolution);
 
 	/* Error checking (when not in debug, all checks automatically return
 	 * true)*/
@@ -987,10 +1033,10 @@ void ImageView::write_blocks(
 
 		/* Prepare vector representing octet-data (will be send to server) */
 		std::vector<char> data(details::data_manip::get_block_data_size(
-		    block_size, props.voxel_type));
+		    block_size, props->voxel_type));
 
 		/* Transform image to octet-data */
-		details::data_manip::write_data(src, offset, data, props.voxel_type,
+		details::data_manip::write_data(src, offset, data, props->voxel_type,
 		                                block_size);
 
 		std::string url =
@@ -1004,12 +1050,15 @@ void ImageView::write_blocks(
 }
 
 template <cnpts::Scalar T>
-void ImageView::write_image(const i3d::Image3d<T>& img) const {
+void ImageView::write_image(const i3d::Image3d<T>& img,
+                            dataset_props_ptr props /* = nullptr */) const {
 
 	/* Fetch image properties from server */
-	DatasetProperties props = get_properties();
-	i3d::Vector3d<int> block_dim = props.get_block_dimensions(_resolution);
-	i3d::Vector3d<int> img_dim = props.dimensions / _resolution;
+	if (!props)
+		props = get_properties();
+
+	i3d::Vector3d<int> block_dim = props->get_block_dimensions(_resolution);
+	i3d::Vector3d<int> img_dim = props->get_img_dimensions(_resolution);
 	i3d::Vector3d<int> block_count =
 	    (img_dim + block_dim - 1) / block_dim; // Ceiling
 
@@ -1026,7 +1075,7 @@ void ImageView::write_image(const i3d::Image3d<T>& img) const {
 			}
 
 	/* write whole image */
-	write_blocks(img, blocks, offsets);
+	write_blocks(img, blocks, offsets, props);
 }
 
 /* ===================================== Connection */
@@ -1043,19 +1092,21 @@ ImageView Connection::get_view(int channel,
 	                 version);
 }
 
-DatasetProperties Connection::get_properties() const {
+dataset_props_ptr Connection::get_properties() const {
 	return get_dataset_properties(_ip, _port, _uuid);
 }
 
 template <cnpts::Scalar T>
-i3d::Image3d<T> Connection::read_block(i3d::Vector3d<int> coord,
-                                       int channel,
-                                       int timepoint,
-                                       int angle,
-                                       i3d::Vector3d<int> resolution,
-                                       const std::string& version) const {
+i3d::Image3d<T>
+Connection::read_block(i3d::Vector3d<int> coord,
+                       int channel,
+                       int timepoint,
+                       int angle,
+                       i3d::Vector3d<int> resolution,
+                       const std::string& version,
+                       dataset_props_ptr props /* = nullptr */) const {
 	return get_view(channel, timepoint, angle, resolution, version)
-	    .read_block<T>(coord);
+	    .read_block<T>(coord, props);
 }
 
 template <cnpts::Scalar T>
@@ -1066,9 +1117,10 @@ void Connection::read_block(i3d::Vector3d<int> coord,
                             int timepoint,
                             int angle,
                             i3d::Vector3d<int> resolution,
-                            const std::string& version) const {
+                            const std::string& version,
+                            dataset_props_ptr props /* = nullptr */) const {
 	return get_view(channel, timepoint, angle, resolution, version)
-	    .read_block(coord, dest, dest_offset);
+	    .read_block(coord, dest, dest_offset, props);
 }
 
 template <cnpts::Scalar T>
@@ -1078,9 +1130,10 @@ Connection::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
                         int timepoint,
                         int angle,
                         i3d::Vector3d<int> resolution,
-                        const std::string& version) const {
+                        const std::string& version,
+                        dataset_props_ptr props /* = nullptr */) const {
 	return get_view(channel, timepoint, angle, resolution, version)
-	    .read_blocks<T>(coords);
+	    .read_blocks<T>(coords, props);
 }
 
 template <cnpts::Scalar T>
@@ -1092,21 +1145,24 @@ void Connection::read_blocks(
     int timepoint,
     int angle,
     i3d::Vector3d<int> resolution,
-    const std::string& version) const {
+    const std::string& version,
+    dataset_props_ptr props /* = nullptr */) const {
 	get_view(channel, timepoint, angle, resolution, version)
-	    .read_blocks(coords, dest, dest_offsets);
+	    .read_blocks(coords, dest, dest_offsets, props);
 }
 
 template <cnpts::Scalar T>
-i3d::Image3d<T> Connection::read_region(i3d::Vector3d<int> start_point,
-                                        i3d::Vector3d<int> end_point,
-                                        int channel,
-                                        int timepoint,
-                                        int angle,
-                                        i3d::Vector3d<int> resolution,
-                                        const std::string& version) const {
+i3d::Image3d<T>
+Connection::read_region(i3d::Vector3d<int> start_point,
+                        i3d::Vector3d<int> end_point,
+                        int channel,
+                        int timepoint,
+                        int angle,
+                        i3d::Vector3d<int> resolution,
+                        const std::string& version,
+                        dataset_props_ptr props /* = nullptr */) const {
 	return get_view(channel, timepoint, angle, resolution, version)
-	    .read_region<T>(start_point, end_point);
+	    .read_region<T>(start_point, end_point, props);
 }
 
 template <cnpts::Scalar T>
@@ -1118,19 +1174,22 @@ void Connection::read_region(i3d::Vector3d<int> start_point,
                              int timepoint,
                              int angle,
                              i3d::Vector3d<int> resolution,
-                             const std::string& version) const {
+                             const std::string& version,
+                             dataset_props_ptr props /* = nullptr */) const {
 	get_view(channel, timepoint, angle, resolution, version)
-	    .read_region<T>(start_point, end_point, dest, offset);
+	    .read_region<T>(start_point, end_point, dest, offset, props);
 }
 
 template <cnpts::Scalar T>
-i3d::Image3d<T> Connection::read_image(int channel,
-                                       int timepoint,
-                                       int angle,
-                                       i3d::Vector3d<int> resolution,
-                                       const std::string& version) const {
+i3d::Image3d<T>
+Connection::read_image(int channel,
+                       int timepoint,
+                       int angle,
+                       i3d::Vector3d<int> resolution,
+                       const std::string& version,
+                       dataset_props_ptr props /* = nullptr */) const {
 	return get_view(channel, timepoint, angle, resolution, version)
-	    .read_image<T>();
+	    .read_image<T>(props);
 }
 
 template <cnpts::Scalar T>
@@ -1141,9 +1200,10 @@ void Connection::write_block(const i3d::Image3d<T>& src,
                              int timepoint,
                              int angle,
                              i3d::Vector3d<int> resolution,
-                             const std::string& version) const {
+                             const std::string& version,
+                             dataset_props_ptr props /* = nullptr */) const {
 	get_view(channel, timepoint, angle, resolution, version)
-	    .write_block(src, coord, src_offset);
+	    .write_block(src, coord, src_offset, props);
 }
 
 template <cnpts::Scalar T>
@@ -1155,9 +1215,10 @@ void Connection::write_blocks(
     int timepoint,
     int angle,
     i3d::Vector3d<int> resolution,
-    const std::string& version) const {
+    const std::string& version,
+    dataset_props_ptr props /* = nullptr */) const {
 	get_view(channel, timepoint, angle, resolution, version)
-	    .write_blocks(src, coords, src_offsets);
+	    .write_blocks(src, coords, src_offsets, props);
 }
 
 template <cnpts::Scalar T>
@@ -1166,29 +1227,33 @@ void Connection::write_image(const i3d::Image3d<T>& img,
                              int timepoint,
                              int angle,
                              i3d::Vector3d<int> resolution,
-                             const std::string& version) const {
-	get_view(channel, timepoint, angle, resolution, version).write_image(img);
+                             const std::string& version,
+                             dataset_props_ptr props /* = nullptr */) const {
+	get_view(channel, timepoint, angle, resolution, version)
+	    .write_image(img, props);
 }
 
 template <cnpts::Scalar T>
-void Connection::write_with_pyramids(const i3d::Image3d<T>& img,
-                                     int channel,
-                                     int timepoint,
-                                     int angle,
-                                     const std::string& version,
-                                     SamplingMode m) const {
-	auto props = get_properties();
-	write_image(img, channel, timepoint, angle, {1, 1, 1}, version);
+void Connection::write_with_pyramids(
+    const i3d::Image3d<T>& img,
+    int channel,
+    int timepoint,
+    int angle,
+    const std::string& version,
+    SamplingMode m,
+    dataset_props_ptr props /* = nullptr */) const {
+	if (!props)
+		props = get_properties();
+	write_image(img, channel, timepoint, angle, {1, 1, 1}, version, props);
 
-	for (const auto& map : props.resolution_levels) {
-		i3d::Vector3d<int> res = map.at("resolutions");
+	for (const auto& res : props->get_all_resolutions()) {
 		if (res == i3d::Vector3d<int>{1, 1, 1})
 			continue;
 
-		i3d::Vector3d<int> new_dim = props.dimensions / res;
+		i3d::Vector3d<int> new_dim = props->get_img_dimensions(res);
 		i3d::Image3d<T> cpy;
 		i3d::Resample(img, cpy, new_dim, m);
-		write_image(cpy, channel, timepoint, angle, res, version);
+		write_image(cpy, channel, timepoint, angle, res, version, props);
 	}
 }
 

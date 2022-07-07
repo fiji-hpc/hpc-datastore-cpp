@@ -8,13 +8,13 @@ void store_image() {
 	std::cout
 	    << "Fetching properties from the server to obtain basic dimensions ... "
 	    << std::flush;
-	ds::DatasetProperties props =
+	ds::dataset_props_ptr props =
 	    ds::get_dataset_properties(SERVER_IP, SERVER_PORT, DS_UUID);
 	std::cout << "[OK]" << std::endl;
 
 	std::cout << "Creating random image ... " << std::flush;
 	// create image
-	i3d::Vector3d<int> img_dim = props.dimensions / IMG_RESOLUTION;
+	i3d::Vector3d<int> img_dim = props->dimensions / IMG_RESOLUTION;
 	i3d::Image3d<T> new_img;
 	new_img.MakeRoom(img_dim);
 	fill_random(new_img);
@@ -61,11 +61,11 @@ void store_image() {
 int main() {
 	std::cout << "Fetching properties from the server ... " << std::flush;
 
-	ds::DatasetProperties props =
+	ds::dataset_props_ptr props =
 	    ds::get_dataset_properties(SERVER_IP, SERVER_PORT, DS_UUID);
 
 	std::cout << "[OK]" << std::endl;
 
 	/** Select correct format for template **/
-	SELECT_TYPE(props.voxel_type, store_image);
+	SELECT_TYPE(props->voxel_type, store_image);
 }

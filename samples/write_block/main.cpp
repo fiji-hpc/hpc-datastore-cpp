@@ -53,11 +53,11 @@ void store_block() {
 int main() {
 	std::cout << "Fetching properties from the server ... " << std::flush;
 
-	ds::DatasetProperties props =
+	ds::dataset_props_ptr props =
 	    ds::get_dataset_properties(SERVER_IP, SERVER_PORT, DS_UUID);
 
 	std::cout << "[OK]" << std::endl;
 
 	/** Select correct format for template **/
-	SELECT_TYPE(props.voxel_type, store_block);
+	SELECT_TYPE(props->voxel_type, store_block);
 }

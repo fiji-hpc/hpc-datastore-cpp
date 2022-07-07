@@ -13,7 +13,7 @@ void test_block() {
 	phase_ok();
 
 	phase_start("Available blocks computation");
-	i3d::Vector3d<int> block_count = props.get_block_count(IMG_RESOLUTION);
+	i3d::Vector3d<int> block_count = props->get_block_count(IMG_RESOLUTION);
 	std::vector<i3d::Vector3d<int>> avail_coords;
 	for (int x = 0; x < block_count.x; ++x)
 		for (int y = 0; y < block_count.y; ++y)
@@ -24,7 +24,7 @@ void test_block() {
 	phase_start("Generate random image");
 
 	i3d::Image3d<T> random_img;
-	random_img.MakeRoom(props.get_img_dimensions(IMG_RESOLUTION));
+	random_img.MakeRoom(props->get_img_dimensions(IMG_RESOLUTION));
 	fill_random(random_img);
 
 	phase_ok();
@@ -36,7 +36,7 @@ void test_block() {
 	phase_start("Write-Read random blocks");
 	{
 	    for (auto coord : avail_coords) {
-	        auto block_size = props.get_block_size(coord, IMG_RESOLUTION);
+	        auto block_size = props->get_block_size(coord, IMG_RESOLUTION);
 	        i3d::Image3d<T> random_block;
 	        random_block.MakeRoom(block_size);
 	        fill_random(random_block);
@@ -57,7 +57,7 @@ void test_block() {
 	phase_start("Read offsets");
 	{
 
-	    auto block_size = props.get_block_size({0, 0, 0}, IMG_RESOLUTION);
+	    auto block_size = props->get_block_size({0, 0, 0}, IMG_RESOLUTION);
 	    i3d::Image3d<T> random_block;
 	    random_block.MakeRoom(block_size);
 	    fill_random(random_block);
@@ -86,7 +86,7 @@ void test_block() {
 
 	phase_start("Write offsets");
 	{
-	    auto block_size = props.get_block_size({0, 0, 0}, IMG_RESOLUTION);
+	    auto block_size = props->get_block_size({0, 0, 0}, IMG_RESOLUTION);
 	    i3d::Image3d<T> random_block;
 	    random_block.MakeRoom(block_size * 2);
 	    fill_random(random_block);
@@ -123,7 +123,7 @@ void test_block() {
 	view.write_image(random_img);
 	{
 	    i3d::Vector3d<int> block_dim =
-	        props.get_block_dimensions(IMG_RESOLUTION);
+	        props->get_block_dimensions(IMG_RESOLUTION);
 
 	    for (int x = 0; x < block_count.x; ++x)
 	        for (int y = 0; y < block_count.y; ++y)
@@ -147,7 +147,7 @@ void test_block() {
 	{
 
 		i3d::Vector3d<int> block_dim =
-		    props.get_block_dimensions(IMG_RESOLUTION);
+		    props->get_block_dimensions(IMG_RESOLUTION);
 
 		auto shuffled = avail_coords;
 		shuffle(shuffled);
@@ -155,7 +155,7 @@ void test_block() {
 		for (auto coord : shuffled) {
 			view.write_block(
 			    get_subimage(random_img, coord * block_dim,
-			                 props.get_block_size(coord, IMG_RESOLUTION)),
+			                 props->get_block_size(coord, IMG_RESOLUTION)),
 			    coord, {0, 0, 0});
 		}
 
@@ -165,7 +165,7 @@ void test_block() {
 		fill_random(random_img);
 		for (auto coord : shuffled) {
 		    conn.write_block(get_subimage(random_img, coord * block_dim,
-		props.get_block_size(coord, IMG_RESOLUTION)), coord, {0, 0, 0}, IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE,
+		props->get_block_size(coord, IMG_RESOLUTION)), coord, {0, 0, 0}, IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE,
 		                     IMG_RESOLUTION, IMG_VERSION);
 		}
 

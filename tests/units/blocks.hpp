@@ -13,7 +13,7 @@ void test_blocks() {
 	phase_ok();
 
 	phase_start("Available blocks computation");
-	i3d::Vector3d<int> block_count = props.get_block_count(IMG_RESOLUTION);
+	i3d::Vector3d<int> block_count = props->get_block_count(IMG_RESOLUTION);
 	std::vector<i3d::Vector3d<int>> avail_coords;
 	for (int x = 0; x < block_count.x; ++x)
 		for (int y = 0; y < block_count.y; ++y)
@@ -37,7 +37,7 @@ void test_blocks() {
 			vec.emplace_back();
 			auto& img = vec.back();
 
-			img.MakeRoom(props.get_block_size(coord, IMG_RESOLUTION));
+			img.MakeRoom(props->get_block_size(coord, IMG_RESOLUTION));
 			fill_random(img);
 		};
 
@@ -46,8 +46,8 @@ void test_blocks() {
 	}
 
 	auto fill_image = [&](auto& img, const auto& blocks, auto& offsets) {
-		auto block_dim = props.get_block_dimensions(IMG_RESOLUTION);
-		img.MakeRoom(props.get_img_dimensions(IMG_RESOLUTION));
+		auto block_dim = props->get_block_dimensions(IMG_RESOLUTION);
+		img.MakeRoom(props->get_img_dimensions(IMG_RESOLUTION));
 
 		for (std::size_t i = 0; i < shuffled.size(); ++i) {
 			auto offset = shuffled[i] * block_dim;

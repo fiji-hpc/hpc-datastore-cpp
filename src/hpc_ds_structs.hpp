@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <memory>
 
 template <typename T, typename U>
 bool lt(i3d::Vector3d<T> lhs, i3d::Vector3d<U> rhs) {
@@ -264,4 +265,6 @@ class DatasetProperties {
 		return stream;
 	}
 };
+using dataset_props_ptr = std::shared_ptr<DatasetProperties>;
+
 } // namespace ds

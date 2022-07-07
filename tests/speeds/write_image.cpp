@@ -10,9 +10,9 @@ void meassure() {
 	                       IMG_TIMEPOINT, IMG_ANGLE, IMG_RESOLUTION,
 	                       IMG_VERSION);
     std::cout << "Generating random image\n";
-    ds::DatasetProperties props =
+    auto props =
 	    ds::get_dataset_properties(SERVER_IP, SERVER_PORT, DS_UUID);
-    i3d::Vector3d<int> img_dim = props.dimensions / IMG_RESOLUTION;
+    i3d::Vector3d<int> img_dim = props->get_img_dimensions(IMG_RESOLUTION);
 	i3d::Image3d<T> new_img;
 	new_img.MakeRoom(img_dim);
 	fill_random(new_img);
@@ -38,11 +38,11 @@ void meassure() {
 int main() {
 	std::cout << "Fetching properties from the server ... " << std::flush;
 
-	ds::DatasetProperties props =
+	auto props =
 	    ds::get_dataset_properties(SERVER_IP, SERVER_PORT, DS_UUID);
 
 	std::cout << "[OK]" << std::endl;
 
 	/** Select correct format for template **/
-	SELECT_TYPE(props.voxel_type, meassure);
+	SELECT_TYPE(props->voxel_type, meassure);
 }

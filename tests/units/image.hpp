@@ -16,7 +16,7 @@ void test_image() {
 	phase_start("Generate random images");
 	i3d::Image3d<T> random_img, view_random_img, conn_random_img;
 
-	auto img_dim = props.get_img_dimensions(IMG_RESOLUTION);
+	auto img_dim = props->get_img_dimensions(IMG_RESOLUTION);
 	random_img.MakeRoom(img_dim);
 	view_random_img.MakeRoom(img_dim);
 	conn_random_img.MakeRoom(img_dim);
@@ -81,10 +81,10 @@ void test_image() {
 			                        IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE,
 			                        IMG_VERSION, mode);
 
-			for (auto& resolution : props.get_all_resolutions()) {
+			for (auto& resolution : props->get_all_resolutions()) {
 				i3d::Image3d<T> cpy;
 				i3d::Resample(random_img, cpy,
-				              props.get_img_dimensions(resolution), mode);
+				              props->get_img_dimensions(resolution), mode);
 
 				assert(cpy == conn.read_image<T>(IMG_CHANNEL, IMG_TIMEPOINT,
 				                                 IMG_ANGLE, resolution,
@@ -109,10 +109,10 @@ void test_image() {
 			conn.write_with_pyramids(random_img, IMG_CHANNEL, IMG_TIMEPOINT,
 			                         IMG_ANGLE, IMG_VERSION, mode);
 
-			for (auto& resolution : props.get_all_resolutions()) {
+			for (auto& resolution : props->get_all_resolutions()) {
 				i3d::Image3d<T> cpy;
 				i3d::Resample(random_img, cpy,
-				              props.get_img_dimensions(resolution), mode);
+				              props->get_img_dimensions(resolution), mode);
 
 				assert(cpy == conn.read_image<T>(IMG_CHANNEL, IMG_TIMEPOINT,
 				                                 IMG_ANGLE, resolution,

@@ -32,7 +32,7 @@ void test_block() {
 	ds::Connection conn(SERVER_IP, SERVER_PORT, DS_UUID);
 	ds::ImageView view(SERVER_IP, SERVER_PORT, DS_UUID, IMG_CHANNEL,
 	                   IMG_TIMEPOINT, IMG_ANGLE, IMG_RESOLUTION, IMG_VERSION);
-
+	
 	phase_start("Write-Read random blocks");
 	{
 	    for (auto coord : avail_coords) {
@@ -117,7 +117,7 @@ void test_block() {
 	            }
 	}
 	phase_ok();
-
+	
 	phase_start("Read location");
 
 	view.write_image(random_img);
@@ -129,6 +129,7 @@ void test_block() {
 	        for (int y = 0; y < block_count.y; ++y)
 	            for (int z = 0; z < block_count.z; ++z) {
 	                i3d::Vector3d coord = {x, y, z};
+
 	                auto view_block = view.read_block<T>(coord);
 	                auto conn_block = conn.read_block<T>(
 	                    coord, IMG_CHANNEL, IMG_TIMEPOINT, IMG_ANGLE,

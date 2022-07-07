@@ -914,7 +914,6 @@ ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	return out;
 }
 
-// TODO optimise
 template <cnpts::Scalar T>
 void ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
                             i3d::Image3d<T>& dest,
@@ -948,21 +947,20 @@ void ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	    details::create_requests(coords, session_url, _timepoint, _channel,
 	                             _angle);
 
-	/* Fetch blocks one by one */
 	for (const auto& [req, idxs] : requests) {
 		auto [data, response] = details::requests::make_request(req);
 
 		std::size_t start_i = 0;
 		for (std::size_t i : idxs) {
-			std::size_t size = details::data_manip::get_block_data_size(
+			std::size_t data_size = details::data_manip::get_block_data_size(
 			    props->get_block_size(coords[i], _resolution),
 			    props->voxel_type);
 
 			details::data_manip::read_data(
-			    std::span(data.begin() + start_i, size), props->voxel_type,
+			    std::span(data.begin() + start_i, data_size), props->voxel_type,
 			    dest, offsets[i]);
 
-			start_i += size;
+			start_i += data_size;
 		}
 	}
 }
@@ -1026,7 +1024,6 @@ void ImageView::write_block(const i3d::Image3d<T>& src,
 	write_blocks(src, {coord}, {src_offset}, props);
 }
 
-// TODO optimise
 template <cnpts::Scalar T>
 void ImageView::write_blocks(const i3d::Image3d<T>& src,
                              const std::vector<i3d::Vector3d<int>>& coords,
@@ -1057,28 +1054,38 @@ void ImageView::write_blocks(const i3d::Image3d<T>& src,
 	if (session_url.ends_with('/'))
 		session_url.pop_back();
 
-	/* Write blocks to server one by one */
-	for (std::size_t i = 0; i < coords.size(); ++i) {
-		auto& coord = coords[i];
-		auto& offset = src_offsets[i];
+	std::vector<std::pair<std::string, std::vector<std::size_t>>> requests =
+	    details::create_requests(coords, session_url, _timepoint, _channel,
+	                             _angle, 256);
 
-		i3d::Vector3d<int> block_size =
-		    details::data_manip::get_block_size(coord, block_dim, img_dim);
+	for (const auto& [req, idxs] : requests) {
+		std::size_t full_size = 0;
+		for (std::size_t i : idxs)
+			full_size += details::data_manip::get_block_data_size(
+			    props->get_block_size(coords[i], _resolution),
+			    props->voxel_type);
 
 		/* Prepare vector representing octet-data (will be send to server) */
-		std::vector<char> data(details::data_manip::get_block_data_size(
-		    block_size, props->voxel_type));
+		std::vector<char> data(full_size);
 
 		/* Transform image to octet-data */
-		details::data_manip::write_data(src, offset, data, props->voxel_type,
-		                                block_size);
+		std::size_t start_i = 0;
+		for (std::size_t i : idxs) {
+			i3d::Vector3d<int> block_size =
+			    props->get_block_size(coords[i], _resolution);
+			std::size_t data_size = details::data_manip::get_block_data_size(
+			    block_size, props->voxel_type);
 
-		std::string url =
-		    fmt::format("{}/{}/{}/{}/{}/{}/{}", session_url, coord.x, coord.y,
-		                coord.z, _timepoint, _channel, _angle);
+			details::data_manip::write_data(
+			    src, src_offsets[i],
+			    std::span(data.begin() + start_i, data_size),
+			    props->voxel_type, block_size);
+
+			start_i += data_size;
+		}
 
 		auto [_, response] = details::requests::make_request(
-		    url, Poco::Net::HTTPRequest::HTTP_POST, data,
+		    req, Poco::Net::HTTPRequest::HTTP_POST, data,
 		    {{"Content-Type", "application/octet-stream"}});
 	}
 }

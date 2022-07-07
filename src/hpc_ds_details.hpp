@@ -103,7 +103,8 @@ create_requests(const std::vector<i3d::Vector3d<int>>& coords,
                 const std::string& session_url,
                 int timepoint,
                 int channel,
-                int angle);
+                int angle,
+                std::size_t max_request_size = MAX_URL_LENGTH);
 
 namespace data_manip {
 inline int get_block_data_size(i3d::Vector3d<int> block_size,
@@ -360,7 +361,8 @@ create_requests(const std::vector<i3d::Vector3d<int>>& coords,
                 const std::string& session_url,
                 int timepoint,
                 int channel,
-                int angle) {
+                int angle,
+                std::size_t max_request_size /* = MAX_URL_LENGTH*/) {
 	std::vector<std::pair<std::string, std::vector<std::size_t>>> out;
 
 	std::string final_url = session_url;
@@ -372,7 +374,7 @@ create_requests(const std::vector<i3d::Vector3d<int>>& coords,
 		    fmt::format("/{}/{}/{}/{}/{}/{}", coord.x, coord.y, coord.z,
 		                timepoint, channel, angle);
 
-		if (final_url.size() + to_append.size() > MAX_URL_LENGTH) {
+		if (final_url.size() + to_append.size() > max_request_size) {
 			out.emplace_back(final_url, indexes);
 			final_url = session_url;
 			indexes.clear();

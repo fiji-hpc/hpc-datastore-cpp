@@ -83,49 +83,49 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6bc9a78e3e37407d25906265b5976f49"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a6bc9a78e3e37407d25906265b5976f49">ImageView</a> (std::string ip, int port, std::string uuid, int channel, int timepoint, int angle, i3d::Vector3d&lt; int &gt; resolution, std::string version)</td></tr>
 <tr class="memdesc:a6bc9a78e3e37407d25906265b5976f49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new Image View object.  <a href="classds_1_1_image_view.html#a6bc9a78e3e37407d25906265b5976f49">More...</a><br /></td></tr>
 <tr class="separator:a6bc9a78e3e37407d25906265b5976f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69ef71caffb16fafdcef4cadab259093"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classds_1_1_dataset_properties.html">DatasetProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a69ef71caffb16fafdcef4cadab259093">get_properties</a> () const</td></tr>
-<tr class="memdesc:a69ef71caffb16fafdcef4cadab259093"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get dataset properties.  <a href="classds_1_1_image_view.html#a69ef71caffb16fafdcef4cadab259093">More...</a><br /></td></tr>
-<tr class="separator:a69ef71caffb16fafdcef4cadab259093"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5547df92e468c571611bc31fec918519"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
-<tr class="memitem:a5547df92e468c571611bc31fec918519"><td class="memTemplItemLeft" align="right" valign="top">i3d::Image3d&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a5547df92e468c571611bc31fec918519">read_block</a> (i3d::Vector3d&lt; int &gt; coord) const</td></tr>
-<tr class="memdesc:a5547df92e468c571611bc31fec918519"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one block from server.  <a href="classds_1_1_image_view.html#a5547df92e468c571611bc31fec918519">More...</a><br /></td></tr>
-<tr class="separator:a5547df92e468c571611bc31fec918519"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f583f4485213c6dc6dcb91476fa6a6e"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
-<tr class="memitem:a2f583f4485213c6dc6dcb91476fa6a6e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a2f583f4485213c6dc6dcb91476fa6a6e">read_block</a> (i3d::Vector3d&lt; int &gt; coord, i3d::Image3d&lt; T &gt; &amp;dest, i3d::Vector3d&lt; int &gt; dest_offset={0, 0, 0}) const</td></tr>
-<tr class="memdesc:a2f583f4485213c6dc6dcb91476fa6a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one block from server to image.  <a href="classds_1_1_image_view.html#a2f583f4485213c6dc6dcb91476fa6a6e">More...</a><br /></td></tr>
-<tr class="separator:a2f583f4485213c6dc6dcb91476fa6a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e425fbe6b7eaf8a6940ea8e4bde8c42"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
-<tr class="memitem:a2e425fbe6b7eaf8a6940ea8e4bde8c42"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; i3d::Image3d&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a2e425fbe6b7eaf8a6940ea8e4bde8c42">read_blocks</a> (const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;coords) const</td></tr>
-<tr class="memdesc:a2e425fbe6b7eaf8a6940ea8e4bde8c42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read blocks from server and return them.  <a href="classds_1_1_image_view.html#a2e425fbe6b7eaf8a6940ea8e4bde8c42">More...</a><br /></td></tr>
-<tr class="separator:a2e425fbe6b7eaf8a6940ea8e4bde8c42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0b5524236ec49ab687f2784410e633d"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
-<tr class="memitem:ad0b5524236ec49ab687f2784410e633d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#ad0b5524236ec49ab687f2784410e633d">read_blocks</a> (const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;coords, i3d::Image3d&lt; T &gt; &amp;dest, const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;offsets) const</td></tr>
-<tr class="memdesc:ad0b5524236ec49ab687f2784410e633d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read blocks from server and saves them into prealocated image.  <a href="classds_1_1_image_view.html#ad0b5524236ec49ab687f2784410e633d">More...</a><br /></td></tr>
-<tr class="separator:ad0b5524236ec49ab687f2784410e633d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a319e3eee6bf89a3eb6ccafc603884bb9"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
-<tr class="memitem:a319e3eee6bf89a3eb6ccafc603884bb9"><td class="memTemplItemLeft" align="right" valign="top">i3d::Image3d&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a319e3eee6bf89a3eb6ccafc603884bb9">read_region</a> (i3d::Vector3d&lt; int &gt; start_point, i3d::Vector3d&lt; int &gt; end_point) const</td></tr>
-<tr class="memdesc:a319e3eee6bf89a3eb6ccafc603884bb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read region of interest from the server.  <a href="classds_1_1_image_view.html#a319e3eee6bf89a3eb6ccafc603884bb9">More...</a><br /></td></tr>
-<tr class="separator:a319e3eee6bf89a3eb6ccafc603884bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47bdec7c863d8a2ec813d5488167f92f"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
-<tr class="memitem:a47bdec7c863d8a2ec813d5488167f92f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a47bdec7c863d8a2ec813d5488167f92f">read_region</a> (i3d::Vector3d&lt; int &gt; start_point, i3d::Vector3d&lt; int &gt; end_point, i3d::Image3d&lt; T &gt; &amp;dest, i3d::Vector3d&lt; int &gt; offset={0, 0, 0}) const</td></tr>
-<tr class="memdesc:a47bdec7c863d8a2ec813d5488167f92f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read region of interest from the server.  <a href="classds_1_1_image_view.html#a47bdec7c863d8a2ec813d5488167f92f">More...</a><br /></td></tr>
-<tr class="separator:a47bdec7c863d8a2ec813d5488167f92f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ee17246ba9dbec1119b87502bbd2dd9"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
-<tr class="memitem:a1ee17246ba9dbec1119b87502bbd2dd9"><td class="memTemplItemLeft" align="right" valign="top">i3d::Image3d&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a1ee17246ba9dbec1119b87502bbd2dd9">read_image</a> () const</td></tr>
-<tr class="memdesc:a1ee17246ba9dbec1119b87502bbd2dd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read full image.  <a href="classds_1_1_image_view.html#a1ee17246ba9dbec1119b87502bbd2dd9">More...</a><br /></td></tr>
-<tr class="separator:a1ee17246ba9dbec1119b87502bbd2dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a360c1c6e6316ae6b74a79b6daa314bd6"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
-<tr class="memitem:a360c1c6e6316ae6b74a79b6daa314bd6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a360c1c6e6316ae6b74a79b6daa314bd6">write_block</a> (const i3d::Image3d&lt; T &gt; &amp;src, i3d::Vector3d&lt; int &gt; coord, i3d::Vector3d&lt; int &gt; src_offset={0, 0, 0}) const</td></tr>
-<tr class="memdesc:a360c1c6e6316ae6b74a79b6daa314bd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write block to server.  <a href="classds_1_1_image_view.html#a360c1c6e6316ae6b74a79b6daa314bd6">More...</a><br /></td></tr>
-<tr class="separator:a360c1c6e6316ae6b74a79b6daa314bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43a60d764663893d8ac6b8cb48527ae7"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
-<tr class="memitem:a43a60d764663893d8ac6b8cb48527ae7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a43a60d764663893d8ac6b8cb48527ae7">write_blocks</a> (const i3d::Image3d&lt; T &gt; &amp;src, const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;coords, const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;src_offsets) const</td></tr>
-<tr class="memdesc:a43a60d764663893d8ac6b8cb48527ae7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write blocks to server.  <a href="classds_1_1_image_view.html#a43a60d764663893d8ac6b8cb48527ae7">More...</a><br /></td></tr>
-<tr class="separator:a43a60d764663893d8ac6b8cb48527ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f22b59ef64bff6811c9fbdce6c26a2f"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
-<tr class="memitem:a4f22b59ef64bff6811c9fbdce6c26a2f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a4f22b59ef64bff6811c9fbdce6c26a2f">write_image</a> (const i3d::Image3d&lt; T &gt; &amp;img) const</td></tr>
-<tr class="memdesc:a4f22b59ef64bff6811c9fbdce6c26a2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write image to server.  <a href="classds_1_1_image_view.html#a4f22b59ef64bff6811c9fbdce6c26a2f">More...</a><br /></td></tr>
-<tr class="separator:a4f22b59ef64bff6811c9fbdce6c26a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7790f0d2cdb03a84c8d15fd50f42eb3"><td class="memItemLeft" align="right" valign="top">dataset_props_ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#ac7790f0d2cdb03a84c8d15fd50f42eb3">get_properties</a> () const</td></tr>
+<tr class="memdesc:ac7790f0d2cdb03a84c8d15fd50f42eb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get dataset properties.  <a href="classds_1_1_image_view.html#ac7790f0d2cdb03a84c8d15fd50f42eb3">More...</a><br /></td></tr>
+<tr class="separator:ac7790f0d2cdb03a84c8d15fd50f42eb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34b06917bdc27ad8747a1706b027b072"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
+<tr class="memitem:a34b06917bdc27ad8747a1706b027b072"><td class="memTemplItemLeft" align="right" valign="top">i3d::Image3d&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a34b06917bdc27ad8747a1706b027b072">read_block</a> (i3d::Vector3d&lt; int &gt; coord, dataset_props_ptr props=nullptr) const</td></tr>
+<tr class="memdesc:a34b06917bdc27ad8747a1706b027b072"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one block from server.  <a href="classds_1_1_image_view.html#a34b06917bdc27ad8747a1706b027b072">More...</a><br /></td></tr>
+<tr class="separator:a34b06917bdc27ad8747a1706b027b072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0536583fc96ce2829e0bf320636ec955"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
+<tr class="memitem:a0536583fc96ce2829e0bf320636ec955"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a0536583fc96ce2829e0bf320636ec955">read_block</a> (i3d::Vector3d&lt; int &gt; coord, i3d::Image3d&lt; T &gt; &amp;dest, i3d::Vector3d&lt; int &gt; dest_offset={0, 0, 0}, dataset_props_ptr props=nullptr) const</td></tr>
+<tr class="memdesc:a0536583fc96ce2829e0bf320636ec955"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one block from server to image.  <a href="classds_1_1_image_view.html#a0536583fc96ce2829e0bf320636ec955">More...</a><br /></td></tr>
+<tr class="separator:a0536583fc96ce2829e0bf320636ec955"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69673262a53500d9c3224755cf5ec47a"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
+<tr class="memitem:a69673262a53500d9c3224755cf5ec47a"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; i3d::Image3d&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a69673262a53500d9c3224755cf5ec47a">read_blocks</a> (const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;coords, dataset_props_ptr props=nullptr) const</td></tr>
+<tr class="memdesc:a69673262a53500d9c3224755cf5ec47a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read blocks from server and return them.  <a href="classds_1_1_image_view.html#a69673262a53500d9c3224755cf5ec47a">More...</a><br /></td></tr>
+<tr class="separator:a69673262a53500d9c3224755cf5ec47a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9843c29ab2ee6430e9ce5fd8cddc49d0"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
+<tr class="memitem:a9843c29ab2ee6430e9ce5fd8cddc49d0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a9843c29ab2ee6430e9ce5fd8cddc49d0">read_blocks</a> (const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;coords, i3d::Image3d&lt; T &gt; &amp;dest, const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;offsets, dataset_props_ptr props=nullptr) const</td></tr>
+<tr class="memdesc:a9843c29ab2ee6430e9ce5fd8cddc49d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read blocks from server and saves them into prealocated image.  <a href="classds_1_1_image_view.html#a9843c29ab2ee6430e9ce5fd8cddc49d0">More...</a><br /></td></tr>
+<tr class="separator:a9843c29ab2ee6430e9ce5fd8cddc49d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affd6e7a10a37fc2b194dd50bb02a1bac"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
+<tr class="memitem:affd6e7a10a37fc2b194dd50bb02a1bac"><td class="memTemplItemLeft" align="right" valign="top">i3d::Image3d&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#affd6e7a10a37fc2b194dd50bb02a1bac">read_region</a> (i3d::Vector3d&lt; int &gt; start_point, i3d::Vector3d&lt; int &gt; end_point, dataset_props_ptr props=nullptr) const</td></tr>
+<tr class="memdesc:affd6e7a10a37fc2b194dd50bb02a1bac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read region of interest from the server.  <a href="classds_1_1_image_view.html#affd6e7a10a37fc2b194dd50bb02a1bac">More...</a><br /></td></tr>
+<tr class="separator:affd6e7a10a37fc2b194dd50bb02a1bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8db123f8b4c6fb39f580d5def0843b4"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
+<tr class="memitem:ae8db123f8b4c6fb39f580d5def0843b4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#ae8db123f8b4c6fb39f580d5def0843b4">read_region</a> (i3d::Vector3d&lt; int &gt; start_point, i3d::Vector3d&lt; int &gt; end_point, i3d::Image3d&lt; T &gt; &amp;dest, i3d::Vector3d&lt; int &gt; offset={0, 0, 0}, dataset_props_ptr props=nullptr) const</td></tr>
+<tr class="memdesc:ae8db123f8b4c6fb39f580d5def0843b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read region of interest from the server.  <a href="classds_1_1_image_view.html#ae8db123f8b4c6fb39f580d5def0843b4">More...</a><br /></td></tr>
+<tr class="separator:ae8db123f8b4c6fb39f580d5def0843b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8da1f476d9998218321aa91ad1a2225f"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
+<tr class="memitem:a8da1f476d9998218321aa91ad1a2225f"><td class="memTemplItemLeft" align="right" valign="top">i3d::Image3d&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a8da1f476d9998218321aa91ad1a2225f">read_image</a> (dataset_props_ptr props=nullptr) const</td></tr>
+<tr class="memdesc:a8da1f476d9998218321aa91ad1a2225f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read full image.  <a href="classds_1_1_image_view.html#a8da1f476d9998218321aa91ad1a2225f">More...</a><br /></td></tr>
+<tr class="separator:a8da1f476d9998218321aa91ad1a2225f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2492faa3dcc360410494b72dd01e40d3"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
+<tr class="memitem:a2492faa3dcc360410494b72dd01e40d3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a2492faa3dcc360410494b72dd01e40d3">write_block</a> (const i3d::Image3d&lt; T &gt; &amp;src, i3d::Vector3d&lt; int &gt; coord, i3d::Vector3d&lt; int &gt; src_offset={0, 0, 0}, dataset_props_ptr props=nullptr) const</td></tr>
+<tr class="memdesc:a2492faa3dcc360410494b72dd01e40d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write block to server.  <a href="classds_1_1_image_view.html#a2492faa3dcc360410494b72dd01e40d3">More...</a><br /></td></tr>
+<tr class="separator:a2492faa3dcc360410494b72dd01e40d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe3c0e86330e84585f37c5cfbd748303"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
+<tr class="memitem:afe3c0e86330e84585f37c5cfbd748303"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#afe3c0e86330e84585f37c5cfbd748303">write_blocks</a> (const i3d::Image3d&lt; T &gt; &amp;src, const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;coords, const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;src_offsets, dataset_props_ptr props=nullptr) const</td></tr>
+<tr class="memdesc:afe3c0e86330e84585f37c5cfbd748303"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write blocks to server.  <a href="classds_1_1_image_view.html#afe3c0e86330e84585f37c5cfbd748303">More...</a><br /></td></tr>
+<tr class="separator:afe3c0e86330e84585f37c5cfbd748303"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45b52dc7c40dfdc79b8ae4ea8fe2ff4a"><td class="memTemplParams" colspan="2">template&lt;cnpts::Scalar T&gt; </td></tr>
+<tr class="memitem:a45b52dc7c40dfdc79b8ae4ea8fe2ff4a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classds_1_1_image_view.html#a45b52dc7c40dfdc79b8ae4ea8fe2ff4a">write_image</a> (const i3d::Image3d&lt; T &gt; &amp;img, dataset_props_ptr props=nullptr) const</td></tr>
+<tr class="memdesc:a45b52dc7c40dfdc79b8ae4ea8fe2ff4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write image to server.  <a href="classds_1_1_image_view.html#a45b52dc7c40dfdc79b8ae4ea8fe2ff4a">More...</a><br /></td></tr>
+<tr class="separator:a45b52dc7c40dfdc79b8ae4ea8fe2ff4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Representation of connection to specific image. </p>
@@ -204,6 +204,7 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramname">angle</td><td>Angle, at which the image is located </td></tr>
     <tr><td class="paramname">resolution</td><td>Resolution, at which the image is located </td></tr>
     <tr><td class="paramname">version</td><td>Version, at which the image is located (integer identifier or "latest") </td></tr>
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
   </table>
   </dd>
 </dl>
@@ -211,14 +212,14 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a69ef71caffb16fafdcef4cadab259093" name="a69ef71caffb16fafdcef4cadab259093"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69ef71caffb16fafdcef4cadab259093">&#9670;&nbsp;</a></span>get_properties()</h2>
+<a id="ac7790f0d2cdb03a84c8d15fd50f42eb3" name="ac7790f0d2cdb03a84c8d15fd50f42eb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7790f0d2cdb03a84c8d15fd50f42eb3">&#9670;&nbsp;</a></span>get_properties()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classds_1_1_dataset_properties.html">DatasetProperties</a> ds::ImageView::get_properties </td>
+          <td class="memname">dataset_props_ptr ds::ImageView::get_properties </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -231,8 +232,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5547df92e468c571611bc31fec918519" name="a5547df92e468c571611bc31fec918519"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5547df92e468c571611bc31fec918519">&#9670;&nbsp;</a></span>read_block() <span class="overload">[1/2]</span></h2>
+<a id="a34b06917bdc27ad8747a1706b027b072" name="a34b06917bdc27ad8747a1706b027b072"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34b06917bdc27ad8747a1706b027b072">&#9670;&nbsp;</a></span>read_block() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -243,8 +244,18 @@ template&lt;cnpts::Scalar T&gt; </div>
           <td class="memname">i3d::Image3d&lt; T &gt; ds::ImageView::read_block </td>
           <td>(</td>
           <td class="paramtype">i3d::Vector3d&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>coord</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramname"><em>coord</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dataset_props_ptr&#160;</td>
+          <td class="paramname"><em>props</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -262,6 +273,7 @@ template&lt;cnpts::Scalar T&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">coord</td><td>Block coordinate </td></tr>
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
   </table>
   </dd>
 </dl>
@@ -269,8 +281,8 @@ template&lt;cnpts::Scalar T&gt; </div>
 
 </div>
 </div>
-<a id="a2f583f4485213c6dc6dcb91476fa6a6e" name="a2f583f4485213c6dc6dcb91476fa6a6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f583f4485213c6dc6dcb91476fa6a6e">&#9670;&nbsp;</a></span>read_block() <span class="overload">[2/2]</span></h2>
+<a id="a0536583fc96ce2829e0bf320636ec955" name="a0536583fc96ce2829e0bf320636ec955"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0536583fc96ce2829e0bf320636ec955">&#9670;&nbsp;</a></span>read_block() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,7 +305,13 @@ template&lt;cnpts::Scalar T&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">i3d::Vector3d&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>dest_offset</em> = <code>{0,&#160;0,&#160;0}</code>&#160;</td>
+          <td class="paramname"><em>dest_offset</em> = <code>{0,&#160;0,&#160;0}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dataset_props_ptr&#160;</td>
+          <td class="paramname"><em>props</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -317,14 +335,15 @@ template&lt;cnpts::Scalar T&gt; </div>
     <tr><td class="paramname">coord</td><td>Block coordinate </td></tr>
     <tr><td class="paramname">dest</td><td>Image to write data to </td></tr>
     <tr><td class="paramname">dest_offset</td><td>Offset by which the corresponding write should be moved </td></tr>
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a2e425fbe6b7eaf8a6940ea8e4bde8c42" name="a2e425fbe6b7eaf8a6940ea8e4bde8c42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e425fbe6b7eaf8a6940ea8e4bde8c42">&#9670;&nbsp;</a></span>read_blocks() <span class="overload">[1/2]</span></h2>
+<a id="a69673262a53500d9c3224755cf5ec47a" name="a69673262a53500d9c3224755cf5ec47a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69673262a53500d9c3224755cf5ec47a">&#9670;&nbsp;</a></span>read_blocks() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -335,8 +354,18 @@ template&lt;cnpts::Scalar T&gt; </div>
           <td class="memname">std::vector&lt; i3d::Image3d&lt; T &gt; &gt; ds::ImageView::read_blocks </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>coords</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramname"><em>coords</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dataset_props_ptr&#160;</td>
+          <td class="paramname"><em>props</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -355,6 +384,7 @@ template&lt;cnpts::Scalar T&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">coords</td><td>Block coordinates </td></tr>
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
   </table>
   </dd>
 </dl>
@@ -362,8 +392,8 @@ template&lt;cnpts::Scalar T&gt; </div>
 
 </div>
 </div>
-<a id="ad0b5524236ec49ab687f2784410e633d" name="ad0b5524236ec49ab687f2784410e633d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0b5524236ec49ab687f2784410e633d">&#9670;&nbsp;</a></span>read_blocks() <span class="overload">[2/2]</span></h2>
+<a id="a9843c29ab2ee6430e9ce5fd8cddc49d0" name="a9843c29ab2ee6430e9ce5fd8cddc49d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9843c29ab2ee6430e9ce5fd8cddc49d0">&#9670;&nbsp;</a></span>read_blocks() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -386,7 +416,13 @@ template&lt;cnpts::Scalar T&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>offsets</em>&#160;</td>
+          <td class="paramname"><em>offsets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dataset_props_ptr&#160;</td>
+          <td class="paramname"><em>props</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -410,14 +446,15 @@ template&lt;cnpts::Scalar T&gt; </div>
     <tr><td class="paramname">coords</td><td>Block coordinates </td></tr>
     <tr><td class="paramname">dest</td><td>Prealocated destination image </td></tr>
     <tr><td class="paramname">offsets</td><td>Offsets at wich the corresponding blocks should be saved </td></tr>
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a1ee17246ba9dbec1119b87502bbd2dd9" name="a1ee17246ba9dbec1119b87502bbd2dd9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ee17246ba9dbec1119b87502bbd2dd9">&#9670;&nbsp;</a></span>read_image()</h2>
+<a id="a8da1f476d9998218321aa91ad1a2225f" name="a8da1f476d9998218321aa91ad1a2225f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8da1f476d9998218321aa91ad1a2225f">&#9670;&nbsp;</a></span>read_image()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -425,7 +462,11 @@ template&lt;cnpts::Scalar T&gt; </div>
 template&lt;cnpts::Scalar T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">i3d::Image3d&lt; T &gt; ds::ImageView::read_image</td>
+          <td class="memname">i3d::Image3d&lt; T &gt; ds::ImageView::read_image </td>
+          <td>(</td>
+          <td class="paramtype">dataset_props_ptr&#160;</td>
+          <td class="paramname"><em>props</em> = <code>nullptr</code></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -439,12 +480,18 @@ template&lt;cnpts::Scalar T&gt; </div>
   </table>
   </dd>
 </dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>i3d::Image3d&lt;T&gt; Fetched image </dd></dl>
 
 </div>
 </div>
-<a id="a319e3eee6bf89a3eb6ccafc603884bb9" name="a319e3eee6bf89a3eb6ccafc603884bb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a319e3eee6bf89a3eb6ccafc603884bb9">&#9670;&nbsp;</a></span>read_region() <span class="overload">[1/2]</span></h2>
+<a id="affd6e7a10a37fc2b194dd50bb02a1bac" name="affd6e7a10a37fc2b194dd50bb02a1bac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affd6e7a10a37fc2b194dd50bb02a1bac">&#9670;&nbsp;</a></span>read_region() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -461,7 +508,13 @@ template&lt;cnpts::Scalar T&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">i3d::Vector3d&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>end_point</em>&#160;</td>
+          <td class="paramname"><em>end_point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dataset_props_ptr&#160;</td>
+          <td class="paramname"><em>props</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -483,6 +536,7 @@ template&lt;cnpts::Scalar T&gt; </div>
   <table class="params">
     <tr><td class="paramname">start_point</td><td>smallest point of the region </td></tr>
     <tr><td class="paramname">end_point</td><td>largest point of the region </td></tr>
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
   </table>
   </dd>
 </dl>
@@ -490,8 +544,8 @@ template&lt;cnpts::Scalar T&gt; </div>
 
 </div>
 </div>
-<a id="a47bdec7c863d8a2ec813d5488167f92f" name="a47bdec7c863d8a2ec813d5488167f92f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47bdec7c863d8a2ec813d5488167f92f">&#9670;&nbsp;</a></span>read_region() <span class="overload">[2/2]</span></h2>
+<a id="ae8db123f8b4c6fb39f580d5def0843b4" name="ae8db123f8b4c6fb39f580d5def0843b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8db123f8b4c6fb39f580d5def0843b4">&#9670;&nbsp;</a></span>read_region() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -520,7 +574,13 @@ template&lt;cnpts::Scalar T&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">i3d::Vector3d&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>offset</em> = <code>{0,&#160;0,&#160;0}</code>&#160;</td>
+          <td class="paramname"><em>offset</em> = <code>{0,&#160;0,&#160;0}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dataset_props_ptr&#160;</td>
+          <td class="paramname"><em>props</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -545,14 +605,15 @@ template&lt;cnpts::Scalar T&gt; </div>
     <tr><td class="paramname">end_point</td><td>largest point of the region </td></tr>
     <tr><td class="paramname">dest</td><td>destination image </td></tr>
     <tr><td class="paramname">offset</td><td>offset to destination image </td></tr>
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a360c1c6e6316ae6b74a79b6daa314bd6" name="a360c1c6e6316ae6b74a79b6daa314bd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a360c1c6e6316ae6b74a79b6daa314bd6">&#9670;&nbsp;</a></span>write_block()</h2>
+<a id="a2492faa3dcc360410494b72dd01e40d3" name="a2492faa3dcc360410494b72dd01e40d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2492faa3dcc360410494b72dd01e40d3">&#9670;&nbsp;</a></span>write_block()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -575,7 +636,13 @@ template&lt;cnpts::Scalar T&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">i3d::Vector3d&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>src_offset</em> = <code>{0,&#160;0,&#160;0}</code>&#160;</td>
+          <td class="paramname"><em>src_offset</em> = <code>{0,&#160;0,&#160;0}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dataset_props_ptr&#160;</td>
+          <td class="paramname"><em>props</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -599,14 +666,15 @@ template&lt;cnpts::Scalar T&gt; </div>
     <tr><td class="paramname">src</td><td>Source image to collect block from </td></tr>
     <tr><td class="paramname">coord</td><td>Block coordinates </td></tr>
     <tr><td class="paramname">src_offset</td><td>Offset of given block in source image </td></tr>
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a43a60d764663893d8ac6b8cb48527ae7" name="a43a60d764663893d8ac6b8cb48527ae7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43a60d764663893d8ac6b8cb48527ae7">&#9670;&nbsp;</a></span>write_blocks()</h2>
+<a id="afe3c0e86330e84585f37c5cfbd748303" name="afe3c0e86330e84585f37c5cfbd748303"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe3c0e86330e84585f37c5cfbd748303">&#9670;&nbsp;</a></span>write_blocks()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -629,7 +697,13 @@ template&lt;cnpts::Scalar T&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::vector&lt; i3d::Vector3d&lt; int &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>src_offsets</em>&#160;</td>
+          <td class="paramname"><em>src_offsets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dataset_props_ptr&#160;</td>
+          <td class="paramname"><em>props</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -653,14 +727,15 @@ template&lt;cnpts::Scalar T&gt; </div>
     <tr><td class="paramname">src</td><td>Source image to collect blocks from </td></tr>
     <tr><td class="paramname">coords</td><td>Vector of block coordinates </td></tr>
     <tr><td class="paramname">src_offsets</td><td>Offsets of corresponding blocks in source image </td></tr>
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a4f22b59ef64bff6811c9fbdce6c26a2f" name="a4f22b59ef64bff6811c9fbdce6c26a2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f22b59ef64bff6811c9fbdce6c26a2f">&#9670;&nbsp;</a></span>write_image()</h2>
+<a id="a45b52dc7c40dfdc79b8ae4ea8fe2ff4a" name="a45b52dc7c40dfdc79b8ae4ea8fe2ff4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45b52dc7c40dfdc79b8ae4ea8fe2ff4a">&#9670;&nbsp;</a></span>write_image()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -671,8 +746,18 @@ template&lt;cnpts::Scalar T&gt; </div>
           <td class="memname">void ds::ImageView::write_image </td>
           <td>(</td>
           <td class="paramtype">const i3d::Image3d&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>img</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramname"><em>img</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dataset_props_ptr&#160;</td>
+          <td class="paramname"><em>props</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -690,6 +775,7 @@ template&lt;cnpts::Scalar T&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">img</td><td>Source image </td></tr>
+    <tr><td class="paramname">props</td><td>[Optional] cached dataset properties </td></tr>
   </table>
   </dd>
 </dl>

@@ -16,29 +16,29 @@ Representation of connection to dataset.
 \begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{classds_1_1_connection}{Connection}} object. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classds_1_1_image_view}{Image\+View}} \mbox{\hyperlink{classds_1_1_connection_a1c12652425561db13b9d624923585eb3}{get\+\_\+view}} (int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
 \begin{DoxyCompactList}\small\item\em Get \mbox{\hyperlink{classds_1_1_image_view}{Image\+View}} of specified image. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{classds_1_1_dataset_properties}{Dataset\+Properties}} \mbox{\hyperlink{classds_1_1_connection_a87173eac0655245d283dd2276dfe8cba}{get\+\_\+properties}} () const
+dataset\+\_\+props\+\_\+ptr \mbox{\hyperlink{classds_1_1_connection_a7fede50bfbc04ac0fba40598ac1b996e}{get\+\_\+properties}} () const
 \begin{DoxyCompactList}\small\item\em Get dataset properties. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classds_1_1_connection_aa0db38e671fc39fb23c13ba3373d7dc8}{read\+\_\+block}} (i3d\+::\+Vector3d$<$ int $>$ coord, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classds_1_1_connection_a2a8f4866ffa2ecd2f4e92b92397070a3}{read\+\_\+block}} (i3d\+::\+Vector3d$<$ int $>$ coord, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \begin{DoxyCompactList}\small\item\em Read one block from server to image. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_ae9563014bb4636781e370530384c2cb4}{read\+\_\+block}} (i3d\+::\+Vector3d$<$ int $>$ coord, i3d\+::\+Image3d$<$ T $>$ \&dest, i3d\+::\+Vector3d$<$ int $>$ dest\+\_\+offset, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_a5c0feddc8a6e89d395999a0495d83829}{read\+\_\+block}} (i3d\+::\+Vector3d$<$ int $>$ coord, i3d\+::\+Image3d$<$ T $>$ \&dest, i3d\+::\+Vector3d$<$ int $>$ dest\+\_\+offset, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \begin{DoxyCompactList}\small\item\em Read one block from server to image. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\std\+::vector$<$ i3d\+::\+Image3d$<$ T $>$ $>$ \mbox{\hyperlink{classds_1_1_connection_af68cd3e821f56119cf7c4701a98599d4}{read\+\_\+blocks}} (const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\std\+::vector$<$ i3d\+::\+Image3d$<$ T $>$ $>$ \mbox{\hyperlink{classds_1_1_connection_a8b58bc861fe1817b09bafaa2bd1e22f1}{read\+\_\+blocks}} (const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \begin{DoxyCompactList}\small\item\em Read blocks from server and return them. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_a896fb7567b84b611bdcfc95718243d2c}{read\+\_\+blocks}} (const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, i3d\+::\+Image3d$<$ T $>$ \&dest, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&dest\+\_\+offsets, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_ac47925d32dbe67fd4be760a849569769}{read\+\_\+blocks}} (const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, i3d\+::\+Image3d$<$ T $>$ \&dest, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&dest\+\_\+offsets, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \begin{DoxyCompactList}\small\item\em Read blocks from server and saves them into prealocated image. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classds_1_1_connection_a68c3184ab5ffdf37bc9a1ec2a448c478}{read\+\_\+region}} (i3d\+::\+Vector3d$<$ int $>$ start\+\_\+point, i3d\+::\+Vector3d$<$ int $>$ end\+\_\+point, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classds_1_1_connection_af280841afc0dd6c7a10ec92eb328beee}{read\+\_\+region}} (i3d\+::\+Vector3d$<$ int $>$ start\+\_\+point, i3d\+::\+Vector3d$<$ int $>$ end\+\_\+point, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \begin{DoxyCompactList}\small\item\em Read region of interest from the server. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_afdc96190246427c800dffa86d2a6a9d9}{read\+\_\+region}} (i3d\+::\+Vector3d$<$ int $>$ start\+\_\+point, i3d\+::\+Vector3d$<$ int $>$ end\+\_\+point, i3d\+::\+Image3d$<$ T $>$ \&dest, i3d\+::\+Vector3d$<$ int $>$ offset, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_acb08cea2f270c04781127d2ce93c9557}{read\+\_\+region}} (i3d\+::\+Vector3d$<$ int $>$ start\+\_\+point, i3d\+::\+Vector3d$<$ int $>$ end\+\_\+point, i3d\+::\+Image3d$<$ T $>$ \&dest, i3d\+::\+Vector3d$<$ int $>$ offset, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \begin{DoxyCompactList}\small\item\em Read region of interest from the server. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classds_1_1_connection_a61717d8f980d4d04c67905e3bee67abf}{read\+\_\+image}} (int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\i3d\+::\+Image3d$<$ T $>$ \mbox{\hyperlink{classds_1_1_connection_a5873115e051044eddefbe066a101c2f3}{read\+\_\+image}} (int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \begin{DoxyCompactList}\small\item\em Read full image. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_a2db680feeb14be92858f316866431256}{write\+\_\+block}} (const i3d\+::\+Image3d$<$ T $>$ \&src, i3d\+::\+Vector3d$<$ int $>$ coord, i3d\+::\+Vector3d$<$ int $>$ src\+\_\+offset, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_ae0c769b98eca34fa1dfae54d9d5014f6}{write\+\_\+block}} (const i3d\+::\+Image3d$<$ T $>$ \&src, i3d\+::\+Vector3d$<$ int $>$ coord, i3d\+::\+Vector3d$<$ int $>$ src\+\_\+offset, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \begin{DoxyCompactList}\small\item\em Write block to server. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_ac98cde9aa1dfb6a56d3c8af7859b4109}{write\+\_\+blocks}} (const i3d\+::\+Image3d$<$ T $>$ \&src, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&src\+\_\+offsets, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_a45c6930400c1c1b80cc54ba7680dc1d1}{write\+\_\+blocks}} (const i3d\+::\+Image3d$<$ T $>$ \&src, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&coords, const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&src\+\_\+offsets, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \begin{DoxyCompactList}\small\item\em Write blocks to server. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_a8cdd90700b2296d3d6b56bedeb523c49}{write\+\_\+image}} (const i3d\+::\+Image3d$<$ T $>$ \&img, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_a7be146f24e215c529a8a066e5b4745e8}{write\+\_\+image}} (const i3d\+::\+Image3d$<$ T $>$ \&img, int channel, int timepoint, int angle, i3d\+::\+Vector3d$<$ int $>$ resolution, const std\+::string \&version, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \begin{DoxyCompactList}\small\item\em Write image to server. \end{DoxyCompactList}\item 
-{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_a915b74a9876a87e34a118de9b0a3ee76}{write\+\_\+with\+\_\+pyramids}} (const i3d\+::\+Image3d$<$ T $>$ \&img, int channel, int timepoint, int angle, const std\+::string \&version, Sampling\+Mode m) const
+{\footnotesize template$<$cnpts\+::\+Scalar T$>$ }\\void \mbox{\hyperlink{classds_1_1_connection_a908dc3d6ba765027770b21d7356c34eb}{write\+\_\+with\+\_\+pyramids}} (const i3d\+::\+Image3d$<$ T $>$ \&img, int channel, int timepoint, int angle, const std\+::string \&version, Sampling\+Mode m, dataset\+\_\+props\+\_\+ptr props=nullptr) const
 \end{DoxyCompactItemize}
 
 
@@ -72,11 +72,11 @@ Construct a new \mbox{\hyperlink{classds_1_1_connection}{Connection}} object.
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classds_1_1_connection_a87173eac0655245d283dd2276dfe8cba}\label{classds_1_1_connection_a87173eac0655245d283dd2276dfe8cba}} 
+\mbox{\Hypertarget{classds_1_1_connection_a7fede50bfbc04ac0fba40598ac1b996e}\label{classds_1_1_connection_a7fede50bfbc04ac0fba40598ac1b996e}} 
 \index{ds::Connection@{ds::Connection}!get\_properties@{get\_properties}}
 \index{get\_properties@{get\_properties}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{get\_properties()}{get\_properties()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{classds_1_1_dataset_properties}{Dataset\+Properties}} ds\+::\+Connection\+::get\+\_\+properties (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+{\footnotesize\ttfamily dataset\+\_\+props\+\_\+ptr ds\+::\+Connection\+::get\+\_\+properties (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
 
 
 
@@ -111,12 +111,12 @@ Get \mbox{\hyperlink{classds_1_1_image_view}{Image\+View}} of specified image.
 \begin{DoxyReturn}{Returns}
 \mbox{\hyperlink{classds_1_1_image_view}{Image\+View}} 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classds_1_1_connection_ae9563014bb4636781e370530384c2cb4}\label{classds_1_1_connection_ae9563014bb4636781e370530384c2cb4}} 
+\mbox{\Hypertarget{classds_1_1_connection_a5c0feddc8a6e89d395999a0495d83829}\label{classds_1_1_connection_a5c0feddc8a6e89d395999a0495d83829}} 
 \index{ds::Connection@{ds::Connection}!read\_block@{read\_block}}
 \index{read\_block@{read\_block}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{read\_block()}{read\_block()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-void ds\+::\+Connection\+::read\+\_\+block (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{dest\+\_\+offset,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+void ds\+::\+Connection\+::read\+\_\+block (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{dest\+\_\+offset,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 
 
@@ -149,13 +149,15 @@ If in DEBUG, function will check wheter given coordinate corresponds to valid bl
 \hline
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
+\hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classds_1_1_connection_aa0db38e671fc39fb23c13ba3373d7dc8}\label{classds_1_1_connection_aa0db38e671fc39fb23c13ba3373d7dc8}} 
+\mbox{\Hypertarget{classds_1_1_connection_a2a8f4866ffa2ecd2f4e92b92397070a3}\label{classds_1_1_connection_a2a8f4866ffa2ecd2f4e92b92397070a3}} 
 \index{ds::Connection@{ds::Connection}!read\_block@{read\_block}}
 \index{read\_block@{read\_block}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{read\_block()}{read\_block()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-i3d\+::\+Image3d$<$ T $>$ ds\+::\+Connection\+::read\+\_\+block (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+i3d\+::\+Image3d$<$ T $>$ ds\+::\+Connection\+::read\+\_\+block (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 
 
@@ -184,16 +186,18 @@ If in DEBUG, function will check wheter given coordinate corresponds to valid bl
 \hline
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
+\hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 Image containing selected block 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classds_1_1_connection_a896fb7567b84b611bdcfc95718243d2c}\label{classds_1_1_connection_a896fb7567b84b611bdcfc95718243d2c}} 
+\mbox{\Hypertarget{classds_1_1_connection_ac47925d32dbe67fd4be760a849569769}\label{classds_1_1_connection_ac47925d32dbe67fd4be760a849569769}} 
 \index{ds::Connection@{ds::Connection}!read\_blocks@{read\_blocks}}
 \index{read\_blocks@{read\_blocks}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{read\_blocks()}{read\_blocks()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-void ds\+::\+Connection\+::read\+\_\+blocks (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{dest\+\_\+offsets,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+void ds\+::\+Connection\+::read\+\_\+blocks (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{dest\+\_\+offsets,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 
 
@@ -226,13 +230,15 @@ If in DEBUG, the function checks if coordinates given in $<$coords$>$ points to 
 \hline
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
+\hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classds_1_1_connection_af68cd3e821f56119cf7c4701a98599d4}\label{classds_1_1_connection_af68cd3e821f56119cf7c4701a98599d4}} 
+\mbox{\Hypertarget{classds_1_1_connection_a8b58bc861fe1817b09bafaa2bd1e22f1}\label{classds_1_1_connection_a8b58bc861fe1817b09bafaa2bd1e22f1}} 
 \index{ds::Connection@{ds::Connection}!read\_blocks@{read\_blocks}}
 \index{read\_blocks@{read\_blocks}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{read\_blocks()}{read\_blocks()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-std\+::vector$<$ i3d\+::\+Image3d$<$ T $>$ $>$ ds\+::\+Connection\+::read\+\_\+blocks (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+std\+::vector$<$ i3d\+::\+Image3d$<$ T $>$ $>$ ds\+::\+Connection\+::read\+\_\+blocks (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 
 
@@ -265,16 +271,18 @@ As there is no (meaningfull) way for C++ to choose correct underlying type in ru
 \hline
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
+\hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 Vector of fetched blocks (the order is the same as given in $<$coords$>$) 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classds_1_1_connection_a61717d8f980d4d04c67905e3bee67abf}\label{classds_1_1_connection_a61717d8f980d4d04c67905e3bee67abf}} 
+\mbox{\Hypertarget{classds_1_1_connection_a5873115e051044eddefbe066a101c2f3}\label{classds_1_1_connection_a5873115e051044eddefbe066a101c2f3}} 
 \index{ds::Connection@{ds::Connection}!read\_image@{read\_image}}
 \index{read\_image@{read\_image}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{read\_image()}{read\_image()}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-i3d\+::\+Image3d$<$ T $>$ ds\+::\+Connection\+::read\+\_\+image (\begin{DoxyParamCaption}\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+i3d\+::\+Image3d$<$ T $>$ ds\+::\+Connection\+::read\+\_\+image (\begin{DoxyParamCaption}\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 
 
@@ -301,16 +309,18 @@ As there is no (meaningfull) way for C++ to choose correct underlying type in ru
 \hline
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
+\hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 i3d\+::\+Image3d$<$\+T$>$ etched image 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classds_1_1_connection_afdc96190246427c800dffa86d2a6a9d9}\label{classds_1_1_connection_afdc96190246427c800dffa86d2a6a9d9}} 
+\mbox{\Hypertarget{classds_1_1_connection_acb08cea2f270c04781127d2ce93c9557}\label{classds_1_1_connection_acb08cea2f270c04781127d2ce93c9557}} 
 \index{ds::Connection@{ds::Connection}!read\_region@{read\_region}}
 \index{read\_region@{read\_region}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{read\_region()}{read\_region()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-void ds\+::\+Connection\+::read\+\_\+region (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{start\+\_\+point,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{end\+\_\+point,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{offset,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+void ds\+::\+Connection\+::read\+\_\+region (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{start\+\_\+point,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{end\+\_\+point,  }\item[{i3d\+::\+Image3d$<$ T $>$ \&}]{dest,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{offset,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 
 
@@ -345,13 +355,15 @@ It is neccessary, that start\+\_\+point \texorpdfstring{$<$}{<} end\+\_\+point (
 \hline
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
+\hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classds_1_1_connection_a68c3184ab5ffdf37bc9a1ec2a448c478}\label{classds_1_1_connection_a68c3184ab5ffdf37bc9a1ec2a448c478}} 
+\mbox{\Hypertarget{classds_1_1_connection_af280841afc0dd6c7a10ec92eb328beee}\label{classds_1_1_connection_af280841afc0dd6c7a10ec92eb328beee}} 
 \index{ds::Connection@{ds::Connection}!read\_region@{read\_region}}
 \index{read\_region@{read\_region}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{read\_region()}{read\_region()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-i3d\+::\+Image3d$<$ T $>$ ds\+::\+Connection\+::read\+\_\+region (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{start\+\_\+point,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{end\+\_\+point,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+i3d\+::\+Image3d$<$ T $>$ ds\+::\+Connection\+::read\+\_\+region (\begin{DoxyParamCaption}\item[{i3d\+::\+Vector3d$<$ int $>$}]{start\+\_\+point,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{end\+\_\+point,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 
 
@@ -380,16 +392,18 @@ Read all neccessary blocks intersecting with chosen region from the server. It i
 \hline
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
+\hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 Image containing selected block 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classds_1_1_connection_a2db680feeb14be92858f316866431256}\label{classds_1_1_connection_a2db680feeb14be92858f316866431256}} 
+\mbox{\Hypertarget{classds_1_1_connection_ae0c769b98eca34fa1dfae54d9d5014f6}\label{classds_1_1_connection_ae0c769b98eca34fa1dfae54d9d5014f6}} 
 \index{ds::Connection@{ds::Connection}!write\_block@{write\_block}}
 \index{write\_block@{write\_block}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{write\_block()}{write\_block()}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-void ds\+::\+Connection\+::write\+\_\+block (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{src,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{src\+\_\+offset,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+void ds\+::\+Connection\+::write\+\_\+block (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{src,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{coord,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{src\+\_\+offset,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 
 
@@ -422,13 +436,15 @@ If in DEBUG, the function checks if coordinate given in $<$coord$>$ points to a 
 \hline
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
+\hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classds_1_1_connection_ac98cde9aa1dfb6a56d3c8af7859b4109}\label{classds_1_1_connection_ac98cde9aa1dfb6a56d3c8af7859b4109}} 
+\mbox{\Hypertarget{classds_1_1_connection_a45c6930400c1c1b80cc54ba7680dc1d1}\label{classds_1_1_connection_a45c6930400c1c1b80cc54ba7680dc1d1}} 
 \index{ds::Connection@{ds::Connection}!write\_blocks@{write\_blocks}}
 \index{write\_blocks@{write\_blocks}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{write\_blocks()}{write\_blocks()}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-void ds\+::\+Connection\+::write\+\_\+blocks (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{src,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{src\+\_\+offsets,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+void ds\+::\+Connection\+::write\+\_\+blocks (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{src,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{coords,  }\item[{const std\+::vector$<$ i3d\+::\+Vector3d$<$ int $>$ $>$ \&}]{src\+\_\+offsets,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 
 
@@ -461,13 +477,15 @@ If in DEBUG, the function checks if coordinates given in $<$coords$>$ points to 
 \hline
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
+\hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classds_1_1_connection_a8cdd90700b2296d3d6b56bedeb523c49}\label{classds_1_1_connection_a8cdd90700b2296d3d6b56bedeb523c49}} 
+\mbox{\Hypertarget{classds_1_1_connection_a7be146f24e215c529a8a066e5b4745e8}\label{classds_1_1_connection_a7be146f24e215c529a8a066e5b4745e8}} 
 \index{ds::Connection@{ds::Connection}!write\_image@{write\_image}}
 \index{write\_image@{write\_image}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{write\_image()}{write\_image()}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-void ds\+::\+Connection\+::write\+\_\+image (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{img,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version }\end{DoxyParamCaption}) const}
+void ds\+::\+Connection\+::write\+\_\+image (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{img,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{i3d\+::\+Vector3d$<$ int $>$}]{resolution,  }\item[{const std\+::string \&}]{version,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 
 
@@ -498,13 +516,15 @@ Mostly, given smaller source image will emit error and fail to upload. Given lar
 \hline
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
+\hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classds_1_1_connection_a915b74a9876a87e34a118de9b0a3ee76}\label{classds_1_1_connection_a915b74a9876a87e34a118de9b0a3ee76}} 
+\mbox{\Hypertarget{classds_1_1_connection_a908dc3d6ba765027770b21d7356c34eb}\label{classds_1_1_connection_a908dc3d6ba765027770b21d7356c34eb}} 
 \index{ds::Connection@{ds::Connection}!write\_with\_pyramids@{write\_with\_pyramids}}
 \index{write\_with\_pyramids@{write\_with\_pyramids}!ds::Connection@{ds::Connection}}
 \doxysubsubsection{\texorpdfstring{write\_with\_pyramids()}{write\_with\_pyramids()}}
 {\footnotesize\ttfamily template$<$cnpts\+::\+Scalar T$>$ \\
-void ds\+::\+Connection\+::write\+\_\+with\+\_\+pyramids (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{img,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{const std\+::string \&}]{version,  }\item[{Sampling\+Mode}]{m }\end{DoxyParamCaption}) const}
+void ds\+::\+Connection\+::write\+\_\+with\+\_\+pyramids (\begin{DoxyParamCaption}\item[{const i3d\+::\+Image3d$<$ T $>$ \&}]{img,  }\item[{int}]{channel,  }\item[{int}]{timepoint,  }\item[{int}]{angle,  }\item[{const std\+::string \&}]{version,  }\item[{Sampling\+Mode}]{m,  }\item[{dataset\+\_\+props\+\_\+ptr}]{props = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
 
 \begin{DoxyVerb}  @brief Write full image and generate pyramids
 
@@ -530,6 +550,8 @@ void ds\+::\+Connection\+::write\+\_\+with\+\_\+pyramids (\begin{DoxyParamCaptio
 {\em version} & Version, at which the image is located (integer identifier or \char`\"{}latest\char`\"{}) \\
 \hline
 {\em m} & Sampling mode used for image resampling \\
+\hline
+{\em props} & \mbox{[}Optional\mbox{]} cached dataset properties \\
 \hline
 \end{DoxyParams}
 

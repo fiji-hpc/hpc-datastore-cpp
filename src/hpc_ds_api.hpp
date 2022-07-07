@@ -45,6 +45,7 @@ inline dataset_props_ptr get_dataset_properties(const std::string& ip,
  * @param resolution Resolution, at which the image is located
  * @param version Version, at which the image is located (integer identifier or
  * "latest")
+ * @param props [Optional] cached dataset properties
  * @return i3d::Image3d<T>
  */
 template <cnpts::Scalar T>
@@ -74,6 +75,7 @@ i3d::Image3d<T> read_image(const std::string& ip,
  * @param resolution Resolution, at which the image is located
  * @param version Version, at which the image is located (integer identifier or
  * "latest")
+ * @param props [Optional] cached dataset properties
  */
 template <cnpts::Scalar T>
 void write_image(const i3d::Image3d<T>& img,
@@ -106,6 +108,7 @@ void write_image(const i3d::Image3d<T>& img,
  * @param version Version, at which the image is located (integer identifier or
  * "latest")
  * @param m Sampling mode used for image resampling
+ * @param props [Optional] cached dataset properties
  */
 template <cnpts::Scalar T>
 void write_with_pyramids(const i3d::Image3d<T>& img,
@@ -143,6 +146,7 @@ class ImageView {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 */
 	ImageView(std::string ip,
 	          int port,
@@ -174,6 +178,7 @@ class ImageView {
 	 *
 	 * @tparam T Scalar used as underlying type for image representation
 	 * @param coord Block coordinate
+	 * @param props [Optional] cached dataset properties
 	 * @return Image containing selected block
 	 */
 	template <cnpts::Scalar T>
@@ -195,6 +200,7 @@ class ImageView {
 	 * @param dest Image to write data to
 	 * @param dest_offset Offset by which the corresponding write should be
 	 * moved
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void read_block(i3d::Vector3d<int> coord,
@@ -224,6 +230,7 @@ class ImageView {
 	 *
 	 * @tparam T Scalar used as underlying type for image representation
 	 * @param coords Block coordinates
+	 * @param props [Optional] cached dataset properties
 	 * @return Vector of fetched blocks (the order is the same as given in
 	 * <coords>)
 	 */
@@ -245,6 +252,7 @@ class ImageView {
 	 * @param coords Block coordinates
 	 * @param dest Prealocated destination image
 	 * @param offsets Offsets at wich the corresponding blocks should be saved
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
@@ -261,6 +269,7 @@ class ImageView {
 	 * @tparam T Scalar used as underlying type for image representation
 	 * @param start_point smallest point of the region
 	 * @param end_point largest point of the region
+	 * @param props [Optional] cached dataset properties
 	 * @return i3d::Image3d<T> Selected region
 	 */
 	template <cnpts::Scalar T>
@@ -281,6 +290,7 @@ class ImageView {
 	 * @param end_point largest point of the region
 	 * @param dest destination image
 	 * @param offset offset to destination image
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void read_region(i3d::Vector3d<int> start_point,
@@ -299,6 +309,7 @@ class ImageView {
 	 * type in runtime, make sure to specify correct template type.
 	 *
 	 * @tparam T Scalar used as underlying type for image representation
+	 * @param props [Optional] cached dataset properties
 	 * @return i3d::Image3d<T> Fetched image
 	 */
 	template <cnpts::Scalar T>
@@ -318,6 +329,7 @@ class ImageView {
 	 * @param src Source image to collect block from
 	 * @param coord Block coordinates
 	 * @param src_offset Offset of given block in source image
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void write_block(const i3d::Image3d<T>& src,
@@ -338,6 +350,7 @@ class ImageView {
 	 * @param src Source image to collect blocks from
 	 * @param coords Vector of block coordinates
 	 * @param src_offsets Offsets of corresponding blocks in source image
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void write_blocks(const i3d::Image3d<T>& src,
@@ -358,6 +371,7 @@ class ImageView {
 	 *
 	 * @tparam T Scalar used as underlying type for image representation
 	 * @param img Source image
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void write_image(const i3d::Image3d<T>& img,
@@ -440,6 +454,7 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 * @return Image containing selected block
 	 */
 	template <cnpts::Scalar T>
@@ -471,6 +486,7 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void read_block(i3d::Vector3d<int> coord,
@@ -511,6 +527,7 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 * @return Vector of fetched blocks (the order is the same as given in
 	 * <coords>)
 	 */
@@ -545,6 +562,7 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
@@ -571,6 +589,7 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 * @return Image containing selected block
 	 */
 	template <cnpts::Scalar T>
@@ -602,6 +621,7 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void read_region(i3d::Vector3d<int> start_point,
@@ -631,6 +651,7 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 * @return i3d::Image3d<T> etched image
 	 */
 	template <cnpts::Scalar T>
@@ -661,6 +682,7 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void write_block(const i3d::Image3d<T>& src,
@@ -693,6 +715,7 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void write_blocks(const i3d::Image3d<T>& src,
@@ -724,6 +747,7 @@ class Connection {
 	 * @param resolution Resolution, at which the image is located
 	 * @param version Version, at which the image is located (integer identifier
 	 * or "latest")
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void write_image(const i3d::Image3d<T>& img,
@@ -752,6 +776,7 @@ class Connection {
  or
  * "latest")
 	 * @param m Sampling mode used for image resampling
+	 * @param props [Optional] cached dataset properties
 	 */
 	template <cnpts::Scalar T>
 	void write_with_pyramids(const i3d::Image3d<T>& img,

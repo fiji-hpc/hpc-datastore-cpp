@@ -262,7 +262,7 @@
 \DoxyCodeLine{321                        i3d::Vector3d<int> end\_point,}
 \DoxyCodeLine{322                        i3d::Vector3d<int> img\_dim,}
 \DoxyCodeLine{323                        i3d::Vector3d<int> block\_dim) \{}
-\DoxyCodeLine{324     assert(start\_point < end\_point);}
+\DoxyCodeLine{324     assert(lt(start\_point, end\_point));}
 \DoxyCodeLine{325 }
 \DoxyCodeLine{326     i3d::Vector3d<int> block\_count = (img\_dim + block\_dim -\/ 1) / block\_dim;}
 \DoxyCodeLine{327     std::vector<i3d::Vector3d<int>> out;}
@@ -271,8 +271,8 @@
 \DoxyCodeLine{330         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} y = 0; y < block\_count.y; ++y)}
 \DoxyCodeLine{331             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_count.z; ++z) \{}
 \DoxyCodeLine{332                 i3d::Vector3d<int> coord = \{x, y, z\};}
-\DoxyCodeLine{333                 \textcolor{keywordflow}{if} (start\_point < (coord + 1) * block\_dim \&\&}
-\DoxyCodeLine{334                     coord * block\_dim < end\_point)}
+\DoxyCodeLine{333                 \textcolor{keywordflow}{if} (lt(start\_point, (coord + 1) * block\_dim) \&\&}
+\DoxyCodeLine{334                     lt(coord * block\_dim, end\_point))}
 \DoxyCodeLine{335                     out.push\_back(coord);}
 \DoxyCodeLine{336             \}}
 \DoxyCodeLine{337 }
@@ -375,235 +375,243 @@
 \DoxyCodeLine{434 }
 \DoxyCodeLine{435     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} x = 0; x < block\_dim.x; ++x)}
 \DoxyCodeLine{436         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} y = 0; y < block\_dim.y; ++y)}
-\DoxyCodeLine{437             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_dim.z; ++z)}
-\DoxyCodeLine{438                 dest.SetVoxel(}
-\DoxyCodeLine{439                     x + offset.x, y + offset.y, z + offset.z,}
-\DoxyCodeLine{440                     get\_elem\_at<T>(data, voxel\_type, \{x, y, z\}, block\_dim));}
-\DoxyCodeLine{441 \}}
-\DoxyCodeLine{442 }
-\DoxyCodeLine{443 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
-\DoxyCodeLine{444 \textcolor{keywordtype}{void} write\_data(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
-\DoxyCodeLine{445                 i3d::Vector3d<int> offset,}
-\DoxyCodeLine{446                 std::span<char> data,}
-\DoxyCodeLine{447                 \textcolor{keyword}{const} std::string\& voxel\_type,}
-\DoxyCodeLine{448                 i3d::Vector3d<int> block\_size) \{}
-\DoxyCodeLine{449     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 0, block\_size.x);}
-\DoxyCodeLine{450     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 4, block\_size.y);}
-\DoxyCodeLine{451     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 8, block\_size.z);}
-\DoxyCodeLine{452 }
-\DoxyCodeLine{453     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} x = 0; x < block\_size.x; ++x)}
-\DoxyCodeLine{454         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} y = 0; y < block\_size.y; ++y)}
-\DoxyCodeLine{455             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_size.z; ++z)}
-\DoxyCodeLine{456                 set\_elem\_at(}
-\DoxyCodeLine{457                     data, voxel\_type, \{x, y, z\}, block\_size,}
-\DoxyCodeLine{458                     src.GetVoxel(x + offset.x, y + offset.y, z + offset.z));}
-\DoxyCodeLine{459 \}}
-\DoxyCodeLine{460 \} \textcolor{comment}{// namespace data\_manip}}
-\DoxyCodeLine{461 }
-\DoxyCodeLine{462 \textcolor{keyword}{namespace }log \{}
-\DoxyCodeLine{463 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void} \_log(\textcolor{keyword}{const} std::string\& msg,}
-\DoxyCodeLine{464                        \textcolor{keyword}{const} std::string\& type,}
-\DoxyCodeLine{465                        \textcolor{keyword}{const} std::source\_location\& location) \{}
-\DoxyCodeLine{466     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_LOG\_)}
-\DoxyCodeLine{467         \textcolor{keywordflow}{return};}
-\DoxyCodeLine{468 }
-\DoxyCodeLine{469     std::cout << fmt::format(\textcolor{stringliteral}{"{}[\{\}] \{\} at row \{\}:\(\backslash\)n\{\} \(\backslash\)n\(\backslash\)n"{}}, type,}
-\DoxyCodeLine{470                              location.function\_name(), location.line(), msg);}
-\DoxyCodeLine{471 \}}
-\DoxyCodeLine{472 }
-\DoxyCodeLine{473 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void} info(\textcolor{keyword}{const} std::string\& msg,}
-\DoxyCodeLine{474                        \textcolor{keyword}{const} std::source\_location\&}
-\DoxyCodeLine{475                            location \textcolor{comment}{/* = std::source\_location::current() */}) \{}
-\DoxyCodeLine{476     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_INFO\_)}
-\DoxyCodeLine{477         \textcolor{keywordflow}{return};}
-\DoxyCodeLine{478     \_log(msg, \textcolor{stringliteral}{"{}INFO"{}}, location);}
+\DoxyCodeLine{437             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_dim.z; ++z) \{}
+\DoxyCodeLine{438                 i3d::Vector3d<int> coord\{x + offset.x, y + offset.y,}
+\DoxyCodeLine{439                                          z + offset.z\};}
+\DoxyCodeLine{440 }
+\DoxyCodeLine{441                 \textcolor{keywordflow}{if} (!(0 <= coord.x \&\& coord.x < \textcolor{keywordtype}{int}(dest.GetSizeX())) ||}
+\DoxyCodeLine{442                     !(0 <= coord.y \&\& coord.y < \textcolor{keywordtype}{int}(dest.GetSizeY())) ||}
+\DoxyCodeLine{443                     !(0 <= coord.z \&\& coord.z < \textcolor{keywordtype}{int}(dest.GetSizeZ())))}
+\DoxyCodeLine{444                     \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{445 }
+\DoxyCodeLine{446                 dest.SetVoxel(coord, get\_elem\_at<T>(data, voxel\_type, \{x, y, z\},}
+\DoxyCodeLine{447                                                     block\_dim));}
+\DoxyCodeLine{448             \}}
+\DoxyCodeLine{449 \}}
+\DoxyCodeLine{450 }
+\DoxyCodeLine{451 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{452 \textcolor{keywordtype}{void} write\_data(\textcolor{keyword}{const} i3d::Image3d<T>\& src,}
+\DoxyCodeLine{453                 i3d::Vector3d<int> offset,}
+\DoxyCodeLine{454                 std::span<char> data,}
+\DoxyCodeLine{455                 \textcolor{keyword}{const} std::string\& voxel\_type,}
+\DoxyCodeLine{456                 i3d::Vector3d<int> block\_size) \{}
+\DoxyCodeLine{457     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 0, block\_size.x);}
+\DoxyCodeLine{458     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 4, block\_size.y);}
+\DoxyCodeLine{459     set\_elem\_at(data, \textcolor{stringliteral}{"{}uint32"{}}, 8, block\_size.z);}
+\DoxyCodeLine{460 }
+\DoxyCodeLine{461     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} x = 0; x < block\_size.x; ++x)}
+\DoxyCodeLine{462         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} y = 0; y < block\_size.y; ++y)}
+\DoxyCodeLine{463             \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} z = 0; z < block\_size.z; ++z)}
+\DoxyCodeLine{464                 set\_elem\_at(}
+\DoxyCodeLine{465                     data, voxel\_type, \{x, y, z\}, block\_size,}
+\DoxyCodeLine{466                     src.GetVoxel(x + offset.x, y + offset.y, z + offset.z));}
+\DoxyCodeLine{467 \}}
+\DoxyCodeLine{468 \} \textcolor{comment}{// namespace data\_manip}}
+\DoxyCodeLine{469 }
+\DoxyCodeLine{470 \textcolor{keyword}{namespace }log \{}
+\DoxyCodeLine{471 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void} \_log(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{472                        \textcolor{keyword}{const} std::string\& type,}
+\DoxyCodeLine{473                        \textcolor{keyword}{const} std::source\_location\& location) \{}
+\DoxyCodeLine{474     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_LOG\_)}
+\DoxyCodeLine{475         \textcolor{keywordflow}{return};}
+\DoxyCodeLine{476 }
+\DoxyCodeLine{477     std::cout << fmt::format(\textcolor{stringliteral}{"{}[\{\}] \{\} at row \{\}:\(\backslash\)n\{\} \(\backslash\)n\(\backslash\)n"{}}, type,}
+\DoxyCodeLine{478                              location.function\_name(), location.line(), msg);}
 \DoxyCodeLine{479 \}}
 \DoxyCodeLine{480 }
-\DoxyCodeLine{481 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void}}
-\DoxyCodeLine{482 warning(\textcolor{keyword}{const} std::string\& msg,}
-\DoxyCodeLine{483         \textcolor{keyword}{const} std::source\_location\&}
-\DoxyCodeLine{484             location \textcolor{comment}{/* = std::source\_location::current() */}) \{}
-\DoxyCodeLine{485     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_WARNING\_)}
-\DoxyCodeLine{486         \textcolor{keywordflow}{return};}
-\DoxyCodeLine{487     \_log(msg, \textcolor{stringliteral}{"{}WARNING"{}}, location);}
-\DoxyCodeLine{488 \}}
-\DoxyCodeLine{489 \} \textcolor{comment}{// namespace log}}
-\DoxyCodeLine{490 }
-\DoxyCodeLine{491 \textcolor{keyword}{namespace }props\_parser \{}
-\DoxyCodeLine{492 }
-\DoxyCodeLine{493 \textcolor{keyword}{template} <cnpts::Basic T>}
-\DoxyCodeLine{494 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
-\DoxyCodeLine{495     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{496         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} was not found"{}}, name));}
-\DoxyCodeLine{497         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{498     \}}
-\DoxyCodeLine{499     \textcolor{keywordflow}{return} root-\/>getValue<T>(name);}
-\DoxyCodeLine{500 \}}
-\DoxyCodeLine{501 }
-\DoxyCodeLine{502 \textcolor{keyword}{template} <cnpts::Vector3d T>}
-\DoxyCodeLine{503 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
-\DoxyCodeLine{504     \textcolor{keyword}{using} V = \textcolor{keyword}{decltype}(T\{\}.x);}
-\DoxyCodeLine{505     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{506         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
-\DoxyCodeLine{507         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{508     \}}
+\DoxyCodeLine{481 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void} info(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{482                        \textcolor{keyword}{const} std::source\_location\&}
+\DoxyCodeLine{483                            location \textcolor{comment}{/* = std::source\_location::current() */}) \{}
+\DoxyCodeLine{484     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_INFO\_)}
+\DoxyCodeLine{485         \textcolor{keywordflow}{return};}
+\DoxyCodeLine{486     \_log(msg, \textcolor{stringliteral}{"{}INFO"{}}, location);}
+\DoxyCodeLine{487 \}}
+\DoxyCodeLine{488 }
+\DoxyCodeLine{489 \textcolor{comment}{/* inline */} \textcolor{keywordtype}{void}}
+\DoxyCodeLine{490 warning(\textcolor{keyword}{const} std::string\& msg,}
+\DoxyCodeLine{491         \textcolor{keyword}{const} std::source\_location\&}
+\DoxyCodeLine{492             location \textcolor{comment}{/* = std::source\_location::current() */}) \{}
+\DoxyCodeLine{493     \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (!\_WARNING\_)}
+\DoxyCodeLine{494         \textcolor{keywordflow}{return};}
+\DoxyCodeLine{495     \_log(msg, \textcolor{stringliteral}{"{}WARNING"{}}, location);}
+\DoxyCodeLine{496 \}}
+\DoxyCodeLine{497 \} \textcolor{comment}{// namespace log}}
+\DoxyCodeLine{498 }
+\DoxyCodeLine{499 \textcolor{keyword}{namespace }props\_parser \{}
+\DoxyCodeLine{500 }
+\DoxyCodeLine{501 \textcolor{keyword}{template} <cnpts::Basic T>}
+\DoxyCodeLine{502 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
+\DoxyCodeLine{503     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{504         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} was not found"{}}, name));}
+\DoxyCodeLine{505         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{506     \}}
+\DoxyCodeLine{507     \textcolor{keywordflow}{return} root-\/>getValue<T>(name);}
+\DoxyCodeLine{508 \}}
 \DoxyCodeLine{509 }
-\DoxyCodeLine{510     Array::Ptr values = root-\/>getArray(name);}
-\DoxyCodeLine{511     \textcolor{keywordflow}{if} (values-\/>size() != 3) \{}
-\DoxyCodeLine{512         log::warning(\textcolor{stringliteral}{"{}Incorrect number of dimensions"{}});}
-\DoxyCodeLine{513         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{514     \}}
-\DoxyCodeLine{515 }
-\DoxyCodeLine{516     T out;}
-\DoxyCodeLine{517     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < 3; ++i)}
-\DoxyCodeLine{518         out[i] = values-\/>getElement<V>(i);}
-\DoxyCodeLine{519 }
-\DoxyCodeLine{520     \textcolor{keywordflow}{return} out;}
-\DoxyCodeLine{521 \}}
-\DoxyCodeLine{522 }
-\DoxyCodeLine{523 \textcolor{keyword}{template} <cnpts::Vector T>}
-\DoxyCodeLine{524 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
-\DoxyCodeLine{525     \textcolor{keyword}{using} V = \textcolor{keyword}{typename} T::value\_type;}
-\DoxyCodeLine{526     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{527         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
-\DoxyCodeLine{528         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{529     \}}
+\DoxyCodeLine{510 \textcolor{keyword}{template} <cnpts::Vector3d T>}
+\DoxyCodeLine{511 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
+\DoxyCodeLine{512     \textcolor{keyword}{using} V = \textcolor{keyword}{decltype}(T\{\}.x);}
+\DoxyCodeLine{513     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{514         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
+\DoxyCodeLine{515         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{516     \}}
+\DoxyCodeLine{517 }
+\DoxyCodeLine{518     Array::Ptr values = root-\/>getArray(name);}
+\DoxyCodeLine{519     \textcolor{keywordflow}{if} (values-\/>size() != 3) \{}
+\DoxyCodeLine{520         log::warning(\textcolor{stringliteral}{"{}Incorrect number of dimensions"{}});}
+\DoxyCodeLine{521         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{522     \}}
+\DoxyCodeLine{523 }
+\DoxyCodeLine{524     T out;}
+\DoxyCodeLine{525     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < 3; ++i)}
+\DoxyCodeLine{526         out[i] = values-\/>getElement<V>(i);}
+\DoxyCodeLine{527 }
+\DoxyCodeLine{528     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{529 \}}
 \DoxyCodeLine{530 }
-\DoxyCodeLine{531     Array::Ptr values = root-\/>getArray(name);}
-\DoxyCodeLine{532     std::size\_t count = values-\/>size();}
-\DoxyCodeLine{533 }
-\DoxyCodeLine{534     T out(count);}
-\DoxyCodeLine{535     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < count; ++i)}
-\DoxyCodeLine{536         out[i] = values-\/>getElement<V>(i);}
-\DoxyCodeLine{537 }
-\DoxyCodeLine{538     \textcolor{keywordflow}{return} out;}
-\DoxyCodeLine{539 \}}
-\DoxyCodeLine{540 }
-\DoxyCodeLine{541 \textcolor{keyword}{template} <cnpts::ResolutionUnit T>}
-\DoxyCodeLine{542 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
-\DoxyCodeLine{543     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{544         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} was not found"{}}, name));}
-\DoxyCodeLine{545         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{546     \}}
-\DoxyCodeLine{547 }
-\DoxyCodeLine{548     Object::Ptr res\_ptr = root-\/>getObject(name);}
-\DoxyCodeLine{549     ResolutionUnit res;}
-\DoxyCodeLine{550 }
-\DoxyCodeLine{551     \textcolor{keywordflow}{if} (res\_ptr-\/>has(\textcolor{stringliteral}{"{}value"{}})) \{}
-\DoxyCodeLine{552         res.value = res\_ptr-\/>getValue<\textcolor{keywordtype}{double}>(\textcolor{stringliteral}{"{}value"{}});}
-\DoxyCodeLine{553     \}}
-\DoxyCodeLine{554 }
-\DoxyCodeLine{555     \textcolor{keywordflow}{if} (res\_ptr-\/>has(\textcolor{stringliteral}{"{}unit"{}})) \{}
-\DoxyCodeLine{556         res.unit = res\_ptr-\/>getValue<std::string>(\textcolor{stringliteral}{"{}unit"{}});}
-\DoxyCodeLine{557     \}}
+\DoxyCodeLine{531 \textcolor{keyword}{template} <cnpts::Vector T>}
+\DoxyCodeLine{532 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
+\DoxyCodeLine{533     \textcolor{keyword}{using} V = \textcolor{keyword}{typename} T::value\_type;}
+\DoxyCodeLine{534     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{535         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
+\DoxyCodeLine{536         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{537     \}}
+\DoxyCodeLine{538 }
+\DoxyCodeLine{539     Array::Ptr values = root-\/>getArray(name);}
+\DoxyCodeLine{540     std::size\_t count = values-\/>size();}
+\DoxyCodeLine{541 }
+\DoxyCodeLine{542     T out(count);}
+\DoxyCodeLine{543     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < count; ++i)}
+\DoxyCodeLine{544         out[i] = values-\/>getElement<V>(i);}
+\DoxyCodeLine{545 }
+\DoxyCodeLine{546     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{547 \}}
+\DoxyCodeLine{548 }
+\DoxyCodeLine{549 \textcolor{keyword}{template} <cnpts::ResolutionUnit T>}
+\DoxyCodeLine{550 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
+\DoxyCodeLine{551     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{552         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} was not found"{}}, name));}
+\DoxyCodeLine{553         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{554     \}}
+\DoxyCodeLine{555 }
+\DoxyCodeLine{556     Object::Ptr res\_ptr = root-\/>getObject(name);}
+\DoxyCodeLine{557     ResolutionUnit res;}
 \DoxyCodeLine{558 }
-\DoxyCodeLine{559     \textcolor{keywordflow}{return} res;}
-\DoxyCodeLine{560 \}}
-\DoxyCodeLine{561 }
-\DoxyCodeLine{562 \textcolor{keyword}{template} <cnpts::Optional T>}
-\DoxyCodeLine{563 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
-\DoxyCodeLine{564     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{565         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
-\DoxyCodeLine{566         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{567     \}}
-\DoxyCodeLine{568 }
-\DoxyCodeLine{569     \textcolor{keywordflow}{if} (root-\/>isNull(name))}
-\DoxyCodeLine{570         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{571 }
-\DoxyCodeLine{572     T out;}
-\DoxyCodeLine{573     out = get\_elem<typename T::value\_type>(root, name);}
-\DoxyCodeLine{574     \textcolor{keywordflow}{return} out;}
-\DoxyCodeLine{575 \}}
+\DoxyCodeLine{559     \textcolor{keywordflow}{if} (res\_ptr-\/>has(\textcolor{stringliteral}{"{}value"{}})) \{}
+\DoxyCodeLine{560         res.value = res\_ptr-\/>getValue<\textcolor{keywordtype}{double}>(\textcolor{stringliteral}{"{}value"{}});}
+\DoxyCodeLine{561     \}}
+\DoxyCodeLine{562 }
+\DoxyCodeLine{563     \textcolor{keywordflow}{if} (res\_ptr-\/>has(\textcolor{stringliteral}{"{}unit"{}})) \{}
+\DoxyCodeLine{564         res.unit = res\_ptr-\/>getValue<std::string>(\textcolor{stringliteral}{"{}unit"{}});}
+\DoxyCodeLine{565     \}}
+\DoxyCodeLine{566 }
+\DoxyCodeLine{567     \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{568 \}}
+\DoxyCodeLine{569 }
+\DoxyCodeLine{570 \textcolor{keyword}{template} <cnpts::Optional T>}
+\DoxyCodeLine{571 T get\_elem(Object::Ptr root, \textcolor{keyword}{const} std::string\& name) \{}
+\DoxyCodeLine{572     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{573         log::warning(fmt::format(\textcolor{stringliteral}{"{}\{\} were not found"{}}, name));}
+\DoxyCodeLine{574         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{575     \}}
 \DoxyCodeLine{576 }
-\DoxyCodeLine{577 \textcolor{comment}{/* inline */} std::vector<std::map<std::string, i3d::Vector3d<int>>>}
-\DoxyCodeLine{578 get\_resolution\_levels(Object::Ptr root) \{}
-\DoxyCodeLine{579     std::string name = \textcolor{stringliteral}{"{}resolutionLevels"{}};}
-\DoxyCodeLine{580 }
-\DoxyCodeLine{581     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
-\DoxyCodeLine{582         log::warning(\textcolor{stringliteral}{"{}resolutionLevels were not found"{}});}
-\DoxyCodeLine{583         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{584     \}}
-\DoxyCodeLine{585 }
-\DoxyCodeLine{586     std::vector<std::map<std::string, i3d::Vector3d<int>>> out;}
-\DoxyCodeLine{587 }
-\DoxyCodeLine{588     Array::Ptr array = root-\/>getArray(name);}
-\DoxyCodeLine{589     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < array-\/>size(); ++i) \{}
-\DoxyCodeLine{590         std::map<std::string, i3d::Vector3d<int>> map;}
-\DoxyCodeLine{591         Object::Ptr map\_ptr = array-\/>getObject(i);}
-\DoxyCodeLine{592 }
-\DoxyCodeLine{593         \textcolor{keywordflow}{for} (\textcolor{keyword}{const} \textcolor{keyword}{auto}\& name : map\_ptr-\/>getNames()) \{}
-\DoxyCodeLine{594             map[name] = get\_elem<i3d::Vector3d<int>>(map\_ptr, name);}
-\DoxyCodeLine{595         \}}
-\DoxyCodeLine{596 }
-\DoxyCodeLine{597         out.push\_back(map);}
-\DoxyCodeLine{598     \}}
-\DoxyCodeLine{599 }
-\DoxyCodeLine{600     \textcolor{keywordflow}{return} out;}
-\DoxyCodeLine{601 \}}
-\DoxyCodeLine{602 }
-\DoxyCodeLine{603 \} \textcolor{comment}{// namespace props\_parser}}
+\DoxyCodeLine{577     \textcolor{keywordflow}{if} (root-\/>isNull(name))}
+\DoxyCodeLine{578         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{579 }
+\DoxyCodeLine{580     T out;}
+\DoxyCodeLine{581     out = get\_elem<typename T::value\_type>(root, name);}
+\DoxyCodeLine{582     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{583 \}}
+\DoxyCodeLine{584 }
+\DoxyCodeLine{585 \textcolor{comment}{/* inline */} std::vector<std::map<std::string, i3d::Vector3d<int>>>}
+\DoxyCodeLine{586 get\_resolution\_levels(Object::Ptr root) \{}
+\DoxyCodeLine{587     std::string name = \textcolor{stringliteral}{"{}resolutionLevels"{}};}
+\DoxyCodeLine{588 }
+\DoxyCodeLine{589     \textcolor{keywordflow}{if} (!root-\/>has(name)) \{}
+\DoxyCodeLine{590         log::warning(\textcolor{stringliteral}{"{}resolutionLevels were not found"{}});}
+\DoxyCodeLine{591         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{592     \}}
+\DoxyCodeLine{593 }
+\DoxyCodeLine{594     std::vector<std::map<std::string, i3d::Vector3d<int>>> out;}
+\DoxyCodeLine{595 }
+\DoxyCodeLine{596     Array::Ptr array = root-\/>getArray(name);}
+\DoxyCodeLine{597     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < array-\/>size(); ++i) \{}
+\DoxyCodeLine{598         std::map<std::string, i3d::Vector3d<int>> map;}
+\DoxyCodeLine{599         Object::Ptr map\_ptr = array-\/>getObject(i);}
+\DoxyCodeLine{600 }
+\DoxyCodeLine{601         \textcolor{keywordflow}{for} (\textcolor{keyword}{const} \textcolor{keyword}{auto}\& name : map\_ptr-\/>getNames()) \{}
+\DoxyCodeLine{602             map[name] = get\_elem<i3d::Vector3d<int>>(map\_ptr, name);}
+\DoxyCodeLine{603         \}}
 \DoxyCodeLine{604 }
-\DoxyCodeLine{605 \textcolor{keyword}{namespace }requests \{}
-\DoxyCodeLine{606 \textcolor{comment}{/* inline */} std::string session\_url\_request(\textcolor{keyword}{const} std::string\& ds\_url,}
-\DoxyCodeLine{607                                              i3d::Vector3d<int> resolution,}
-\DoxyCodeLine{608                                              \textcolor{keyword}{const} std::string\& version) \{}
-\DoxyCodeLine{609 }
-\DoxyCodeLine{610     log::info(}
-\DoxyCodeLine{611         fmt::format(\textcolor{stringliteral}{"{}Obtaining session url for resolution: \{\}, version: \{\}"{}},}
-\DoxyCodeLine{612                     to\_string(resolution), version));}
-\DoxyCodeLine{613     std::string req\_url =}
-\DoxyCodeLine{614         fmt::format(\textcolor{stringliteral}{"{}\{\}/\{\}/\{\}/\{\}/\{\}/read-\/write"{}}, ds\_url, resolution.x,}
-\DoxyCodeLine{615                     resolution.y, resolution.z, version);}
-\DoxyCodeLine{616 }
-\DoxyCodeLine{617     \textcolor{keyword}{auto} [\_, response] = make\_request(req\_url);}
-\DoxyCodeLine{618 }
-\DoxyCodeLine{619     \textcolor{keywordtype}{int} res\_code = response.getStatus();}
-\DoxyCodeLine{620     \textcolor{keywordflow}{if} (res\_code != 307)}
-\DoxyCodeLine{621         log::warning(fmt::format(}
-\DoxyCodeLine{622             \textcolor{stringliteral}{"{}Request ended with status: \{\}, redirection may be incorrect"{}},}
-\DoxyCodeLine{623             res\_code));}
+\DoxyCodeLine{605         out.push\_back(map);}
+\DoxyCodeLine{606     \}}
+\DoxyCodeLine{607 }
+\DoxyCodeLine{608     \textcolor{keywordflow}{return} out;}
+\DoxyCodeLine{609 \}}
+\DoxyCodeLine{610 }
+\DoxyCodeLine{611 \} \textcolor{comment}{// namespace props\_parser}}
+\DoxyCodeLine{612 }
+\DoxyCodeLine{613 \textcolor{keyword}{namespace }requests \{}
+\DoxyCodeLine{614 \textcolor{comment}{/* inline */} std::string session\_url\_request(\textcolor{keyword}{const} std::string\& ds\_url,}
+\DoxyCodeLine{615                                              i3d::Vector3d<int> resolution,}
+\DoxyCodeLine{616                                              \textcolor{keyword}{const} std::string\& version) \{}
+\DoxyCodeLine{617 }
+\DoxyCodeLine{618     log::info(}
+\DoxyCodeLine{619         fmt::format(\textcolor{stringliteral}{"{}Obtaining session url for resolution: \{\}, version: \{\}"{}},}
+\DoxyCodeLine{620                     to\_string(resolution), version));}
+\DoxyCodeLine{621     std::string req\_url =}
+\DoxyCodeLine{622         fmt::format(\textcolor{stringliteral}{"{}\{\}/\{\}/\{\}/\{\}/\{\}/read-\/write"{}}, ds\_url, resolution.x,}
+\DoxyCodeLine{623                     resolution.y, resolution.z, version);}
 \DoxyCodeLine{624 }
-\DoxyCodeLine{625     \textcolor{keywordflow}{return} response.get(\textcolor{stringliteral}{"{}Location"{}});}
-\DoxyCodeLine{626 \}}
-\DoxyCodeLine{627 }
-\DoxyCodeLine{628 \textcolor{comment}{/* inline */} std::pair<std::vector<char>, Poco::Net::HTTPResponse>}
-\DoxyCodeLine{629 make\_request(\textcolor{keyword}{const} std::string\& url,}
-\DoxyCodeLine{630              \textcolor{keyword}{const} std::string\& type \textcolor{comment}{/*  = Poco::Net::HTTPRequest::HTTP\_GET */},}
-\DoxyCodeLine{631              \textcolor{keyword}{const} std::vector<char>\& data \textcolor{comment}{/*  = \{\} */},}
-\DoxyCodeLine{632              \textcolor{keyword}{const} std::map<std::string, std::string>\& headers \textcolor{comment}{/* = \{\} */}) \{}
-\DoxyCodeLine{633     Poco::URI uri(url);}
-\DoxyCodeLine{634     std::string path(uri.getPathAndQuery());}
+\DoxyCodeLine{625     \textcolor{keyword}{auto} [\_, response] = make\_request(req\_url);}
+\DoxyCodeLine{626 }
+\DoxyCodeLine{627     \textcolor{keywordtype}{int} res\_code = response.getStatus();}
+\DoxyCodeLine{628     \textcolor{keywordflow}{if} (res\_code != 307)}
+\DoxyCodeLine{629         log::warning(fmt::format(}
+\DoxyCodeLine{630             \textcolor{stringliteral}{"{}Request ended with status: \{\}, redirection may be incorrect"{}},}
+\DoxyCodeLine{631             res\_code));}
+\DoxyCodeLine{632 }
+\DoxyCodeLine{633     \textcolor{keywordflow}{return} response.get(\textcolor{stringliteral}{"{}Location"{}});}
+\DoxyCodeLine{634 \}}
 \DoxyCodeLine{635 }
-\DoxyCodeLine{636     Poco::Net::HTTPClientSession session(uri.getHost(), uri.getPort());}
-\DoxyCodeLine{637 }
-\DoxyCodeLine{638     Poco::Net::HTTPRequest request(type, path,}
-\DoxyCodeLine{639                                    Poco::Net::HTTPMessage::HTTP\_1\_1);}
-\DoxyCodeLine{640 }
-\DoxyCodeLine{641     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto}\& [key, value] : headers)}
-\DoxyCodeLine{642         request.set(key, value);}
+\DoxyCodeLine{636 \textcolor{comment}{/* inline */} std::pair<std::vector<char>, Poco::Net::HTTPResponse>}
+\DoxyCodeLine{637 make\_request(\textcolor{keyword}{const} std::string\& url,}
+\DoxyCodeLine{638              \textcolor{keyword}{const} std::string\& type \textcolor{comment}{/*  = Poco::Net::HTTPRequest::HTTP\_GET */},}
+\DoxyCodeLine{639              \textcolor{keyword}{const} std::vector<char>\& data \textcolor{comment}{/*  = \{\} */},}
+\DoxyCodeLine{640              \textcolor{keyword}{const} std::map<std::string, std::string>\& headers \textcolor{comment}{/* = \{\} */}) \{}
+\DoxyCodeLine{641     Poco::URI uri(url);}
+\DoxyCodeLine{642     std::string path(uri.getPathAndQuery());}
 \DoxyCodeLine{643 }
-\DoxyCodeLine{644     request.setContentLength(data.size());}
+\DoxyCodeLine{644     Poco::Net::HTTPClientSession session(uri.getHost(), uri.getPort());}
 \DoxyCodeLine{645 }
-\DoxyCodeLine{646     log::info(fmt::format(\textcolor{stringliteral}{"{}Sending \{\} request to url: \{\}"{}}, type, url));}
-\DoxyCodeLine{647     std::ostream\& os = session.sendRequest(request);}
-\DoxyCodeLine{648     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{char} ch : data)}
-\DoxyCodeLine{649         os << ch;}
-\DoxyCodeLine{650 }
-\DoxyCodeLine{651     Poco::Net::HTTPResponse response;}
-\DoxyCodeLine{652     std::istream\& rs = session.receiveResponse(response);}
+\DoxyCodeLine{646     Poco::Net::HTTPRequest request(type, path,}
+\DoxyCodeLine{647                                    Poco::Net::HTTPMessage::HTTP\_1\_1);}
+\DoxyCodeLine{648 }
+\DoxyCodeLine{649     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto}\& [key, value] : headers)}
+\DoxyCodeLine{650         request.set(key, value);}
+\DoxyCodeLine{651 }
+\DoxyCodeLine{652     request.setContentLength(data.size());}
 \DoxyCodeLine{653 }
-\DoxyCodeLine{654     std::vector<char> out\{std::istreambuf\_iterator<char>(rs),}
-\DoxyCodeLine{655                           std::istreambuf\_iterator<char>()\};}
-\DoxyCodeLine{656 }
-\DoxyCodeLine{657     log::info(fmt::format(}
-\DoxyCodeLine{658         \textcolor{stringliteral}{"{}Fetched response with status: \{\}, reason: \{\}, content size: \{\}"{}},}
-\DoxyCodeLine{659         response.getStatus(), response.getReason(), out.size()));}
-\DoxyCodeLine{660 }
-\DoxyCodeLine{661     \textcolor{keywordflow}{return} \{out, response\};}
-\DoxyCodeLine{662 \}}
-\DoxyCodeLine{663 }
-\DoxyCodeLine{664 \} \textcolor{comment}{// namespace requests}}
-\DoxyCodeLine{665 \} \textcolor{comment}{// namespace details}}
-\DoxyCodeLine{666 \} \textcolor{comment}{// namespace ds}}
+\DoxyCodeLine{654     log::info(fmt::format(\textcolor{stringliteral}{"{}Sending \{\} request to url: \{\}"{}}, type, url));}
+\DoxyCodeLine{655     std::ostream\& os = session.sendRequest(request);}
+\DoxyCodeLine{656     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{char} ch : data)}
+\DoxyCodeLine{657         os << ch;}
+\DoxyCodeLine{658 }
+\DoxyCodeLine{659     Poco::Net::HTTPResponse response;}
+\DoxyCodeLine{660     std::istream\& rs = session.receiveResponse(response);}
+\DoxyCodeLine{661 }
+\DoxyCodeLine{662     std::vector<char> out\{std::istreambuf\_iterator<char>(rs),}
+\DoxyCodeLine{663                           std::istreambuf\_iterator<char>()\};}
+\DoxyCodeLine{664 }
+\DoxyCodeLine{665     log::info(fmt::format(}
+\DoxyCodeLine{666         \textcolor{stringliteral}{"{}Fetched response with status: \{\}, reason: \{\}, content size: \{\}"{}},}
+\DoxyCodeLine{667         response.getStatus(), response.getReason(), out.size()));}
+\DoxyCodeLine{668 }
+\DoxyCodeLine{669     \textcolor{keywordflow}{return} \{out, response\};}
+\DoxyCodeLine{670 \}}
+\DoxyCodeLine{671 }
+\DoxyCodeLine{672 \} \textcolor{comment}{// namespace requests}}
+\DoxyCodeLine{673 \} \textcolor{comment}{// namespace details}}
+\DoxyCodeLine{674 \} \textcolor{comment}{// namespace ds}}
 
 \end{DoxyCode}

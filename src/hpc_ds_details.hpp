@@ -88,6 +88,23 @@ get_intercepted_blocks(i3d::Vector3d<int> start_point,
                        i3d::Vector3d<int> img_dim,
                        i3d::Vector3d<int> block_dim);
 
+/**
+ * @brief Create an optimized requests
+ *
+ * @param coords requested block coordinates
+ * @param session_url connection session url
+ * @param timepoint
+ * @param channel
+ * @param angle
+ * @return Vector of pair: {request_url, coord indexes}
+ */
+inline std::vector<std::pair<std::string, std::vector<std::size_t>>>
+create_requests(const std::vector<i3d::Vector3d<int>>& coords,
+                const std::string& session_url,
+                int timepoint,
+                int channel,
+                int angle);
+
 namespace data_manip {
 inline int get_block_data_size(i3d::Vector3d<int> block_size,
                                const std::string& voxel_type);
@@ -334,6 +351,40 @@ get_intercepted_blocks(i3d::Vector3d<int> start_point,
 				    lt(coord * block_dim, end_point))
 					out.push_back(coord);
 			}
+
+	return out;
+}
+
+/* inline */ std::vector<std::pair<std::string, std::vector<std::size_t>>>
+create_requests(const std::vector<i3d::Vector3d<int>>& coords,
+                const std::string& session_url,
+                int timepoint,
+                int channel,
+                int angle) {
+	std::vector<std::pair<std::string, std::vector<std::size_t>>> out;
+
+	std::string final_url = session_url;
+	std::vector<std::size_t> indexes;
+
+	for (std::size_t i = 0; i < coords.size(); ++i) {
+		const auto& coord = coords[i];
+		std::string to_append =
+		    fmt::format("/{}/{}/{}/{}/{}/{}", coord.x, coord.y, coord.z,
+		                timepoint, channel, angle);
+
+		if (final_url.size() + to_append.size() > MAX_URL_LENGTH) {
+			out.emplace_back(final_url, indexes);
+			final_url = session_url;
+			indexes.clear();
+		}
+
+		final_url += to_append;
+		indexes.push_back(i);
+	}
+
+	if (!indexes.empty()) {
+		out.emplace_back(final_url, indexes);
+	}
 
 	return out;
 }

@@ -944,17 +944,26 @@ void ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	if (session_url.ends_with('/'))
 		session_url.pop_back();
 
+	std::vector<std::pair<std::string, std::vector<std::size_t>>> requests =
+	    details::create_requests(coords, session_url, _timepoint, _channel,
+	                             _angle);
+
 	/* Fetch blocks one by one */
-	for (std::size_t i = 0; i < coords.size(); ++i) {
-		auto& coord = coords[i];
-		auto& offset = offsets[i];
+	for (const auto& [req, idxs] : requests) {
+		auto [data, response] = details::requests::make_request(req);
 
-		std::string url =
-		    fmt::format("{}/{}/{}/{}/{}/{}/{}", session_url, coord.x, coord.y,
-		                coord.z, _timepoint, _channel, _angle);
-		auto [data, response] = details::requests::make_request(url);
+		std::size_t start_i = 0;
+		for (std::size_t i : idxs) {
+			std::size_t size = details::data_manip::get_block_data_size(
+			    props->get_block_size(coords[i], _resolution),
+			    props->voxel_type);
 
-		details::data_manip::read_data(data, props->voxel_type, dest, offset);
+			details::data_manip::read_data(
+			    std::span(data.begin() + start_i, size), props->voxel_type,
+			    dest, offsets[i]);
+
+			start_i += size;
+		}
 	}
 }
 

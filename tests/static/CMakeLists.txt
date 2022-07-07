@@ -80,15 +80,18 @@ find_package(RXSpencer CONFIG REQUIRED)
 set(LIBS ${LIBS} rxspencer)
 
 # I3D library
-# set(LIBS ${LIBS} "${CMAKE_SOURCE_DIR}/libs/src-core/libi3core.a" "${CMAKE_SOURCE_DIR}/libs/src/libi3dalgo.a")
+set(LIBS "${CMAKE_SOURCE_DIR}/libs/libi3dcore.a" "${CMAKE_SOURCE_DIR}/libs/libi3dalgo.a" ${LIBS})
+set(INCL_DIRS "${CMAKE_SOURCE_DIR}/includes")
 
 add_executable(unit_tests "../units/main.cpp")
-target_link_libraries(unit_tests "${CMAKE_SOURCE_DIR}/libs/libi3dcore.a" "${CMAKE_SOURCE_DIR}/libs/libi3dalgo.a" ${LIBS})
+target_link_libraries(unit_tests ${LIBS})
+target_include_directories(unit_tests SYSTEM PUBLIC ${INCL_DIRS})
 
 foreach(PROJ read_blocks read_image write_blocks write_image)
     add_executable("${PROJ}" "../speeds/${PROJ}.cpp")
-    target_link_libraries("${PROJ}" "${CMAKE_SOURCE_DIR}/libs/libi3dcore.a" "${CMAKE_SOURCE_DIR}/libs/libi3dalgo.a" ${LIBS})
+    target_link_libraries("${PROJ}" ${LIBS})
     set_target_properties("${PROJ}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/speeds")
+    target_include_directories("${PROJ}" SYSTEM PUBLIC ${INCL_DIRS})
 endforeach()
 
 

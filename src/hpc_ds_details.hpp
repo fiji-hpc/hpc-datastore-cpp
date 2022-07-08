@@ -150,12 +150,14 @@ void set_elem_at(std::span<char> data,
  * @param voxel_type data type of image in <data>
  * @param dest destination image
  * @param offset offset to destination image
+ * @param block_size size of expected block
  */
 template <typename T>
 void read_data(std::span<const char> data,
                const std::string& voxel_type,
                i3d::Image3d<T>& dest,
-               i3d::Vector3d<int> offset);
+               i3d::Vector3d<int> offset,
+			   i3d::Vector3d<int> block_size);
 
 /**
  * @brief Write image to data
@@ -480,14 +482,14 @@ template <typename T>
 void read_data(std::span<const char> data,
                const std::string& voxel_type,
                i3d::Image3d<T>& dest,
-               i3d::Vector3d<int> offset) {
-	i3d::Vector3d<int> block_dim;
-	for (int i = 0; i < 3; ++i)
-		block_dim[i] = get_elem_at<int>(data, "uint32", i * 4);
+               i3d::Vector3d<int> offset,
+			   i3d::Vector3d<int> block_size) {
 
-	for (int x = 0; x < block_dim.x; ++x)
-		for (int y = 0; y < block_dim.y; ++y)
-			for (int z = 0; z < block_dim.z; ++z) {
+	assert(std::size_t(get_block_data_size(block_size, voxel_type)) == data.size());
+
+	for (int x = 0; x < block_size.x; ++x)
+		for (int y = 0; y < block_size.y; ++y)
+			for (int z = 0; z < block_size.z; ++z) {
 				i3d::Vector3d<int> coord{x + offset.x, y + offset.y,
 				                         z + offset.z};
 
@@ -497,7 +499,7 @@ void read_data(std::span<const char> data,
 					continue;
 
 				dest.SetVoxel(coord, get_elem_at<T>(data, voxel_type, {x, y, z},
-				                                    block_dim));
+				                                    block_size));
 			}
 }
 

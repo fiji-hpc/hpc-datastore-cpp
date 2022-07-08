@@ -8,11 +8,11 @@
 /** DO NOT FORGET TO CHANGE THESE TO MATCH YOUR SERVER **/
 
 /* SERVER PROPERTIES  */
-const std::string SERVER_IP = "127.0.0.1";
-constexpr int SERVER_PORT = 9080;
+const std::string SERVER_IP = "http://alfeios.fi.muni.cz";
+constexpr int SERVER_PORT = 19080;
 
 /* DATASET PROPERTIES */
-const std::string DS_UUID = "59c4e076-c4c8-4703-b5ee-fbfdb47d340d";
+const std::string DS_UUID = "2af2d295-61f6-41ca-968c-418e6fd91464";
 
 /* IMAGE PROPERTIES */
 constexpr int IMG_CHANNEL = 0;

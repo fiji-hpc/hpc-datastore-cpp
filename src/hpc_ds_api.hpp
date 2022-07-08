@@ -952,13 +952,14 @@ void ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 
 		std::size_t start_i = 0;
 		for (std::size_t i : idxs) {
+			i3d::Vector3d<int> block_size = props->get_block_size(coords[i], _resolution);
 			std::size_t data_size = details::data_manip::get_block_data_size(
-			    props->get_block_size(coords[i], _resolution),
+			    block_size,
 			    props->voxel_type);
 
 			details::data_manip::read_data(
 			    std::span(data.begin() + start_i, data_size), props->voxel_type,
-			    dest, offsets[i]);
+			    dest, offsets[i], block_size);
 
 			start_i += data_size;
 		}

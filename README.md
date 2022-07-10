@@ -111,7 +111,7 @@ To this date, only three types of image are fully supported:
 
 * **uint8_t** (i3d::GRAY8)
 * **uint16_t** (i3d::GRAY16)
-* **float** (i3d::FLOAT32)
+* **float**
 
 There is a chance, that some of other types might work as well, but with limited functionality (i. e. it depends what template do you instantiate). The unsupported fromat will show itself as undefined reference to some internal function.
 

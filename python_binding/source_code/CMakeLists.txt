@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(HPC_Datastore_unit_tests CXX)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wconversion -fmax-errors=1 -g -O2 -static-libgcc -static-libstdc++")
 set(CMAKE_CXX_COMPILER g++)
-set(CMAKE_CXX_STANDARD 20)
+
+project(HPC_Datastore_pybind CXX)
 
 # disable info message print
 add_compile_options(-DDATASTORE_NINFO)
@@ -79,19 +77,19 @@ endif(WIN32)
 find_package(RXSpencer CONFIG REQUIRED)
 set(LIBS ${LIBS} rxspencer)
 
-# Pybind11
-find_package(pybind11 CONFIG REQUIRED)
-set(LIBS ${LIBS} pybind11::lto pybind11::embed pybind11::module)
-
-
 # I3D library
 set(STATIC_DIR "${CMAKE_SOURCE_DIR}/../../static_i3dlib")
 set(LIBS "${STATIC_DIR}/libs/libi3dcore.a" "${STATIC_DIR}/libs/libi3dalgo.a" ${LIBS})
 set(INCL_DIRS "${STATIC_DIR}/includes")
 
-add_executable(main "src/main.cpp")
-target_link_libraries(main ${LIBS})
+# Pybind11 library 
+add_subdirectory("${CMAKE_SOURCE_DIR}/pybind11")
+set(INCL_DIRS "${CMAKE_SOURCE_DIR}/pybind11/include")
+
+pybind11_add_module(main src/main.cpp)
+target_link_libraries(main PUBLIC ${LIBS})
 target_include_directories(main SYSTEM PUBLIC ${INCL_DIRS})
 
-
-
+# add compile options
+set_target_properties(main PROPERTIES CXX_STANDARD 20)
+set_target_properties(main PROPERTIES COMPILE_FLAGS "-Wall -Wextra -Wconversion -fmax-errors=1 -g -O2 -static-libgcc -static-libstdc++")

@@ -80,8 +80,9 @@ find_package(RXSpencer CONFIG REQUIRED)
 set(LIBS ${LIBS} rxspencer)
 
 # I3D library
-set(LIBS "${CMAKE_SOURCE_DIR}/libs/libi3dcore.a" "${CMAKE_SOURCE_DIR}/libs/libi3dalgo.a" ${LIBS})
-set(INCL_DIRS "${CMAKE_SOURCE_DIR}/includes")
+set(STATIC_DIR "${CMAKE_SOURCE_DIR}/../../static_i3dlib")
+set(LIBS "${STATIC_DIR}/libs/libi3dcore.a" "${STATIC_DIR}/libs/libi3dalgo.a" ${LIBS})
+set(INCL_DIRS "${STATIC_DIR}/includes")
 
 add_executable(unit_tests "../units/main.cpp")
 target_link_libraries(unit_tests ${LIBS})

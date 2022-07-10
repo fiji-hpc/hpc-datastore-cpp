@@ -8,7 +8,7 @@ set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD 20)
 
 # disable info message print
-add_compile_options(-DDATASTORE_NLOG)
+add_compile_options(-DDATASTORE_NINFO)
 
 
 # FMT library

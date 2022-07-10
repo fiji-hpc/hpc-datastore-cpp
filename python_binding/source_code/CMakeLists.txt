@@ -79,21 +79,19 @@ endif(WIN32)
 find_package(RXSpencer CONFIG REQUIRED)
 set(LIBS ${LIBS} rxspencer)
 
+# Pybind11
+find_package(pybind11 CONFIG REQUIRED)
+set(LIBS ${LIBS} pybind11::lto pybind11::embed pybind11::module)
+
+
 # I3D library
 set(STATIC_DIR "${CMAKE_SOURCE_DIR}/../../static_i3dlib")
 set(LIBS "${STATIC_DIR}/libs/libi3dcore.a" "${STATIC_DIR}/libs/libi3dalgo.a" ${LIBS})
 set(INCL_DIRS "${STATIC_DIR}/includes")
 
-add_executable(unit_tests "../units/main.cpp")
-target_link_libraries(unit_tests ${LIBS})
-target_include_directories(unit_tests SYSTEM PUBLIC ${INCL_DIRS})
-
-foreach(PROJ read_blocks read_image write_blocks write_image)
-    add_executable("${PROJ}" "../speeds/${PROJ}.cpp")
-    target_link_libraries("${PROJ}" ${LIBS})
-    set_target_properties("${PROJ}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/speeds")
-    target_include_directories("${PROJ}" SYSTEM PUBLIC ${INCL_DIRS})
-endforeach()
+add_executable(main "src/main.cpp")
+target_link_libraries(main ${LIBS})
+target_include_directories(main SYSTEM PUBLIC ${INCL_DIRS})
 
 
 

@@ -1,0 +1,28 @@
+{
+    "name": "hpc-datastore-cpp-pybind",
+    "version-string": "0.0.1",
+    "dependencies": [
+        "fmt",
+        "poco",
+        "openblas",
+        "clapack",
+        "hdf5",
+        "tiff",
+        "libjpeg-turbo",
+        "zlib",
+        "libpng",
+        "libics",
+        "rxspencer",
+        {
+            "name":"dcmtk",
+            "platform":"windows"
+        },
+        {
+            "name": "fftw3",
+            "features": [
+                "threads"
+            ]
+        },
+        "pybind11"
+    ]
+}

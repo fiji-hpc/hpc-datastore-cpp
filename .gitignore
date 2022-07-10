@@ -6,3 +6,4 @@ samples/build*
 samples/*/build*
 tests/*/build*
 tmp
+python_binding/build*

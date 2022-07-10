@@ -102,6 +102,21 @@ Use this, if you want to connect to different images from one dataset. This clas
 ### 4.3 ImageView class
 Use this, if you want to connect to one specified image (and use several read/write operations on it). This class will remember the image and you will not have to write it all over again.
 
+
+### 4.4 Supported features
+Limited support for image types comes from i3d library. This project does not put any restriction on used type (apart from voxel type, which has to be scalar). If you download new version of i3dlib in the future, this code will adapt itself accordingly, so there is no need for changing anything and you can use new functionality.
+
+To this date, only three types of image are fully supported:
+
+* uint8_t (i3d::GRAY8)
+* uint16_t (i3d::GRAY16)
+* float (i3d::FLOAT32)
+
+There is a chance, that some of other types might work as well, but with limited functionality (i. e. it depends what template do you instantiate). The unsupported fromat will show itself as undefined reference to some internal function.
+
+
+There is also limitation on sampling algorithm using when uploading with pyramids. Currently, only nearest neighbour is implemented in i3dlib. We hope, that one day, this will improve.
+
 ## 5 Samples
 There exist few samples, that can be used to check, if project is compilable, and to `quick start` your datastore journey.
 

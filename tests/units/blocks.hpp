@@ -8,6 +8,7 @@ template <typename T>
 void test_blocks() {
 	test_start("Read/Write blocks");
 
+	
 	phase_start("Fetch dataset properties");
 	auto props = ds::get_dataset_properties(SERVER_IP, SERVER_PORT, DS_UUID);
 	phase_ok();

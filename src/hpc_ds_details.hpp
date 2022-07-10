@@ -157,7 +157,7 @@ void read_data(std::span<const char> data,
                const std::string& voxel_type,
                i3d::Image3d<T>& dest,
                i3d::Vector3d<int> offset,
-			   i3d::Vector3d<int> block_size);
+               i3d::Vector3d<int> block_size);
 
 /**
  * @brief Write image to data
@@ -483,9 +483,10 @@ void read_data(std::span<const char> data,
                const std::string& voxel_type,
                i3d::Image3d<T>& dest,
                i3d::Vector3d<int> offset,
-			   i3d::Vector3d<int> block_size) {
+               i3d::Vector3d<int> block_size) {
 
-	assert(std::size_t(get_block_data_size(block_size, voxel_type)) == data.size());
+	assert(std::size_t(get_block_data_size(block_size, voxel_type)) ==
+	       data.size());
 
 	for (int x = 0; x < block_size.x; ++x)
 		for (int y = 0; y < block_size.y; ++y)
@@ -509,16 +510,25 @@ void write_data(const i3d::Image3d<T>& src,
                 std::span<char> data,
                 const std::string& voxel_type,
                 i3d::Vector3d<int> block_size) {
-	set_elem_at(data, "uint32", 0, block_size.x);
-	set_elem_at(data, "uint32", 4, block_size.y);
-	set_elem_at(data, "uint32", 8, block_size.z);
+
+	assert(data.size() ==
+	       std::size_t(get_block_data_size(block_size, voxel_type)));
+
+	set_elem_at(data, "int32", 0, block_size.x);
+	set_elem_at(data, "int32", 4, block_size.y);
+	set_elem_at(data, "int32", 8, block_size.z);
 
 	for (int x = 0; x < block_size.x; ++x)
 		for (int y = 0; y < block_size.y; ++y)
-			for (int z = 0; z < block_size.z; ++z)
+			for (int z = 0; z < block_size.z; ++z) {
+				assert(x + offset.x < int(src.GetSizeX()));
+				assert(y + offset.y < int(src.GetSizeY()));
+				assert(z + offset.z < int(src.GetSizeZ()));
+
 				set_elem_at(
 				    data, voxel_type, {x, y, z}, block_size,
 				    src.GetVoxel(x + offset.x, y + offset.y, z + offset.z));
+			}
 }
 } // namespace data_manip
 

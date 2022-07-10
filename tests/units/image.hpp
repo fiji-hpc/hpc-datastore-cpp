@@ -67,6 +67,7 @@ void test_image() {
 
 	phase_ok();
 	
+	
 	phase_start("Write with pyramids");
 
 	{

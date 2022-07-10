@@ -19,6 +19,7 @@ Table of Contents
   * [4.1 Global (datastore::) scope](#41-global-datastore-scope)
   * [4.2 Connection class](#42-connection-class)
   * [4.3 ImageView class](#43-imageview-class)
+  * [4.4 Supported features](#44-supported-features)
 * [5 Samples](#5-samples)
   * [5.1 Building sample(s)](#51-building-samples)
 * [6 Tests](#6-tests)
@@ -108,9 +109,9 @@ Limited support for image types comes from i3d library. This project does not pu
 
 To this date, only three types of image are fully supported:
 
-* uint8_t (i3d::GRAY8)
-* uint16_t (i3d::GRAY16)
-* float (i3d::FLOAT32)
+* **uint8_t** (i3d::GRAY8)
+* **uint16_t** (i3d::GRAY16)
+* **float** (i3d::FLOAT32)
 
 There is a chance, that some of other types might work as well, but with limited functionality (i. e. it depends what template do you instantiate). The unsupported fromat will show itself as undefined reference to some internal function.
 

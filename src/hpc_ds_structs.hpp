@@ -208,12 +208,13 @@ class DatasetProperties {
 	i3d::Vector3d<int> get_block_size(i3d::Vector3d<int> coord,
 	                                  i3d::Vector3d<int> resolution) const {
 		i3d::Vector3d<int> block_dim = get_block_dimensions(resolution);
+		i3d::Vector3d<int> img_dim = get_img_dimensions(resolution);
 		i3d::Vector3d<int> start = (coord * block_dim);
 		i3d::Vector3d<int> end = (coord + 1) * block_dim;
 
 		i3d::Vector3d<int> out;
 		for (int i = 0; i < 3; ++i) {
-			out[i] = std::max(0, std::min(dimensions[i], end[i]) -
+			out[i] = std::max(0, std::min(img_dim[i], end[i]) -
 			                         std::max(start[i], 0));
 		}
 		return out;

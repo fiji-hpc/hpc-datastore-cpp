@@ -1057,7 +1057,7 @@ void ImageView::write_blocks(const i3d::Image3d<T>& src,
 
 	std::vector<std::pair<std::string, std::vector<std::size_t>>> requests =
 	    details::create_requests(coords, session_url, _timepoint, _channel,
-	                             _angle, 256);
+	                             _angle, 512 / sizeof(T));
 
 	for (const auto& [req, idxs] : requests) {
 		std::size_t full_size = 0;

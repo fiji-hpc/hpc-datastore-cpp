@@ -173,7 +173,7 @@ void test_block() {
 		assert(view.read_image<T>() == random_img);
 	}
 	phase_ok();
-
+	
 	test_ok();
 }
 } // namespace units

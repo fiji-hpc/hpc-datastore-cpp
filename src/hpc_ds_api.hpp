@@ -22,9 +22,8 @@ namespace ds {
  * @param uuid Unique identifier of dataset
  * @return DatasetProperties
  */
-inline dataset_props_ptr get_dataset_properties(const std::string& ip,
-                                                int port,
-                                                const std::string& uuid);
+inline std::unique_ptr<DatasetProperties> get_dataset_properties(
+    const std::string& ip, int port, const std::string& uuid);
 
 /**
  * @brief Read full image
@@ -799,11 +798,10 @@ class Connection {
 
 namespace ds {
 /* ===================================== Global space */
-/* inline */ dataset_props_ptr get_dataset_properties(const std::string& ip,
-                                                      int port,
-                                                      const std::string& uuid) {
+/* inline */ std::unique_ptr<DatasetProperties> get_dataset_properties(
+    const std::string& ip, int port, const std::string& uuid) {
 	std::string dataset_url = details::get_dataset_url(ip, port, uuid);
-	return std::make_shared<DatasetProperties>(
+	return std::make_unique<DatasetProperties>(
 	    details::get_dataset_properties(dataset_url));
 }
 
@@ -952,10 +950,10 @@ void ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 
 		std::size_t start_i = 0;
 		for (std::size_t i : idxs) {
-			i3d::Vector3d<int> block_size = props->get_block_size(coords[i], _resolution);
+			i3d::Vector3d<int> block_size =
+			    props->get_block_size(coords[i], _resolution);
 			std::size_t data_size = details::data_manip::get_block_data_size(
-			    block_size,
-			    props->voxel_type);
+			    block_size, props->voxel_type);
 
 			details::data_manip::read_data(
 			    std::span(data.begin() + start_i, data_size), props->voxel_type,
@@ -1079,8 +1077,8 @@ void ImageView::write_blocks(const i3d::Image3d<T>& src,
 
 			details::data_manip::write_data(
 			    src, src_offsets[i],
-			    std::span(data.begin() + start_i, data_size),
-			    props->voxel_type, block_size);
+			    std::span(data.begin() + start_i, data_size), props->voxel_type,
+			    block_size);
 
 			start_i += data_size;
 		}

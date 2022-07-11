@@ -237,6 +237,12 @@ class DatasetProperties {
 		return out;
 	}
 
+
+	std::string str() const
+	{
+		return details::to_string(*this);
+	}
+
 	friend std::ostream& operator<<(std::ostream& stream,
 	                                const DatasetProperties& ds) {
 		using details::to_string;
@@ -265,6 +271,8 @@ class DatasetProperties {
 
 		return stream;
 	}
+
+
 };
 using dataset_props_ptr = std::shared_ptr<DatasetProperties>;
 

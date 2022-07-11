@@ -285,30 +285,27 @@ get_dataset_properties(const std::string& dataset_url) {
 	using namespace props_parser;
 
 	/* Parse elements from JSON */
+	auto fill_info = [&](auto& elem, const std::string& name) {
+		elem = get_elem<std::remove_reference_t<decltype(elem)>>(root, name);
+	};
 
-	props.uuid = get_elem<std::string>(root, "uuid");
-	props.voxel_type = get_elem<std::string>(root, "voxelType");
-	props.dimensions = get_elem<i3d::Vector3d<int>>(root, "dimensions");
-	props.channels = get_elem<int>(root, "channels");
-	props.angles = get_elem<int>(root, "angles");
-	props.transformations =
-	    get_elem<std::optional<std::string>>(root, "transformations");
-	props.voxel_unit = get_elem<std::string>(root, "voxelUnit");
-	props.voxel_resolution =
-	    get_elem<std::optional<i3d::Vector3d<double>>>(root, "voxelResolution");
-	props.timepoint_resolution =
-	    get_elem<std::optional<ResolutionUnit>>(root, "timepointResolution");
-	props.channel_resolution =
-	    get_elem<std::optional<ResolutionUnit>>(root, "channelResolution");
-	props.angle_resolution =
-	    get_elem<std::optional<ResolutionUnit>>(root, "angleResolution");
-	props.compression = get_elem<std::string>(root, "compression");
+	fill_info(props.uuid, "uuid");
+	fill_info(props.voxel_type, "voxelType");
+	fill_info(props.dimensions, "dimensions");
+	fill_info(props.channels, "channels");
+	fill_info(props.angles, "angles");
+	fill_info(props.transformations, "transformations");
+	fill_info(props.voxel_unit, "voxelUnit");
+	fill_info(props.voxel_resolution, "voxelResolution");
+	fill_info(props.timepoint_resolution, "timepointResolution");
+	fill_info(props.channel_resolution, "channelResolution");
+	fill_info(props.angle_resolution, "angleResolution");
+	fill_info(props.compression, "compression");
 	props.resolution_levels = get_resolution_levels(root);
-	props.versions = get_elem<std::vector<int>>(root, "versions");
-	props.label = get_elem<std::string>(root, "label");
-	props.view_registrations =
-	    get_elem<std::optional<std::string>>(root, "viewRegistrations");
-	props.timepoint_ids = get_elem<std::vector<int>>(root, "timepointIds");
+	fill_info(props.versions, "versions");
+	fill_info(props.label, "label");
+	fill_info(props.view_registrations, "viewRegistrations");
+	fill_info(props.timepoint_ids, "timepointIds");
 
 	log::info("Parsing has finished");
 	return props;

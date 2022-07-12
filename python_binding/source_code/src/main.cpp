@@ -1,19 +1,20 @@
 #include "../../../src/hpc_ds_api.hpp"
+#include "custom_casters.hpp"
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 using namespace py::literals;
 
-std::unique_ptr<ds::DatasetProperties> foo(const std::string&, int, const std::string&)
-{
-	return std::make_unique<ds::DatasetProperties>();
-}
+/* TESING ENV <-- remove later */
+
+/* END */
 
 PYBIND11_MODULE(hpc_datastore, m) {
 	m.doc() = "HPC Datastore API python bind";
 
 	using props_t = ds::DatasetProperties;
-	py::class_<props_t>(m, "DatastoreProperties")
+	py::class_<props_t, std::shared_ptr<props_t>>(m, "DatastoreProperties")
 	    .def(py::init<>())
 	    .def_readwrite("uuid", &props_t::uuid)
 	    .def_readwrite("voxel_type", &props_t::voxel_type)
@@ -40,5 +41,6 @@ PYBIND11_MODULE(hpc_datastore, m) {
 	    .def("__str__", &props_t::str)
 	    .def("__repr__", &props_t::str);
 
-	m.def("get_dataset_properties", &ds::get_dataset_properties, "ip"_a, "port"_a, "uuid"_a);
+	m.def("get_dataset_properties", &ds::get_dataset_properties, "ip"_a,
+	      "port"_a, "uuid"_a);
 }

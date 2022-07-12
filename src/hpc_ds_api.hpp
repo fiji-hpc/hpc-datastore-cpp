@@ -22,8 +22,9 @@ namespace ds {
  * @param uuid Unique identifier of dataset
  * @return DatasetProperties
  */
-inline std::unique_ptr<DatasetProperties> get_dataset_properties(
-    const std::string& ip, int port, const std::string& uuid);
+inline dataset_props_ptr get_dataset_properties(const std::string& ip,
+                                                int port,
+                                                const std::string& uuid);
 
 /**
  * @brief Read full image
@@ -798,8 +799,9 @@ class Connection {
 
 namespace ds {
 /* ===================================== Global space */
-/* inline */ std::unique_ptr<DatasetProperties> get_dataset_properties(
-    const std::string& ip, int port, const std::string& uuid) {
+/* inline */ dataset_props_ptr get_dataset_properties(const std::string& ip,
+                                                      int port,
+                                                      const std::string& uuid) {
 	std::string dataset_url = details::get_dataset_url(ip, port, uuid);
 	return std::make_unique<DatasetProperties>(
 	    details::get_dataset_properties(dataset_url));

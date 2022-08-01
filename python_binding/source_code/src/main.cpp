@@ -170,6 +170,99 @@ void write_image(ds::ImageView* view, const py::array_t<T>& src) {
 }
 
 } // namespace ImageView
+
+namespace Connection {
+template <typename T, typename... Params>
+py::array read_block(ds::Connection* conn, Params... args) {
+	auto img = conn->read_block<T>(args...);
+	return image3d_to_numpy(img);
+}
+
+template <typename T, typename... Params>
+void read_block_inplace(ds::Connection* conn,
+                        i3d::Vector3d<int> coord,
+                        py::array_t<T> dest,
+                        i3d::Vector3d<int> dest_offset,
+                        Params... args) {
+	auto img = conn->read_block<T>(coord, args...);
+	image3d_to_numpy(img, dest, dest_offset);
+}
+
+template <typename T, typename... Params>
+std::vector<py::array> read_blocks(ds::Connection* conn, Params... args) {
+	auto imgs = conn->read_blocks<T>(args...);
+	std::vector<py::array> out;
+	for (const auto& img : imgs)
+		out.push_back(image3d_to_numpy(img));
+
+	return out;
+}
+
+template <typename T, typename... Params>
+void read_blocks_inplace(ds::Connection* conn,
+                         const std::vector<i3d::Vector3d<int>>& coords,
+                         py::array_t<T> dest,
+                         Params... args) {
+
+	auto img = numpy_to_image3d(dest);
+	conn->read_blocks(coords, img, args...);
+	image3d_to_numpy(img, dest);
+}
+
+template <typename T, typename... Params>
+py::array read_region(ds::Connection* conn, Params... args) {
+	auto img = conn->read_region<T>(args...);
+	return image3d_to_numpy(img);
+}
+
+template <typename T, typename... Params>
+void read_region_inplace(ds::Connection* conn,
+                         i3d::Vector3d<int> start_point,
+                         i3d::Vector3d<int> end_point,
+                         py::array_t<T> dest,
+                         i3d::Vector3d<int> offset,
+                         Params... args) {
+
+	auto reg = conn->read_region<T>(start_point, end_point, args...);
+	image3d_to_numpy(reg, dest, offset);
+}
+
+template <typename T, typename... Params>
+py::array read_image(ds::Connection* conn, Params... args) {
+	auto img = conn->read_image<T>(args...);
+	return image3d_to_numpy(img);
+}
+
+template <typename T, typename... Params>
+void write_block(ds::Connection* conn,
+                 const py::array_t<T>& src,
+                 Params... args) {
+	conn->write_block(numpy_to_image3d(src), args...);
+}
+
+template <typename T, typename... Params>
+void write_blocks(ds::Connection* conn,
+                  const py::array_t<T>& src,
+                  Params... args) {
+	conn->write_blocks(numpy_to_image3d(src), args...);
+}
+
+template <typename T, typename... Params>
+void write_image(ds::Connection* conn,
+                 const py::array_t<T>& src,
+                 Params... args) {
+	conn->write_image(numpy_to_image3d(src), args...);
+}
+
+template <typename T, typename... Params>
+void write_with_pyramids(ds::Connection* conn,
+                         const py::array_t<T>& src,
+                         Params... args) {
+	conn->write_with_pyramids(numpy_to_image3d(src), args...);
+}
+
+} // namespace Connection
+
 } // namespace pywrap
 
 PYBIND11_MODULE(hpc_datastore, m) {
@@ -351,4 +444,153 @@ PYBIND11_MODULE(hpc_datastore, m) {
 		                       props->voxel_type, self, src);
 	        },
 	        "src"_a);
+
+	py::class_<ds::Connection>(m, "Connection")
+	    .def(py::init<std::string, int, std::string>(), "ip"_a, "port"_a,
+	         "uuid"_a)
+	    .def("get_view", &ds::Connection::get_view, "channel"_a, "timepoint"_a,
+	         "angle"_a, "resolution"_a, "version"_a)
+	    .def("get_properties", &ds::Connection::get_properties)
+	    .def(
+	        "read_block",
+	        [](ds::Connection* self, i3d::Vector3d<int> coord, int channel,
+	           int timepoint, int angle, i3d::Vector3d<int> resolution,
+	           const std::string& version) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::read_block,
+		                       props->voxel_type, self, coord, channel,
+		                       timepoint, angle, resolution, version);
+	        },
+	        "coord"_a, "channel"_a, "timepoint"_a, "angle"_a, "resolution"_a,
+	        "version"_a)
+	    .def(
+	        "read_block",
+	        [](ds::Connection* self, i3d::Vector3d<int> coord, py::array& dest,
+	           i3d::Vector3d<int> dest_offset, int channel, int timepoint,
+	           int angle, i3d::Vector3d<int> resolution,
+	           const std::string& version) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::read_block_inplace,
+		                       props->voxel_type, self, coord, dest,
+		                       dest_offset, channel, timepoint, angle,
+		                       resolution, version);
+	        },
+	        "coord"_a, "dest"_a, "dest_offset"_a, "channel"_a, "timepoint"_a,
+	        "angle"_a, "resolution"_a, "version"_a)
+	    .def(
+	        "read_blocks",
+	        [](ds::Connection* self,
+	           const std::vector<i3d::Vector3d<int>>& coords, int channel,
+	           int timepoint, int angle, i3d::Vector3d<int> resolution,
+	           const std::string& version) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::read_blocks,
+		                       props->voxel_type, self, coords, channel,
+		                       timepoint, angle, resolution, version);
+	        },
+	        "coords"_a, "channel"_a, "timepoint"_a, "angle"_a, "resolution"_a,
+	        "version"_a)
+	    .def(
+	        "read_blocks",
+	        [](ds::Connection* self,
+	           const std::vector<i3d::Vector3d<int>>& coords, py::array& dest,
+	           const std::vector<i3d::Vector3d<int>>& offsets, int channel,
+	           int timepoint, int angle, i3d::Vector3d<int> resolution,
+	           const std::string& version) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::read_blocks_inplace,
+		                       props->voxel_type, self, coords, dest, offsets,
+		                       channel, timepoint, angle, resolution, version);
+	        },
+	        "coords"_a, "dest"_a, "offsets"_a, "channel"_a, "timepoint"_a,
+	        "angle"_a, "resolution"_a, "version"_a)
+	    .def(
+	        "read_region",
+	        [](ds::Connection* self, i3d::Vector3d<int> start_point,
+	           i3d::Vector3d<int> end_point, int channel, int timepoint,
+	           int angle, i3d::Vector3d<int> resolution,
+	           const std::string& version) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::read_region,
+		                       props->voxel_type, self, start_point, end_point,
+		                       channel, timepoint, angle, resolution, version);
+	        },
+	        "start_point"_a, "end_point"_a, "channel"_a, "timepoint"_a,
+	        "angle"_a, "resolution"_a, "version"_a)
+	    .def(
+	        "read_region",
+	        [](ds::Connection* self, i3d::Vector3d<int> start_point,
+	           i3d::Vector3d<int> end_point, py::array& dest,
+	           i3d::Vector3d<int> offset, int channel, int timepoint, int angle,
+	           i3d::Vector3d<int> resolution, const std::string& version) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::read_region_inplace,
+		                       props->voxel_type, self, start_point, end_point,
+		                       dest, offset, channel, timepoint, angle,
+		                       resolution, version);
+	        },
+	        "start_point"_a, "end_point"_a, "dest"_a, "offset"_a, "channel"_a,
+	        "timepoint"_a, "angle"_a, "resolution"_a, "version"_a)
+	    .def(
+	        "read_image",
+	        [](ds::Connection* self, int channel, int timepoint, int angle,
+	           i3d::Vector3d<int> resolution, const std::string& version) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::read_image,
+		                       props->voxel_type, self, channel, timepoint,
+		                       angle, resolution, version);
+	        },
+	        "channel"_a, "timepoint"_a, "angle"_a, "resolution"_a, "version"_a)
+	    .def(
+	        "write_block",
+	        [](ds::Connection* self, const py::array& src,
+	           i3d::Vector3d<int> coord, i3d::Vector3d<int> src_offset,
+	           int channel, int timepoint, int angle,
+	           i3d::Vector3d<int> resolution, const std::string& version) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::write_block,
+		                       props->voxel_type, self, src, coord, src_offset,
+		                       channel, timepoint, angle, resolution, version);
+	        },
+	        "src"_a, "coord"_a, "src_offset"_a, "channel"_a, "timepoint"_a,
+	        "angle"_a, "resolution"_a, "version"_a)
+	    .def(
+	        "write_blocks",
+	        [](ds::Connection* self, const py::array& src,
+	           const std::vector<i3d::Vector3d<int>>& coords,
+	           const std::vector<i3d::Vector3d<int>>& src_offsets, int channel,
+	           int timepoint, int angle, i3d::Vector3d<int> resolution,
+	           const std::string& version) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::write_blocks,
+		                       props->voxel_type, self, src, coords,
+		                       src_offsets, channel, timepoint, angle,
+		                       resolution, version);
+	        },
+	        "src"_a, "coords"_a, "src_offsets"_a, "channel"_a, "timepoint"_a,
+	        "angle"_a, "resolution"_a, "version"_a)
+	    .def(
+	        "write_image",
+	        [](ds::Connection* self, const py::array& src, int channel,
+	           int timepoint, int angle, i3d::Vector3d<int> resolution,
+	           const std::string& version) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::write_image,
+		                       props->voxel_type, self, src, channel, timepoint,
+		                       angle, resolution, version);
+	        },
+	        "src"_a, "channel"_a, "timepoint"_a, "angle"_a, "resolution"_a,
+	        "version"_a)
+	    .def(
+	        "write_with_pyramids",
+	        [](ds::Connection* self, const py::array& src, int channel,
+	           int timepoint, int angle, const std::string& version,
+	           ds::SamplingMode m) {
+		        auto props = self->get_properties();
+		        SELECT_TYPE_RV(pywrap::Connection::write_with_pyramids,
+		                       props->voxel_type, self, src, channel, timepoint,
+		                       angle, version, m);
+	        },
+	        "src"_a, "channel"_a, "timepoint"_a, "angle"_a, "version"_a,
+	        "sampling_mode"_a);
 }

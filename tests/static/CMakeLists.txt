@@ -2,8 +2,12 @@ cmake_minimum_required(VERSION 3.18)
 
 project(HPC_Datastore_unit_tests CXX)
 
+IF (WIN32)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+ELSE (WIN32)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wconversion -fmax-errors=1 -g -O2 -static-libgcc -static-libstdc++")
 set(CMAKE_CXX_COMPILER g++)
+ENDIF (WIN32)
 set(CMAKE_CXX_STANDARD 20)
 
 # disable info message print
@@ -81,7 +85,13 @@ set(LIBS ${LIBS} rxspencer)
 
 # I3D library
 set(STATIC_DIR "${CMAKE_SOURCE_DIR}/../../static_i3dlib")
+
+IF (WIN32)
+set(LIBS "${STATIC_DIR}/libs/cbia.lib.i3dalgo.dyn.rel.x64.16.lib" "${STATIC_DIR}/libs/cbia.lib.i3dcore.dyn.rel.x64.16.lib" ${LIBS})
+ELSE (WIN32)
 set(LIBS "${STATIC_DIR}/libs/libi3dcore.a" "${STATIC_DIR}/libs/libi3dalgo.a" ${LIBS})
+ENDIF(WIN32)
+
 set(INCL_DIRS "${STATIC_DIR}/includes")
 
 add_executable(unit_tests "../units/main.cpp")

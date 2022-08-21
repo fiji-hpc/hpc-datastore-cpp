@@ -6,13 +6,14 @@
 #include <i3d/transform.h>
 #include <i3d/vector3d.h>
 #include <map>
+#include <memory>
 #include <optional>
 #include <ostream>
+#include <set>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <memory>
 
 template <typename T, typename U>
 bool lt(i3d::Vector3d<T> lhs, i3d::Vector3d<U> rhs) {
@@ -32,7 +33,8 @@ template <typename T, typename U>
 requires std::is_floating_point_v<T> && std::is_floating_point_v<U>
 bool eq(i3d::Vector3d<T> lhs, i3d::Vector3d<U> rhs) {
 	for (int i = 0; i < 3; ++i)
-		if (static_cast<long double>(lhs[i]) != static_cast<long double>(rhs[i]))
+		if (static_cast<long double>(lhs[i]) !=
+		    static_cast<long double>(rhs[i]))
 			return false;
 	return true;
 }
@@ -105,12 +107,67 @@ concept Map = requires(T) {
 };
 
 template <typename T>
+concept Set = requires(T) {
+	requires std::is_same_v<std::set<typename T::value_type>, T>;
+};
+
+template <typename T>
 concept ResolutionUnit = requires(T) {
 	requires std::is_same_v<T, ds::ResolutionUnit>;
 };
 } // namespace cnpts
 
 namespace details {
+/** Type match checks **/
+inline bool matches_image_type(const i3d::Image3d<uint8_t>&,
+                               std::string voxel_type) {
+	return voxel_type == "uint8";
+}
+
+inline bool matches_image_type(const i3d::Image3d<uint16_t>&,
+                               std::string voxel_type) {
+	return voxel_type == "uint16";
+}
+
+inline bool matches_image_type(const i3d::Image3d<uint32_t>&,
+                               std::string voxel_type) {
+	return voxel_type == "uint32";
+}
+
+inline bool matches_image_type(const i3d::Image3d<uint64_t>&,
+                               std::string voxel_type) {
+	return voxel_type == "uint64";
+}
+
+inline bool matches_image_type(const i3d::Image3d<int8_t>&,
+                               std::string voxel_type) {
+	return voxel_type == "int8";
+}
+
+inline bool matches_image_type(const i3d::Image3d<int16_t>&,
+                               std::string voxel_type) {
+	return voxel_type == "int16";
+}
+
+inline bool matches_image_type(const i3d::Image3d<int32_t>&,
+                               std::string voxel_type) {
+	return voxel_type == "int32";
+}
+
+inline bool matches_image_type(const i3d::Image3d<int64_t>&,
+                               std::string voxel_type) {
+	return voxel_type == "int64";
+}
+
+inline bool matches_image_type(const i3d::Image3d<float>&,
+                               std::string voxel_type) {
+	return voxel_type == "float32";
+}
+
+inline bool matches_image_type(const i3d::Image3d<double>&,
+                               std::string voxel_type) {
+	return voxel_type == "float64";
+}
 
 /** Unified way to convert structures into string **/
 /** Forward declarations to enable 'recursion' **/
@@ -121,6 +178,9 @@ template <cnpts::Vector T>
 std::string to_string(const T&);
 
 template <cnpts::Map T>
+std::string to_string(const T&);
+
+template <cnpts::Set T>
 std::string to_string(const T&);
 
 template <cnpts::Optional T>
@@ -161,6 +221,21 @@ std::string to_string(const T& map) {
 	return ss.str();
 }
 
+template <cnpts::Set T>
+std::string to_string(const T& set) {
+	std::stringstream ss;
+	ss << "{";
+
+	const char* delim = "";
+	for (auto& v : set) {
+		ss << delim << to_string(v);
+		delim = ", ";
+	}
+
+	ss << "}";
+	return ss.str();
+}
+
 template <cnpts::Optional T>
 std::string to_string(const T& val) {
 	if (!val)
@@ -192,7 +267,7 @@ class DatasetProperties {
 	std::vector<int> versions;
 	std::string label;
 	std::optional<std::string> view_registrations;
-	std::vector<int> timepoint_ids;
+	std::set<int> timepoint_ids;
 
 	i3d::Vector3d<int>
 	get_block_dimensions(i3d::Vector3d<int> resolution) const {
@@ -227,6 +302,7 @@ class DatasetProperties {
 	}
 
 	i3d::Vector3d<int> get_img_dimensions(i3d::Vector3d<int> resolution) const {
+		
 		return dimensions / resolution;
 	}
 
@@ -237,11 +313,7 @@ class DatasetProperties {
 		return out;
 	}
 
-
-	std::string str() const
-	{
-		return details::to_string(*this);
-	}
+	std::string str() const { return details::to_string(*this); }
 
 	friend std::ostream& operator<<(std::ostream& stream,
 	                                const DatasetProperties& ds) {
@@ -271,8 +343,6 @@ class DatasetProperties {
 
 		return stream;
 	}
-
-
 };
 using dataset_props_ptr = std::shared_ptr<DatasetProperties>;
 

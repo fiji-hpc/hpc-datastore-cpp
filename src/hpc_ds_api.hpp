@@ -5,6 +5,8 @@
 #include <i3d/image3d.h>
 #include <i3d/transform.h>
 #include <memory>
+#include <ranges>
+#include <stdexcept>
 #include <string>
 #include <type_traits>
 #include <vector>
@@ -924,6 +926,33 @@ void ImageView::read_blocks(const std::vector<i3d::Vector3d<int>>& coords,
 	if (!props)
 		props = get_properties();
 
+	if (!details::matches_image_type(dest, props->voxel_type))
+		throw std::logic_error("Server and i3d image type does not match\n");
+
+	auto resolutions = props->get_all_resolutions();
+	if (std::ranges::find(resolutions, _resolution) == end(resolutions))
+		throw std::logic_error(
+		    fmt::format("Resolution {} not supported by server\n",
+		                details::to_string(_resolution))
+		        .c_str());
+
+	if (!props->timepoint_ids.contains(_timepoint))
+		throw std::logic_error(
+		    fmt::format("Timepoint {} not supported by server\n",
+		                details::to_string(_timepoint))
+		        .c_str());
+
+	if (_channel >= props->channels)
+		throw std::logic_error(
+		    fmt::format("Channel {} not supported by server\n",
+		                details::to_string(_channel))
+		        .c_str());
+
+	if (_angle >= props->angles)
+		throw std::logic_error(fmt::format("Angle {} not supported by server\n",
+		                                   details::to_string(_angle))
+		                           .c_str());
+
 	/* Fetched properties from server */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
 	i3d::Vector3d<int> block_dim = props->get_block_dimensions(_resolution);
@@ -1034,6 +1063,33 @@ void ImageView::write_blocks(const i3d::Image3d<T>& src,
 	if (!props)
 		props = get_properties();
 
+	if (!details::matches_image_type(src, props->voxel_type))
+		throw std::logic_error("Server and i3d image type does not match\n");
+
+	auto resolutions = props->get_all_resolutions();
+	if (std::ranges::find(resolutions, _resolution) == end(resolutions))
+		throw std::logic_error(
+		    fmt::format("Resolution {} not supported by server\n",
+		                details::to_string(_resolution))
+		        .c_str());
+
+	if (!props->timepoint_ids.contains(_timepoint))
+		throw std::logic_error(
+		    fmt::format("Timepoint {} not supported by server\n",
+		                details::to_string(_timepoint))
+		        .c_str());
+
+	if (_channel >= props->channels)
+		throw std::logic_error(
+		    fmt::format("Channel {} not supported by server\n",
+		                details::to_string(_channel))
+		        .c_str());
+
+	if (_angle >= props->angles)
+		throw std::logic_error(fmt::format("Angle {} not supported by server\n",
+		                                   details::to_string(_angle))
+		                           .c_str());
+
 	/* Fetch server properties */
 	std::string dataset_url = details::get_dataset_url(_ip, _port, _uuid);
 
@@ -1056,8 +1112,11 @@ void ImageView::write_blocks(const i3d::Image3d<T>& src,
 		session_url.pop_back();
 
 	std::vector<std::pair<std::string, std::vector<std::size_t>>> requests =
-	    details::create_requests(coords, session_url, _timepoint, _channel,
-	                             _angle, 512 / sizeof(T));
+	    details::create_requests(
+	        coords, session_url, _timepoint, _channel, _angle,
+	        134217728 /
+	            (sizeof(T) * block_dim.x * block_dim.y *
+	             block_dim.z)); //<-- Magic constant empiricaly chosen :D
 
 	for (const auto& [req, idxs] : requests) {
 		std::size_t full_size = 0;
@@ -1098,6 +1157,11 @@ void ImageView::write_image(const i3d::Image3d<T>& img,
 	/* Fetch image properties from server */
 	if (!props)
 		props = get_properties();
+
+	auto resolutions = props->get_all_resolutions();
+	if (std::ranges::find(resolutions, _resolution) == end(resolutions) ||
+	    !eq(props->get_img_dimensions(_resolution), img.GetSize()))
+		throw std::logic_error("Size of server and i3d image does not match\n");
 
 	i3d::Vector3d<int> block_dim = props->get_block_dimensions(_resolution);
 	i3d::Vector3d<int> img_dim = props->get_img_dimensions(_resolution);

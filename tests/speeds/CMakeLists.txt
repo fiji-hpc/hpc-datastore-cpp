@@ -26,7 +26,7 @@ set(LIBS ${LIBS} Poco::Net Poco::JSON)
 # I3D library
 set(LIBS ${LIBS} i3dcore)
 
-foreach(PROJ read_image) #read_blocks read_image write_blocks write_image)
+foreach(PROJ read_blocks read_image write_blocks write_image)
     add_executable(${PROJ} "${PROJ}.cpp")
     target_link_libraries(${PROJ} PRIVATE ${LIBS})
 endforeach()

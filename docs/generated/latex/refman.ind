@@ -1,84 +1,75 @@
 \begin{theindex}
 
-  \item {/home/somik/CBIA/hpc-\/datastore-\/cpp/src/hpc\_ds\_api.hpp}, 
-		\hyperpage{27}
-  \item {/home/somik/CBIA/hpc-\/datastore-\/cpp/src/hpc\_ds\_details.hpp}, 
-		\hyperpage{36}
-  \item {/home/somik/CBIA/hpc-\/datastore-\/cpp/src/hpc\_ds\_structs.hpp}, 
-		\hyperpage{43}
-
-  \indexspace
-
   \item {Connection}
-    \subitem {ds::Connection}, \hyperpage{6}
+    \subitem {ds::Connection}, \hyperpage{4}
 
   \indexspace
 
-  \item {ds::Connection}, \hyperpage{5}
-    \subitem {Connection}, \hyperpage{6}
-    \subitem {get\_properties}, \hyperpage{7}
-    \subitem {get\_view}, \hyperpage{7}
-    \subitem {read\_block}, \hyperpage{7, 8}
-    \subitem {read\_blocks}, \hyperpage{9, 10}
-    \subitem {read\_image}, \hyperpage{11}
-    \subitem {read\_region}, \hyperpage{11, 12}
-    \subitem {write\_block}, \hyperpage{13}
-    \subitem {write\_blocks}, \hyperpage{14}
-    \subitem {write\_image}, \hyperpage{15}
-    \subitem {write\_with\_pyramids}, \hyperpage{15}
-  \item {ds::DatasetProperties}, \hyperpage{16}
-  \item {ds::ImageView}, \hyperpage{17}
-    \subitem {get\_properties}, \hyperpage{19}
-    \subitem {ImageView}, \hyperpage{19}
-    \subitem {read\_block}, \hyperpage{19, 20}
-    \subitem {read\_blocks}, \hyperpage{21}
-    \subitem {read\_image}, \hyperpage{22}
-    \subitem {read\_region}, \hyperpage{22, 23}
-    \subitem {write\_block}, \hyperpage{24}
-    \subitem {write\_blocks}, \hyperpage{24}
-    \subitem {write\_image}, \hyperpage{25}
-  \item {ds::ResolutionUnit}, \hyperpage{26}
+  \item {ds::Connection}, \hyperpage{3}
+    \subitem {Connection}, \hyperpage{4}
+    \subitem {get\_properties}, \hyperpage{5}
+    \subitem {get\_view}, \hyperpage{5}
+    \subitem {read\_block}, \hyperpage{5, 6}
+    \subitem {read\_blocks}, \hyperpage{7, 8}
+    \subitem {read\_image}, \hyperpage{9}
+    \subitem {read\_region}, \hyperpage{9, 10}
+    \subitem {write\_block}, \hyperpage{11}
+    \subitem {write\_blocks}, \hyperpage{12}
+    \subitem {write\_image}, \hyperpage{13}
+    \subitem {write\_with\_pyramids}, \hyperpage{13}
+  \item {ds::DatasetProperties}, \hyperpage{14}
+  \item {ds::ImageView}, \hyperpage{15}
+    \subitem {get\_properties}, \hyperpage{17}
+    \subitem {ImageView}, \hyperpage{17}
+    \subitem {read\_block}, \hyperpage{17, 18}
+    \subitem {read\_blocks}, \hyperpage{19}
+    \subitem {read\_image}, \hyperpage{20}
+    \subitem {read\_region}, \hyperpage{20, 21}
+    \subitem {write\_block}, \hyperpage{22}
+    \subitem {write\_blocks}, \hyperpage{22}
+    \subitem {write\_image}, \hyperpage{23}
+  \item {ds::ResolutionUnit}, \hyperpage{24}
 
   \indexspace
 
   \item {get\_properties}
-    \subitem {ds::Connection}, \hyperpage{7}
-    \subitem {ds::ImageView}, \hyperpage{19}
+    \subitem {ds::Connection}, \hyperpage{5}
+    \subitem {ds::ImageView}, \hyperpage{17}
   \item {get\_view}
-    \subitem {ds::Connection}, \hyperpage{7}
+    \subitem {ds::Connection}, \hyperpage{5}
 
   \indexspace
 
   \item {ImageView}
-    \subitem {ds::ImageView}, \hyperpage{19}
+    \subitem {ds::ImageView}, \hyperpage{17}
 
   \indexspace
 
   \item {read\_block}
-    \subitem {ds::Connection}, \hyperpage{7, 8}
-    \subitem {ds::ImageView}, \hyperpage{19, 20}
+    \subitem {ds::Connection}, \hyperpage{5, 6}
+    \subitem {ds::ImageView}, \hyperpage{17, 18}
   \item {read\_blocks}
-    \subitem {ds::Connection}, \hyperpage{9, 10}
-    \subitem {ds::ImageView}, \hyperpage{21}
+    \subitem {ds::Connection}, \hyperpage{7, 8}
+    \subitem {ds::ImageView}, \hyperpage{19}
   \item {read\_image}
-    \subitem {ds::Connection}, \hyperpage{11}
-    \subitem {ds::ImageView}, \hyperpage{22}
+    \subitem {ds::Connection}, \hyperpage{9}
+    \subitem {ds::ImageView}, \hyperpage{20}
   \item {read\_region}
-    \subitem {ds::Connection}, \hyperpage{11, 12}
-    \subitem {ds::ImageView}, \hyperpage{22, 23}
+    \subitem {ds::Connection}, \hyperpage{9, 10}
+    \subitem {ds::ImageView}, \hyperpage{20, 21}
 
   \indexspace
 
   \item {write\_block}
-    \subitem {ds::Connection}, \hyperpage{13}
-    \subitem {ds::ImageView}, \hyperpage{24}
+    \subitem {ds::Connection}, \hyperpage{11}
+    \subitem {ds::ImageView}, \hyperpage{22}
   \item {write\_blocks}
-    \subitem {ds::Connection}, \hyperpage{14}
-    \subitem {ds::ImageView}, \hyperpage{24}
+    \subitem {ds::Connection}, \hyperpage{12}
+    \subitem {ds::ImageView}, \hyperpage{22}
   \item {write\_image}
-    \subitem {ds::Connection}, \hyperpage{15}
-    \subitem {ds::ImageView}, \hyperpage{25}
+    \subitem {ds::Connection}, \hyperpage{13}
+    \subitem {ds::ImageView}, \hyperpage{23}
   \item {write\_with\_pyramids}
-    \subitem {ds::Connection}, \hyperpage{15}
+    \subitem {ds::Connection}, \hyperpage{13}
 
 \end{theindex}

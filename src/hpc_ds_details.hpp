@@ -230,6 +230,9 @@ T get_elem(Object::Ptr root, const std::string& name);
 template <cnpts::Optional T>
 T get_elem(Object::Ptr root, const std::string& name);
 
+template <cnpts::Set T>
+T get_elem(Object::Ptr root, const std::string& name);
+
 inline std::vector<std::map<std::string, i3d::Vector3d<int>>>
 get_resolution_levels(Object::Ptr root);
 
@@ -604,6 +607,24 @@ T get_elem(Object::Ptr root, const std::string& name) {
 	T out(count);
 	for (unsigned i = 0; i < count; ++i)
 		out[i] = values->getElement<V>(i);
+
+	return out;
+}
+
+template <cnpts::Set T>
+T get_elem(Object::Ptr root, const std::string& name) {
+	using V = typename T::value_type;
+	if (!root->has(name)) {
+		log::warning(fmt::format("{} were not found", name));
+		return {};
+	}
+
+	Array::Ptr values = root->getArray(name);
+	std::size_t count = values->size();
+
+	T out;
+	for (unsigned i = 0; i < count; ++i)
+		out.insert(values->getElement<V>(i));
 
 	return out;
 }
